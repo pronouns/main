@@ -1,0 +1,69 @@
+<section ng-controller="PronounsController" ng-init="findOne()">
+  <div class="page-header">
+    <h1 ng-bind="pronoun.pattern"></h1>
+  </div>
+  <div class="pull-right">
+    <a class="btn btn-info" ng-click="makeMine(pronoun);" ng-show="!hasPronoun(pronoun._id)">
+      <i class="glyphicon glyphicon-plus"></i>
+    </a>
+    <a class="btn btn-info" ng-click="removeMine(pronoun);" ng-show="hasPronoun(pronoun._id)">
+      <i class="glyphicon glyphicon-minus"></i>
+    </a>
+    <a class="btn btn-primary" ui-sref="pronouns.edit({pronounId: pronoun._id})" ng-show="user.roles.indexOf('admin') != -1">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" ng-click="remove();" ng-show="user.roles.indexOf('admin') != -1">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+
+  <small>
+    <em class="text-muted">
+      Posted on
+      <span ng-bind="pronoun.created | date:'mediumDate'"></span>
+      by
+      <span ng-bind="pronoun.user.displayName"></span>
+    </em>
+  </small>
+  <p class="lead" ng-bind="pronoun.content"></p>
+  <div class="container">
+    <div class="row">
+      <div class="col col-md-6 col-sm-12">
+        <table class="table">
+          <tbody>
+          <tr>
+            <td>Subject Pronoun</td>
+            <td ng-bind="pronoun.subject"></td>
+          </tr>
+          <tr>
+            <td>Object Pronoun</td>
+            <td ng-bind="pronoun.object"></td>
+          </tr>
+          <tr>
+            <td>Possessive Determiner</td>
+            <td ng-bind="pronoun.determiner"></td>
+          </tr>
+          <tr>
+            <td>Possessive Pronoun</td>
+            <td ng-bind="pronoun.possessive"></td>
+          </tr>
+          <tr>
+            <td>Reflexive Pronoun</td>
+            <td ng-bind="pronoun.reflexive"></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col col-md-6 col-sm-12">
+        <div class="well">
+          <p>This morning, <b><span ng-bind="pronoun.subject"></span></b> went to the park.</p>
+          <p>I went with <b><span ng-bind="pronoun.object"></span></b>.</p>
+          <p>And <b><span ng-bind="pronoun.subject"></span></b> brought <b><span ng-bind="pronoun.determiner"></span></b> frisbee.</p>
+          <p>At least I think it was <b><span ng-bind="pronoun.possessive"></span></b>.</p>
+          <p>By the end of the day, <b><span ng-bind="pronoun.subject"></span></b> started throwing the frisbee to <b><span ng-bind="pronoun.reflexive"></span>.</b></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>

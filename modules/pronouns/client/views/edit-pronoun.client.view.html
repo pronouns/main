@@ -1,0 +1,52 @@
+<section ng-controller="PronounsController" ng-init="findOne()">
+  <div class="page-header">
+    <h1>Edit Pronoun</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="pronounForm" class="form-horizontal" ng-submit="update(pronounForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label for="subject">Subject Pronoun</label>
+          <input name="subject" type="text" ng-model="pronoun.subject" id="subject" class="form-control" placeholder="they" required>
+          <div ng-messages="pronounForm.subject.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Subject Pronoun is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <label for="object">Object Pronoun</label>
+          <input name="object" type="text" ng-model="pronoun.object" id="object" class="form-control" placeholder="them" required>
+          <div ng-messages="pronounForm.object.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Object Pronoun is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <label for="determiner">Possessive Determiner</label>
+          <input name="determiner" type="text" ng-model="pronoun.determiner" id="determiner" class="form-control" placeholder="their" required>
+          <div ng-messages="pronounForm.determiner.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Possessive Determiner is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <label for="possessive">Possessive Pronoun</label>
+          <input name="possessive" type="text" ng-model="pronoun.possessive" id="possessive" class="form-control" placeholder="theirs" required>
+          <div ng-messages="pronounForm.possessive.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Possessive Pronoun is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <label for="reflexive">Reflexive Pronoun</label>
+          <input name="reflexive" type="text" ng-model="pronoun.reflexive" id="reflexive" class="form-control" placeholder="themself" required>
+          <div ng-messages="pronounForm.reflexive.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Reflexive Pronoun is required.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <input type="submit" value="Update" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

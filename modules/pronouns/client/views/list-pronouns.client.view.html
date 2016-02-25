@@ -1,0 +1,25 @@
+<section ng-controller="PronounListController" ng-init="find()">
+  <div class="page-header">
+    <div class="row">
+      <div class="col-md-4">
+        <h1>Pronouns</h1>
+      </div>
+      <div class="col-md-4" style="margin-top: 2em">
+        <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
+      </div>
+    </div>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="pronoun in pagedItems" ui-sref="pronouns.view({pronounId: pronoun._id})" class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="pronoun.created | date:'mediumDate'"></span>
+        by
+        <span ng-bind="pronoun.user.displayName"></span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="pronoun.pattern"></h4>
+    </a>
+  </div>
+
+  <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+</section>

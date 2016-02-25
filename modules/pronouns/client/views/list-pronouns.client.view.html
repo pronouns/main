@@ -12,7 +12,7 @@
   <div class="list-group">
     <a ng-repeat="pronoun in pagedItems" ui-sref="pronouns.view({pronounId: pronoun._id})" class="list-group-item">
       <small class="list-group-item-text">
-        Posted on
+        Created on
         <span ng-bind="pronoun.created | date:'mediumDate'"></span>
         by
         <span ng-bind="pronoun.user.displayName"></span>

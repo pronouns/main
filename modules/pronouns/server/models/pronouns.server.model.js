@@ -14,6 +14,9 @@ var PronounSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  content: {
+    type: String
+  },
   subject: {
     type: String,
     required: 'Please fill in a subject'

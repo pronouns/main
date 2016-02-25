@@ -48,6 +48,7 @@ exports.update = function (req, res) {
   pronoun.determiner = req.body.determiner;
   pronoun.possessive = req.body.possessive;
   pronoun.reflexive = req.body.reflexive;
+  pronoun.content = req.body.content;
 
   pronoun.pattern = pronoun.subject + '/' + pronoun.object + '/' + pronoun.determiner + '/' + pronoun.possessive + '/' + pronoun.reflexive;
 
@@ -98,12 +99,12 @@ exports.list = function (req, res) {
   });
 };
 exports.findByPattern = function(req, res){
-  Pronoun.findOne({pattern: req.params.subject + '/' + req.params.object + '/' + req.params.determiner + '/' + req.params.possessive + '/' + req.params.reflexive}, '_id', function(err, pronoun){
+  Pronoun.findOne({ pattern: req.params.subject + '/' + req.params.object + '/' + req.params.determiner + '/' + req.params.possessive + '/' + req.params.reflexive }, '_id', function(err, pronoun){
     if(err !== null || pronoun === null){
-      res.redirect("/pronouns");
+      res.redirect('/pronouns');
     }
     else{
-      res.redirect("/pronouns/" + pronoun._id);
+      res.redirect('/pronouns/' + pronoun._id);
     }
   });
 };

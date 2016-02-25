@@ -6,15 +6,15 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
-    $scope.hasPronoun = function(pronounId){
-      for(var i = 0; i < $scope.user.pronouns.length; i++){
-        if($scope.user.pronouns[i] === pronounId){
+    $scope.hasPronoun = function (pronounId) {
+      for (var i = 0; i < $scope.user.pronouns.length; i++) {
+        if ($scope.user.pronouns[i] === pronounId) {
           return true;
         }
       }
       return false;
     };
-    $scope.makeMine = function(pronoun){
+    $scope.makeMine = function (pronoun) {
       var user = new Users($scope.user);
       user.pronouns.push(pronoun._id);
 
@@ -24,7 +24,7 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
         $scope.error = response.data.message;
       });
     };
-    $scope.removeMine = function(pronoun){
+    $scope.removeMine = function (pronoun) {
       var user = new Users($scope.user);
       user.pronouns.splice(user.pronouns.indexOf(pronoun._id), 1);
 
@@ -34,7 +34,7 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
         $scope.error = response.data.message;
       });
     };
-    // Create new Pronoun
+// Create new Pronoun
     $scope.create = function (isValid) {
       $scope.error = null;
 
@@ -44,7 +44,7 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
         return false;
       }
 
-      // Create new Pronoun object
+// Create new Pronoun object
       var pronoun = new Pronouns({
         subject: this.subject,
         object: this.object,
@@ -53,11 +53,11 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
         reflexive: this.reflexive
       });
 
-      // Redirect after save
+// Redirect after save
       pronoun.$save(function (response) {
         $location.path('pronouns/' + response._id);
 
-        // Clear form fields
+// Clear form fields
         $scope.subject = '';
         $scope.object = '';
         $scope.determiner = '';
@@ -68,7 +68,7 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
       });
     };
 
-    // Remove existing Pronoun
+// Remove existing Pronoun
     $scope.remove = function (pronoun) {
       if (pronoun) {
         pronoun.$remove();
@@ -85,7 +85,7 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
       }
     };
 
-    // Update existing Pronoun
+// Update existing Pronoun
     $scope.update = function (isValid) {
       $scope.error = null;
 
@@ -104,12 +104,12 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
       });
     };
 
-    // Find a list of Pronouns
+// Find a list of Pronouns
     $scope.find = function () {
       $scope.pronouns = Pronouns.query();
     };
 
-    // Find existing Pronoun
+// Find existing Pronoun
     $scope.findOne = function () {
       $scope.pronoun = Pronouns.get({
         pronounId: $stateParams.pronounId

@@ -19,7 +19,7 @@ exports.userByID = function (req, res, next, id) {
 
   User.findOne({
     _id: id
-  }).populate('pronouns').exec(function (err, user) {
+  }).exec(function (err, user) {
     if (err) {
       return next(err);
     } else if (!user) {

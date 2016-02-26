@@ -1,7 +1,7 @@
 <section class="row" ng-controller="UpdatePronounsController">
   <div class="col-xs-offset-1 col-xs-10 col-md-offset-2 col-md-12">
     <div class="list-group">
-      <a ng-repeat="pronoun in user.pronouns" ui-sref="pronouns.view({pronounId: pronoun._id})" class="list-group-item">
+      <a ng-repeat="pronoun in pronouns" ui-sref="pronouns.view({pronounId: pronoun._id})" class="list-group-item">
         <h4 class="list-group-item-heading" ng-bind="pronoun.pattern"></h4>
       </a>
     </div>

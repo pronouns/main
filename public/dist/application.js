@@ -1319,8 +1319,12 @@ angular.module('users').controller('SettingsController', ['$scope', 'Authenticat
 angular.module('users').controller('UpdatePronounsController', ['$scope', '$http', '$location', 'Users', 'Authentication', 'Pronouns',
   function ($scope, $http, $location, Users, Authentication, Pronouns) {
     $scope.user = Authentication.user;
-
-    console.log($scope.user);
+    $scope.pronouns = [];
+    $scope.user.pronouns.forEach(function(value){
+      Pronouns.get({ pronounId: value }, function(data) {
+        $scope.pronouns.push(data);
+      });
+    });
   }
 ]);
 

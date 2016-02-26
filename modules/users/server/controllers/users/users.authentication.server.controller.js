@@ -68,7 +68,9 @@ exports.signin = function (req, res, next) {
         if (err) {
           res.status(400).send(err);
         } else {
-          res.json(user);
+          User.populate(user, {path:"pronouns"}, function(err, user) {
+            res.json(user);
+          });
         }
       });
     }

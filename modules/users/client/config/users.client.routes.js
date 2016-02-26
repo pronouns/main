@@ -13,6 +13,10 @@ angular.module('users').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       })
+      .state('settings.pronouns', {
+        url: '/pronouns',
+        templateUrl: 'modules/users/client/views/settings/update-pronouns.client.view.html'
+      })
       .state('settings.profile', {
         url: '/profile',
         templateUrl: 'modules/users/client/views/settings/edit-profile.client.view.html'

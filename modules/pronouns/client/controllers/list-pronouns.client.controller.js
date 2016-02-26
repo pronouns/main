@@ -3,7 +3,7 @@
 angular.module('pronouns').controller('PronounListController', ['$scope', '$filter', 'Users', 'Authentication', 'Pronouns',
   function ($scope, $filter, Users, Authentication, Pronouns) {
     Pronouns.query(function (data) {
-      $scope.users = data;
+      $scope.pronouns = data;
       $scope.buildPager();
     });
 
@@ -15,7 +15,7 @@ angular.module('pronouns').controller('PronounListController', ['$scope', '$filt
     };
 
     $scope.figureOutItemsToDisplay = function () {
-      $scope.filteredItems = $filter('filter')($scope.users, {
+      $scope.filteredItems = $filter('filter')($scope.pronouns, {
         $: $scope.search
       });
       $scope.filterLength = $scope.filteredItems.length;

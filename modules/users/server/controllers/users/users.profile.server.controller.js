@@ -49,7 +49,17 @@ exports.update = function (req, res) {
     });
   }
 };
-
+/**
+ * Return public user details
+ */
+exports.getUser = function (req, res) {
+  User.populate(req.profile, { path: "pronouns" }, function(err, user) {
+    //TODO remove non-public data !!!
+    user.salt = undefined;
+    user.password = undefined;
+    res.json(user);
+  });
+};
 /**
  * Update profile picture
  */

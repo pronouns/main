@@ -71,6 +71,18 @@ angular.module('users').config(['$stateProvider',
       .state('password.reset.form', {
         url: '/:token',
         templateUrl: 'modules/users/client/views/password/reset-password.client.view.html'
+      })
+      .state('profile', {
+        url: '/users/:username',
+        templateUrl: 'modules/users/client/views/user-profile.client.view.html',
+        controller: 'UserProfileController',
+        resolve: {
+          profileResolve: ['$stateParams', 'Profile', function ($stateParams, Profile) {
+            return Profile.get({
+              username: $stateParams.username
+            });
+          }]
+        }
       });
   }
 ]);

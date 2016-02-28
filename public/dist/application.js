@@ -930,6 +930,18 @@ angular.module('users').config(['$stateProvider',
       .state('password.reset.form', {
         url: '/:token',
         templateUrl: 'modules/users/client/views/password/reset-password.client.view.html'
+      })
+      .state('profile', {
+        url: '/users/:username',
+        templateUrl: 'modules/users/client/views/user-profile.client.view.html',
+        controller: 'UserProfileController',
+        resolve: {
+          profileResolve: ['$stateParams', 'Profile', function ($stateParams, Profile) {
+            return Profile.get({
+              username: $stateParams.username
+            });
+          }]
+        }
       });
   }
 ]);
@@ -1131,6 +1143,17 @@ angular.module('users').controller('PasswordController', ['$scope', '$stateParam
         $scope.error = response.message;
       });
     };
+  }
+]);
+
+'use strict';
+
+angular.module('users').controller('UserProfileController', ['$scope', 'Authentication', 'Users', 'Pronouns', 'profileResolve',
+  function ($scope, Authentication, Users, Pronouns, profileResolve) {
+    $scope.authentication = Authentication;
+    $scope.profile = profileResolve;
+
+    $scope.user = Authentication.user;
   }
 ]);
 
@@ -1464,6 +1487,7 @@ angular.module('users').factory('Users', ['$resource',
   }
 ]);
 
+
 //TODO this should be Users service
 angular.module('users.admin').factory('Admin', ['$resource',
   function ($resource) {
@@ -1473,6 +1497,14 @@ angular.module('users.admin').factory('Admin', ['$resource',
       update: {
         method: 'PUT'
       }
+    });
+  }
+]);
+
+angular.module('users.admin').factory('Profile', ['$resource',
+  function ($resource) {
+    return $resource('api/users/profile/:username', {
+      username: '@_id'
     });
   }
 ]);

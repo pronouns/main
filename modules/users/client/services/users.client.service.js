@@ -11,6 +11,7 @@ angular.module('users').factory('Users', ['$resource',
   }
 ]);
 
+
 //TODO this should be Users service
 angular.module('users.admin').factory('Admin', ['$resource',
   function ($resource) {
@@ -20,6 +21,14 @@ angular.module('users.admin').factory('Admin', ['$resource',
       update: {
         method: 'PUT'
       }
+    });
+  }
+]);
+
+angular.module('users.admin').factory('Profile', ['$resource',
+  function ($resource) {
+    return $resource('api/users/profile/:username', {
+      username: '@_id'
     });
   }
 ]);

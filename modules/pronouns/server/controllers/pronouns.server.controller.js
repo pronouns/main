@@ -88,7 +88,7 @@ exports.delete = function (req, res) {
  * List of Pronouns
  */
 exports.list = function (req, res) {
-  Pronoun.find().sort('-created').populate('user', 'displayName').exec(function (err, pronouns) {
+  Pronoun.find().sort('-created').populate('user', 'displayName username').exec(function (err, pronouns) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -119,7 +119,7 @@ exports.pronounByID = function (req, res, next, id) {
     });
   }
 
-  Pronoun.findById(id).populate('user', 'displayName').exec(function (err, pronoun) {
+  Pronoun.findById(id).populate('user', 'displayName username').exec(function (err, pronoun) {
     if (err) {
       return next(err);
     } else if (!pronoun) {

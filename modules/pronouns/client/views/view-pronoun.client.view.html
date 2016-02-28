@@ -22,7 +22,7 @@
       Posted on
       <span ng-bind="pronoun.created | date:'mediumDate'"></span>
       by
-      <span ng-bind="pronoun.user.displayName"></span>
+      <a ng-bind="pronoun.user.displayName" ui-sref="profile({username: pronoun.user.username})"></a>
     </em>
   </small>
   <p class="lead" ng-bind="pronoun.content"></p>

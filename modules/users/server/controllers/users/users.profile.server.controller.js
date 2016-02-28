@@ -28,6 +28,9 @@ exports.update = function (req, res) {
     user.pronouns = user.pronouns.filter(function (value, index, self){
       return self.indexOf(value) === index;
     });
+    user.friends = user.friends.filter(function (value, index, self){
+      return self.indexOf(value) === index && value !== user._id;
+    });
     user.updated = Date.now();
     user.displayName = user.firstName + ' ' + user.lastName;
 
@@ -57,10 +60,12 @@ exports.update = function (req, res) {
  */
 exports.getUser = function (req, res) {
   User.populate(req.profile, { path: "pronouns" }, function(err, user) {
-    //TODO remove non-public data !!!
-    user.salt = undefined;
-    user.password = undefined;
-    res.json(user);
+    User.populate(user, { path: "friends", select: "username displayName" }, function(err, user) {
+      //TODO remove non-public data !!!
+      user.salt = undefined;
+      user.password = undefined;
+      res.json(user);
+    });
   });
 };
 /**

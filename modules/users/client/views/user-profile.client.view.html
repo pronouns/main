@@ -1,15 +1,46 @@
 <section>
   <div class="page-header">
-    <h1 ng-bind="profile.displayName"></h1>
+    <h1><span class="glyphicon glyphicon-user" style="color: #B74934;" ng-show="profile.roles.indexOf('admin') != -1"></span> <span class="glyphicon glyphicon-user" ng-hide="profile.roles.indexOf('admin') != -1"></span> <span ng-bind="profile.displayName"></span> <small ng-bind="profile.username"></small>
+      <span ng-hide="user._id === profile._id">
+        <a class="btn btn-info pull-right" ng-click="addFriend();" ng-show="user.friends.indexOf(profile._id) == -1">Add friend</a>
+        <a class="btn btn-danger pull-right" ng-click="removeFriend();" ng-hide="user.friends.indexOf(profile._id) == -1">Unfriend</a>
+      </span>
+    </h1>
   </div>
   <div class="row">
-    <div class="list-group">
-      <div ng-show="!profile.pronouns.length" class="list-group-item" >
-        <h4 class="list-group-item-heading"><i>No pronouns</i></h4>
+    <div class="col-md-6 col-sm-12">
+      <h2>User information</h2>
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <td>Name</td>
+            <td ng-bind="profile.displayName"></td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td ng-bind="profile.email"></td>
+          </tr>
+          <tr>
+            <td>Username</td>
+            <td ng-bind="profile.username"></td>
+          </tr>
+          <tr>
+            <td>User id</td>
+            <td ng-bind="profile._id"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-6 col-sm-12">
+      <h2>Pronouns</h2>
+      <div class="list-group">
+        <div ng-show="!profile.pronouns.length" class="list-group-item" >
+          <h4 class="list-group-item-heading"><i>No pronouns</i></h4>
+        </div>
+        <a ng-repeat="pronoun in profile.pronouns" ui-sref="pronouns.view({pronounId: pronoun._id})" class="list-group-item">
+          <h4 class="list-group-item-heading" ng-bind="pronoun.pattern"></h4>
+        </a>
       </div>
-      <a ng-repeat="pronoun in profile.pronouns" ui-sref="pronouns.view({pronounId: pronoun._id})" class="list-group-item">
-        <h4 class="list-group-item-heading" ng-bind="pronoun.pattern"></h4>
-      </a>
     </div>
   </div>
 </section>

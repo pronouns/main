@@ -90,6 +90,12 @@ var UserSchema = new Schema({
       ref: 'Pronoun'
     }]
   },
+  friends: {
+    type: [{
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }]
+  },
   updated: {
     type: Date
   },

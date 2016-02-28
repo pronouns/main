@@ -4,36 +4,41 @@
       This is a testing version. The database may be cleared at any time. Features may be broken and are subject to change.
     </p>
   </div>
-  <div class="jumbotron text-center">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12">
-       <h1>Pronouns!</h1>
+  <div ng-hide="authentication.user">
+    <div class="jumbotron text-center">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12">
+         <h1>Pronouns!</h1>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <p class="lead">
+          This is a cool app for updating your pronouns.
+        </p>
+      </div>
+      <div class="row">
+        <p>
+          <a class="btn btn-primary btn-lg" href="/authentication/signup">Sign me up</a>
+        </p>
       </div>
     </div>
-    <br>
     <div class="row">
-      <p class="lead">
-        This is a cool app for updating your pronouns.
-      </p>
-    </div>
-    <div class="row">
-      <p>
-        <a class="btn btn-primary btn-lg" href="/authentication/signup">Sign me up</a>
-      </p>
+      <div class="col-md-4 col-sm-12">
+        <h2>Register</h2>
+        <p>Create an account by providing your name, email, and a username. You can change anything later.</p>
+      </div>
+      <div class="col-md-4 col-sm-12">
+        <h2>Update</h2>
+        <p>Browse the available list of pronouns and find yours. Add them to your profile.</p>
+      </div>
+      <div class="col-md-4 col-sm-12">
+        <h2>Send</h2>
+        <p>Your friends will be able to check your updated pronouns.</p>
+      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-4 col-sm-12">
-      <h2>Register</h2>
-      <p>Create an account by providing your name, email, and a username. You can change anything later.</p>
-    </div>
-    <div class="col-md-4 col-sm-12">
-      <h2>Update</h2>
-      <p>Browse the available list of pronouns and find yours. Add them to your profile.</p>
-    </div>
-    <div class="col-md-4 col-sm-12">
-      <h2>Send</h2>
-      <p>Your friends will be able to check your updated pronouns. For more information on how we handle the list of pronouns, please </p>
-    </div>
+  <div ng-show="authentication.user">
+    <h1>You are logged in!</h1>
   </div>
 </section>

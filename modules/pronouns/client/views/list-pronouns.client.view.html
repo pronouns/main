@@ -10,15 +10,15 @@
     </div>
   </div>
   <div class="list-group">
-    <a ng-repeat="pronoun in pagedItems" ui-sref="pronouns.view({pronounId: pronoun._id})" class="list-group-item">
+    <div ng-repeat="pronoun in pagedItems" class="list-group-item">
       <small class="list-group-item-text">
         Created on
         <span ng-bind="pronoun.created | date:'mediumDate'"></span>
         by
-        <span ng-bind="pronoun.user.displayName"></span>
+        <a ng-bind="pronoun.user.displayName" ui-sref="profile({username: pronoun.user.username})"></a>
       </small>
-      <h4 class="list-group-item-heading" ng-bind="pronoun.pattern"></h4>
-    </a>
+      <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading" ng-bind="pronoun.pattern"></h4></a>
+    </div>
   </div>
 
   <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>

@@ -4,9 +4,13 @@
       <div ng-show="!pronouns.length" class="list-group-item" >
         <h4 class="list-group-item-heading"><i>No pronouns</i></h4>
       </div>
-      <a ng-repeat="pronoun in pronouns" ui-sref="pronouns.view({pronounId: pronoun._id})" class="list-group-item">
-        <h4 class="list-group-item-heading" ng-bind="pronoun.pattern"></h4>
-      </a>
+      <div ng-repeat="pronoun in pronouns" class="list-group-item">
+        <button class="btn btn-info btn-sm pull-right" ng-click="removeMine(pronoun);">
+          <i class="glyphicon glyphicon-minus"></i>
+        </button>
+        <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading" ng-bind="pronoun.pattern"></h4></a>
+
+      </div>
     </div>
   </div>
 </section>

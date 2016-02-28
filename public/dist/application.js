@@ -221,10 +221,20 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
 
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication',
-  function ($scope, Authentication) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'Users', 'Profile',
+  function ($scope, Authentication, Users, Profile) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
+    $scope.user = Authentication.user;
+
+    $scope.friends = [];
+    if($scope.user) {
+      $scope.user.friends.forEach(function (value) {
+        Profile.get({ username: value }, function (data) {
+          $scope.friends.push(data);
+        });
+      });
+    }
   }
 ]);
 
@@ -1154,6 +1164,31 @@ angular.module('users').controller('UserProfileController', ['$scope', 'Authenti
     $scope.profile = profileResolve;
 
     $scope.user = Authentication.user;
+
+    $scope.addFriend = function () {
+      if($scope.profile._id !== $scope.user._id) {
+        var user = new Users($scope.user);
+        user.friends.push($scope.profile._id);
+
+        user.$update(function (response) {
+          Authentication.user = response;
+        }, function (response) {
+          $scope.error = response.data.message;
+        });
+      }
+    };
+    $scope.removeFriend = function () {
+      if($scope.profile._id !== $scope.user._id) {
+        var user = new Users($scope.user);
+        user.friends.splice(user.friends.indexOf($scope.profile._id), 1);
+
+        user.$update(function (response) {
+          Authentication.user = response;
+        }, function (response) {
+          $scope.error = response.data.message;
+        });
+      }
+    };
   }
 ]);
 
@@ -1348,6 +1383,23 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$http
         $scope.pronouns.push(data);
       });
     });
+    $scope.removeMine = function (pronoun) {
+      var user = new Users($scope.user);
+      user.pronouns.splice(user.pronouns.indexOf(pronoun._id), 1);
+
+      user.$update(function (response) {
+        Authentication.user = response;
+        $scope.user = Authentication.user;
+        $scope.pronouns = [];
+        $scope.user.pronouns.forEach(function(value){
+          Pronouns.get({ pronounId: value }, function(data) {
+            $scope.pronouns.push(data);
+          });
+        });
+      }, function (response) {
+        $scope.error = response.data.message;
+      });
+    };
   }
 ]);
 

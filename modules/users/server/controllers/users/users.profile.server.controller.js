@@ -59,8 +59,8 @@ exports.update = function (req, res) {
  * Return public user details
  */
 exports.getUser = function (req, res) {
-  User.populate(req.profile, { path: "pronouns" }, function(err, user) {
-    User.populate(user, { path: "friends", select: "username displayName" }, function(err, user) {
+  User.populate(req.profile, { path: 'pronouns' }, function(err, user) {
+    User.populate(user, { path: 'friends', select: 'username displayName' }, function(err, user) {
       //TODO remove non-public data !!!
       user.salt = undefined;
       user.password = undefined;

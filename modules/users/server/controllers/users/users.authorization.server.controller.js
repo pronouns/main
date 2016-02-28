@@ -40,3 +40,30 @@ exports.userByUsername = function(req, res, next, username) {
     next();
   });
 };
+exports.userByUsernameOrId = function(req, res, next, usernameOrId) {
+
+  if (mongoose.Types.ObjectId.isValid(usernameOrId)) {
+    User.findOne({
+      _id: usernameOrId
+    }).exec(function (err, user) {
+      if (err) {
+        return next(err);
+      } else if (!user) {
+        return next(new Error('Failed to load User ' + usernameOrId));
+      }
+
+      req.profile = user;
+      next();
+    });
+  }
+  else{
+    User.findOne({
+      username: usernameOrId
+    }).exec(function(err, user) {
+      if (err) return next(err);
+      if (!user) return next(new Error('Failed to load User ' + usernameOrId));
+      req.profile = user;
+      next();
+    });
+  }
+};

@@ -39,6 +39,23 @@
     </div>
   </div>
   <div ng-show="authentication.user">
-    <h1>You are logged in!</h1>
+    <div class="alert alert-warning" ng-show="!friends.length">
+      <p>You have no friends.</p>
+    </div>
+    <div class="panel panel-default" ng-repeat="friend in friends">
+      <div class="panel-heading">
+        <a ui-sref="profile({username: friend.username})"><h3 class="panel-title" ng-bind="friend.displayName"></h3></a>
+      </div>
+      <div class="panel-body">
+        <div class="list-group">
+          <div ng-show="!friend.pronouns.length" class="list-group-item" >
+            <h4 class="list-group-item-heading"><i>No pronouns</i></h4>
+          </div>
+          <a ng-repeat="pronoun in friend.pronouns" ui-sref="pronouns.view({pronounId: pronoun._id})" class="list-group-item">
+            <h4 class="list-group-item-heading" ng-bind="pronoun.pattern"></h4>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>

@@ -11,9 +11,10 @@ module.exports = function (app) {
   app.route('/api/users/password').post(users.changePassword);
   app.route('/api/users/picture').post(users.changeProfilePicture);
 
-  app.route('/api/users/profile/:username').get(users.getUser);
+  app.route('/api/users/profile/:usernameOrId').get(users.getUser);
 
   // Finish by binding the user middleware
   app.param('userId', users.userByID);
   app.param('username', users.userByUsername);
+  app.param('usernameOrId', users.userByUsernameOrId);
 };

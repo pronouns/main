@@ -25,6 +25,9 @@ exports.update = function (req, res) {
   if (user) {
     // Merge existing user
     user = _.extend(user, req.body);
+    user.pronouns = user.pronouns.filter(function (value, index, self){
+      return self.indexOf(value) === index;
+    });
     user.updated = Date.now();
     user.displayName = user.firstName + ' ' + user.lastName;
 

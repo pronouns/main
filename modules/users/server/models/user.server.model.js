@@ -90,6 +90,9 @@ var UserSchema = new Schema({
       ref: 'Pronoun'
     }]
   },
+  metaPronoun: {
+    type: String
+  },
   friends: {
     type: [{
       type: Schema.Types.ObjectId,
@@ -198,7 +201,7 @@ UserSchema.statics.generateRandomPassphrase = function () {
         numbers: true,
         symbols: false,
         uppercase: true,
-        excludeSimilarCharacters: true,
+        excludeSimilarCharacters: true
       });
 
       // check if we need to remove any repeating characters.

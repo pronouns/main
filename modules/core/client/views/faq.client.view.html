@@ -1,0 +1,12 @@
+<section ng-controller="FaqController">
+  <div class="alert alert-danger">
+    <p>
+      This is a testing version. The database may be cleared at any time. Features may be broken and are subject to change.
+    </p>
+  </div>
+  <accordion close-others="true">
+    <accordion-group heading="{{faq.title}}" ng-repeat="faq in faqs">
+      {{faq.content}}
+    </accordion-group>
+  </accordion>
+</section>

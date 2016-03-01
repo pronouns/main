@@ -49,7 +49,8 @@
       <div class="panel-body">
         <div class="list-group">
           <div ng-show="!friend.pronouns.length" class="list-group-item" >
-            <h4 class="list-group-item-heading"><i>No pronouns</i></h4>
+            <h4 class="list-group-item-heading text-warning" ng-bind="friend.metaPronoun" tooltip-placement="bottom" tooltip="This is a 'meta'-pronoun. This pronoun was entered by the user and is not reviewed by staff."></h4>
+            <h4 class="list-group-item-heading text-muted" tooltip-placement="bottom" tooltip="This user has not set specific pronouns or a 'meta'-pronoun." ng-show="friend.metaPronoun == ''">Pronouns not set</h4>
           </div>
           <a ng-repeat="pronoun in friend.pronouns" ui-sref="pronouns.view({pronounId: pronoun._id})" class="list-group-item">
             <h4 class="list-group-item-heading" ng-bind="pronoun.pattern"></h4>

@@ -1,34 +1,45 @@
 <section ng-controller="PronounsController" ng-init="findOne()">
   <div class="page-header">
-    <h1 ng-bind="pronoun.pattern"></h1>
-  </div>
-  <div class="pull-right">
-    <a class="btn btn-info" ng-click="makeMine(pronoun);" ng-show="!hasPronoun(pronoun._id)">
-      <i class="glyphicon glyphicon-plus"></i>
-    </a>
-    <a class="btn btn-info" ng-click="removeMine(pronoun);" ng-show="hasPronoun(pronoun._id)">
-      <i class="glyphicon glyphicon-minus"></i>
-    </a>
-    <a class="btn btn-primary" ui-sref="pronouns.edit({pronounId: pronoun._id})" ng-show="user.roles.indexOf('admin') != -1">
-      <i class="glyphicon glyphicon-edit"></i>
-    </a>
-    <a class="btn btn-primary" ng-click="remove();" ng-show="user.roles.indexOf('admin') != -1">
-      <i class="glyphicon glyphicon-trash"></i>
-    </a>
+    <h1 style="font-size: 5.6vw;" ng-bind="pronoun.pattern"></h1>
   </div>
 
-  <small>
-    <em class="text-muted">
-      Posted on
-      <span ng-bind="pronoun.created | date:'mediumDate'"></span>
-      by
-      <a ng-bind="pronoun.user.displayName" ui-sref="profile({username: pronoun.user.username})"></a>
-    </em>
-  </small>
-  <p class="lead" ng-bind="pronoun.content"></p>
   <div class="container">
     <div class="row">
-      <div class="col col-md-6 col-sm-12">
+      <div class="col-md-6 col-sm-12">
+        <!-- This isn't private data, but only admins really need to see it -->
+        <small ng-show="user && user.roles.indexOf('admin') != -1">
+          <em class="text-muted">
+            Posted on
+            <span ng-bind="pronoun.created | date:'mediumDate'"></span>
+            by
+            <a ng-bind="pronoun.user.displayName" ui-sref="profile({username: pronoun.user.username})"></a>
+          </em>
+        </small>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div class="pull-right">
+          <a class="btn btn-info" ng-click="makeMine(pronoun);" ng-show="user && !hasPronoun(pronoun._id)">
+            <i class="glyphicon glyphicon-plus"></i>
+          </a>
+          <a class="btn btn-info" ng-click="removeMine(pronoun);" ng-show="user && hasPronoun(pronoun._id)">
+            <i class="glyphicon glyphicon-minus"></i>
+          </a>
+          <a class="btn btn-primary" ui-sref="pronouns.edit({pronounId: pronoun._id})" ng-show="user && user.roles.indexOf('admin') != -1">
+            <i class="glyphicon glyphicon-edit"></i>
+          </a>
+          <a class="btn btn-primary" ng-click="remove();" ng-show="user && user.roles.indexOf('admin') != -1">
+            <i class="glyphicon glyphicon-trash"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <p class="lead" ng-bind="pronoun.content"></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-sm-12">
         <table class="table">
           <tbody>
           <tr>

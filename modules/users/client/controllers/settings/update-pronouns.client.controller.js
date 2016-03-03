@@ -5,6 +5,7 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$http
 
     $scope.user = Authentication.user;
     $scope.pronouns = [];
+    $scope.testPronouns = [];
     $scope.sortableOptions = {
       stop: function(e, ui) {
         $scope.pronouns.forEach(function(value){
@@ -26,8 +27,9 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$http
       }
     };
     $scope.user.pronouns.forEach(function(value){
+      $scope.testPronouns.push(value);
       Pronouns.get({ pronounId: value }, function(data) {
-        $scope.pronouns.push(data);
+        $scope.pronouns[$scope.testPronouns.indexOf(data._id)] = data;
       });
     });
 

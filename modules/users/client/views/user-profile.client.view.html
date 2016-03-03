@@ -2,8 +2,8 @@
   <div class="page-header">
     <h1><span ng-bind="profile.displayName"></span> <small ng-bind="profile.username"></small>
       <span ng-hide="user._id === profile._id">
-        <a class="btn btn-info pull-right" ng-click="addFriend();" ng-show="user.friends.indexOf(profile._id) == -1">Add friend</a>
-        <a class="btn btn-danger pull-right" ng-click="removeFriend();" ng-hide="user.friends.indexOf(profile._id) == -1">Unfriend</a>
+        <a class="btn btn-info pull-right" ng-click="addFriend();" ng-show="user.friends.indexOf(profile._id) === -1">Add friend</a>
+        <a class="btn btn-danger pull-right" ng-click="removeFriend();" ng-show="user.friends.indexOf(profile._id) !== -1">Unfriend</a>
       </span>
     </h1>
   </div>

@@ -1510,7 +1510,12 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$http
         });
         $scope.user.pronouns = [];
         for(var i = 0; i < $scope.pronouns.length; i++){
-          $scope.user.pronouns.push($scope.pronouns[i]._id);
+          if($scope.pronouns[i]._id === null){
+            $scope.user.pronouns.push($scope.pronouns[i]); //If pronoun content hasn't been injected yet
+          }
+          else{
+            $scope.user.pronouns.push($scope.pronouns[i]._id);
+          }
         }
         var user = new Users($scope.user);
         user.$update(function (response) {

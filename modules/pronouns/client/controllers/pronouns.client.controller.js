@@ -5,6 +5,7 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
   function ($scope, $stateParams, $location, Users, Authentication, Pronouns) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
+    $scope.pronounType = 'X';
 
     $scope.hasPronoun = function (pronounId) {
       for (var i = 0; i < $scope.user.pronouns.length; i++) {
@@ -34,40 +35,6 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
         $scope.error = response.data.message;
       });
     };
-// Create new Pronoun
-    $scope.create = function (isValid) {
-      $scope.error = null;
-
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'pronounForm');
-
-        return false;
-      }
-
-// Create new Pronoun object
-      var pronoun = new Pronouns({
-        subject: this.subject,
-        object: this.object,
-        determiner: this.determiner,
-        possessive: this.possessive,
-        reflexive: this.reflexive
-      });
-
-// Redirect after save
-      pronoun.$save(function (response) {
-        $location.path('pronouns/' + response._id);
-
-// Clear form fields
-        $scope.subject = '';
-        $scope.object = '';
-        $scope.determiner = '';
-        $scope.possessive = '';
-        $scope.reflexive = '';
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-    };
-
 // Remove existing Pronoun
     $scope.remove = function (pronoun) {
       if (pronoun) {

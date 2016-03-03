@@ -32,7 +32,6 @@ exports.update = function (req, res) {
       return self.indexOf(value) === index && value !== user._id;
     });
     user.updated = Date.now();
-    user.displayName = user.firstName + ' ' + user.lastName;
 
     user.save(function (err) {
       if (err) {

@@ -14,11 +14,16 @@ var path = require('path'),
  */
 exports.create = function (req, res) {
   var pronoun = new Pronoun(req.body);
-
-  pronoun.pattern = pronoun.subject + '/' + pronoun.object + '/' + pronoun.determiner + '/' + pronoun.possessive + '/' + pronoun.reflexive;
+  console.log(pronoun.pronounType);
+  if(pronoun.pronounType === 'M' && pronoun.listed && req.user.roles.indexOf('admin') === -1){
+    return res.status(400).send({
+      message: 'Only admins can create public "M" pronouns'
+    });
+  }
   pronoun.user = req.user;
-
+  pronoun.pattern = pronoun.subject + '/' + pronoun.object + '/' + pronoun.determiner + '/' + pronoun.possessive + '/' + pronoun.reflexive;
   pronoun.save(function (err) {
+    console.log(err);
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -42,15 +47,17 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
   var pronoun = req.pronoun;
 
-
-  pronoun.subject = req.body.subject;
-  pronoun.object = req.body.object;
-  pronoun.determiner = req.body.determiner;
-  pronoun.possessive = req.body.possessive;
-  pronoun.reflexive = req.body.reflexive;
   pronoun.content = req.body.content;
+  pronoun.title = req.body.title;
 
-  pronoun.pattern = pronoun.subject + '/' + pronoun.object + '/' + pronoun.determiner + '/' + pronoun.possessive + '/' + pronoun.reflexive;
+  if(pronoun.pronounType === 'X') {
+    pronoun.subject = req.body.subject;
+    pronoun.object = req.body.object;
+    pronoun.determiner = req.body.determiner;
+    pronoun.possessive = req.body.possessive;
+    pronoun.reflexive = req.body.reflexive;
+    pronoun.pattern = pronoun.subject + '/' + pronoun.object + '/' + pronoun.determiner + '/' + pronoun.possessive + '/' + pronoun.reflexive;
+  }
 
   pronoun.save(function (err) {
     if (err) {
@@ -85,10 +92,24 @@ exports.delete = function (req, res) {
 };
 
 /**
- * List of Pronouns
+ * Public list of Pronouns
  */
 exports.list = function (req, res) {
-  Pronoun.find().sort('-created').populate('user', 'displayName username').exec(function (err, pronouns) {
+  Pronoun.find({ listed: true }).sort('-created').populate('user', 'displayName username').exec(function (err, pronouns) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(pronouns);
+    }
+  });
+};
+/**
+ * Personal list of Pronouns
+ */
+exports.listMine = function (req, res) {
+  Pronoun.find({ user: req.user._id, listed: false }).sort('-created').populate('user', 'displayName username').exec(function (err, pronouns) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -99,7 +120,7 @@ exports.list = function (req, res) {
   });
 };
 exports.findByPattern = function(req, res){
-  Pronoun.findOne({ pattern: req.params.subject + '/' + req.params.object + '/' + req.params.determiner + '/' + req.params.possessive + '/' + req.params.reflexive }, '_id', function(err, pronoun){
+  Pronoun.findOne({ pattern: req.params.subject + '/' + req.params.object + '/' + req.params.determiner + '/' + req.params.possessive + '/' + req.params.reflexive, listed: true }, '_id', function(err, pronoun){
     if(err !== null || pronoun === null){
       res.redirect('/pronouns');
     }

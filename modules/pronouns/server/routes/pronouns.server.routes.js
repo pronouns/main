@@ -12,6 +12,9 @@ module.exports = function (app) {
     .get(pronouns.list)
     .post(pronouns.create);
 
+  app.route('/api/pronouns/mine').all(pronounsPolicy.isAllowed)
+    .get(pronouns.listMine);
+
   // Single pronoun routes
   app.route('/api/pronouns/:pronounId').all(pronounsPolicy.isAllowed)
     .get(pronouns.read)
@@ -19,6 +22,7 @@ module.exports = function (app) {
     .delete(pronouns.delete);
 
   app.route('/:subject/:object/:determiner/:possessive/:reflexive').all(pronouns.findByPattern);
+
 
   // Finish by binding the pronoun middleware
   app.param('pronounId', pronouns.pronounByID);

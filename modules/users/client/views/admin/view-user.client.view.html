@@ -2,7 +2,7 @@
   <div class="page-header">
     <div class="row">
       <div class="col-md-6">
-        <h1 ng-bind="user.username"></h1>
+        <h1 ng-bind="user.username"></h1> <a ui-sref="profile({username: user.username})">View profile</a>
       </div>
       <div class="col-md-4">
         <a class="btn btn-primary" ui-sref="admin.user-edit({userId: user._id})">
@@ -18,13 +18,8 @@
   <div class="row">
     <div class="col-md-8">
       <div class="row">
-        <div class="col-md-3"><strong>First Name</strong></div>
-        <div class="col-md-6" ng-bind="user.firstName"></div>
-      </div>
-      <hr/>
-      <div class="row">
-        <div class="col-md-3"><strong>Last Name</strong></div>
-        <div class="col-md-6" ng-bind="user.lastName"></div>
+        <div class="col-md-3"><strong>Name</strong></div>
+        <div class="col-md-6" ng-bind="user.displayName"></div>
       </div>
       <hr/>
       <div class="row">
@@ -51,7 +46,7 @@
         <div class="col-md-3"><strong>Pronouns</strong></div>
         <div class="col-md-6">
           <ul ng-repeat="pronoun in user.pronouns">
-            <li type="text" ng-bind="pronoun.pattern"></li>
+            <li><a ui-sref="pronouns.view({pronounId: pronoun._id})"><span ng-show="pronoun.pronounType === 'X'" ng-bind="pronoun.pattern"></span><span ng-show="pronoun.pronounType === 'M'" ng-bind="pronoun.title"></span></a></li>
           </ul>
         </div>
 

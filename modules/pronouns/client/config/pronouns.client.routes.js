@@ -12,8 +12,18 @@ angular.module('pronouns').config(['$stateProvider',
       })
       .state('pronouns.list', {
         url: '',
+        abstract: true,
+        template: '<ui-view/>'
+      })
+      .state('pronouns.list.all', {
+        url: '',
         templateUrl: 'modules/pronouns/client/views/list-pronouns.client.view.html',
         controller: 'PronounListController'
+      })
+      .state('pronouns.list.mine', {
+        url: '/mine',
+        templateUrl: 'modules/pronouns/client/views/my-pronouns.client.view.html',
+        controller: 'MyPronounListController'
       })
       .state('pronouns.create', {
         url: '/create',

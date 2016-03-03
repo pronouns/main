@@ -20,6 +20,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/pronouns/:pronounId',
       permissions: '*'
+    }, {
+      resources: '/api/pronouns/mine',
+      permissions: '*'
     }]
   }, {
     roles: ['user'],
@@ -28,6 +31,9 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get', 'post']
     }, {
       resources: '/api/pronouns/:pronounId',
+      permissions: ['get']
+    }, {
+      resources: '/api/pronouns/mine',
       permissions: ['get']
     }]
   }, {
@@ -48,10 +54,10 @@ exports.invokeRolesPolicies = function () {
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
-  // If an pronoun is being processed and the current user created it then allow any manipulation
-  /*if (req.pronoun && req.user && req.pronoun.user.id === req.user.id) {
+  // If an pronoun is being processed and the current user created it then allow any manipulation, as long as the pronoun isn't a "listed" pronoun
+  if (req.pronoun && req.user && req.pronoun.user.id === req.user.id && !req.pronoun.listed) {
     return next();
-  }*/
+  }
 
   // Check for user roles
   acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {

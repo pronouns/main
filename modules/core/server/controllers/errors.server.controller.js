@@ -22,8 +22,10 @@ var getUniqueErrorMessage = function (err) {
  */
 exports.getErrorMessage = function (err) {
   var message = '';
-
-  if (err.code) {
+  if(err.message && err.errors === undefined){
+    message = err.message;
+  }
+  else if (err.code) {
     switch (err.code) {
       case 11000:
       case 11001:

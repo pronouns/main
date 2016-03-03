@@ -3,35 +3,27 @@
     <div ng-show="!pronouns.length" class="panel" >
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title">"Meta-pronouns"</h3>
+          <h3 class="panel-title">You haven't added any pronouns</h3>
         </div>
         <div class="panel-body">
-          <p>You haven't added any pronouns to your profile. This means you can select a general "meta" pronoun. These pronouns are non-specific and can't be processed by a computer. They usually outline an attitude toward pronouns as opposed to specifc pronouns. Examples are "no pronouns" and "anything goes".</p>
-          <form name="metaPronounForm" ng-submit="updateMetaPronoun(metaPronounForm.$valid)" novalidate autocomplete="off">
-            <div class="input-group">
-              <input type="text" ng-model="user.metaPronoun" typeahead="metaPronoun for metaPronoun in metaPronouns | filter:$viewValue | limitTo:8" class="form-control">
-              <span class="input-group-btn">
-                <button class="btn btn-default" type="submit">Update</button>
-              </span>
-            </div>
-            <br>
-            <div ng-show="success" class="text-center text-success">
-              <strong>Meta pronoun saved</strong>
-            </div>
-            <div ng-show="error" class="text-center text-danger">
-              <strong ng-bind="error"></strong>
-            </div>
-          </form>
+          <p>You haven't added any pronouns to your profile.</p>
         </div>
       </div>
     </div>
-    <div class="list-group">
-      <div ng-repeat="pronoun in pronouns" class="list-group-item">
-        <button class="btn btn-info btn-sm pull-right" ng-click="removeMine(pronoun);">
-          <i class="glyphicon glyphicon-minus"></i>
-        </button>
-        <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading" ng-bind="pronoun.pattern"></h4></a>
 
+    <div class="list-group" ui-sortable="sortableOptions" ng-model="pronouns">
+      <div ng-repeat="pronoun in pronouns" class="list-group-item">
+        <div class="pull-right">
+          <span class="label label-default" ng-show="pronoun.listed" tooltip="This pronoun is listed on the public pronoun list and can be used by anyone.">Public</span>
+          <span class="label label-default" ng-show="!pronoun.listed" tooltip="This pronoun was created by you and can only be used by you. You can make edits to it.">Unlisted</span>
+          <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">Standard</span>
+          <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">Non-standard</span>
+          <button class="btn btn-info btn-sm" ng-click="removeMine(pronoun);">
+            <i class="glyphicon glyphicon-minus"></i>
+          </button>
+        </div>
+        <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="pronoun.pronounType == 'X'"></h4><h4 class="list-group-item-heading" ng-bind="pronoun.title" ng-show="pronoun.pronounType == 'M'"></h4></a>
+        <small class="list-group-item-heading" ng-bind="pronoun.title" ng-show="pronoun.pronounType == 'X'"></small>
       </div>
     </div>
   </div>

@@ -118,7 +118,7 @@ ApplicationConfiguration.registerModule('pronouns');
 'use strict';
 
 // Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('users', ['core']);
+ApplicationConfiguration.registerModule('users', ['core', 'ui.sortable']);
 ApplicationConfiguration.registerModule('users.admin', ['core.admin']);
 ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.routes']);
 
@@ -588,20 +588,25 @@ angular.module('pronouns').run(['Menus',
   function (Menus) {
     // Add the pronouns dropdown item
     Menus.addMenuItem('topbar', {
-      title: 'pronouns',
-      state: 'pronouns',
+      title: 'List pronouns',
+      state: 'pronouns.list',
       type: 'dropdown',
       roles: ['*']
     });
 
     // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'pronouns', {
-      title: 'List pronouns',
-      state: 'pronouns.list'
+    Menus.addSubMenuItem('topbar', 'pronouns.list', {
+      title: 'Public pronouns',
+      state: 'pronouns.list.all'
     });
 
     // Add the dropdown create item
-    Menus.addSubMenuItem('topbar', 'pronouns', {
+    Menus.addSubMenuItem('topbar', 'pronouns.list', {
+      title: 'My pronouns',
+      state: 'pronouns.list.mine',
+      roles: ['user']
+    });
+    Menus.addMenuItem('topbar', {
       title: 'Create pronouns',
       state: 'pronouns.create',
       roles: ['user']
@@ -623,8 +628,18 @@ angular.module('pronouns').config(['$stateProvider',
       })
       .state('pronouns.list', {
         url: '',
+        abstract: true,
+        template: '<ui-view/>'
+      })
+      .state('pronouns.list.all', {
+        url: '',
         templateUrl: 'modules/pronouns/client/views/list-pronouns.client.view.html',
         controller: 'PronounListController'
+      })
+      .state('pronouns.list.mine', {
+        url: '/mine',
+        templateUrl: 'modules/pronouns/client/views/my-pronouns.client.view.html',
+        controller: 'MyPronounListController'
       })
       .state('pronouns.create', {
         url: '/create',
@@ -644,6 +659,75 @@ angular.module('pronouns').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       });
+  }
+]);
+
+'use strict';
+
+// Pronouns controller
+angular.module('pronouns').controller('CreatePronounController', ['$scope', '$stateParams', '$location', 'Users', 'Authentication', 'Pronouns',
+  function ($scope, $stateParams, $location, Users, Authentication, Pronouns) {
+    $scope.authentication = Authentication;
+    $scope.user = Authentication.user;
+    $scope.pronoun = {};
+
+    $scope.pronounType = 'X';
+
+    $scope.setType = function(type){
+      $scope.pronounType = type;
+    };
+
+    $scope.submit = function (isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'pronounForm');
+        return false;
+      }
+      var pronoun = {};
+      console.log($scope.pronounType);
+      if($scope.pronounType === 'X') {
+// Create new Pronoun object
+        pronoun = new Pronouns({
+          subject: $scope.pronoun.subject,
+          object: $scope.pronoun.object,
+          determiner: $scope.pronoun.determiner,
+          possessive: $scope.pronoun.possessive,
+          reflexive: $scope.pronoun.reflexive,
+          title: $scope.pronoun.title,
+          pronounType: 'X',
+          listed: $scope.pronoun.listed === true
+        });
+      }
+      if($scope.pronounType === 'M') {
+// Create new Pronoun object
+        pronoun = new Pronouns({
+          content: $scope.pronoun.content,
+          title: $scope.pronoun.title,
+          pronounType: 'M',
+          listed: $scope.pronoun.listed === true && $scope.user.roles.indexOf('admin') !== -1
+        });
+      }
+
+// Redirect after save
+      pronoun.$save(function (response) {
+        $location.path('pronouns/' + response._id);
+
+// Clear form fields
+        $scope.subject = '';
+        $scope.object = '';
+        $scope.determiner = '';
+        $scope.possessive = '';
+        $scope.reflexive = '';
+        $scope.title = '';
+        $scope.content = '';
+
+      }, function (errorResponse) {
+        console.log(errorResponse);
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
   }
 ]);
 
@@ -682,11 +766,52 @@ angular.module('pronouns').controller('PronounListController', ['$scope', '$filt
 
 'use strict';
 
+angular.module('pronouns').controller('MyPronounListController', ['$http', '$scope', '$filter', 'Users', 'Authentication',
+  function ($http, $scope, $filter, Users, Authentication) {
+    $scope.authentication = Authentication;
+    $scope.user = Authentication.user;
+
+    $http.get('/api/pronouns/mine', {}).then(function(response){
+      $scope.pronouns = response.data;
+      $scope.buildPager();
+
+    }, function(response){
+      console.log(response);
+    });
+
+    $scope.buildPager = function () {
+      $scope.pagedItems = [];
+      $scope.itemsPerPage = 15;
+      $scope.currentPage = 1;
+      $scope.figureOutItemsToDisplay();
+    };
+
+    $scope.figureOutItemsToDisplay = function () {
+      $scope.filteredItems = $filter('filter')($scope.pronouns, {
+        $: $scope.search
+      });
+      $scope.filterLength = $scope.filteredItems.length;
+      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
+      var end = begin + $scope.itemsPerPage;
+      $scope.pagedItems = $scope.filteredItems.slice(begin, end);
+    };
+
+    $scope.pageChanged = function () {
+      $scope.figureOutItemsToDisplay();
+    };
+  }
+]);
+
+
+
+'use strict';
+
 // Pronouns controller
 angular.module('pronouns').controller('PronounsController', ['$scope', '$stateParams', '$location', 'Users', 'Authentication', 'Pronouns',
   function ($scope, $stateParams, $location, Users, Authentication, Pronouns) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
+    $scope.pronounType = 'X';
 
     $scope.hasPronoun = function (pronounId) {
       for (var i = 0; i < $scope.user.pronouns.length; i++) {
@@ -716,40 +841,6 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
         $scope.error = response.data.message;
       });
     };
-// Create new Pronoun
-    $scope.create = function (isValid) {
-      $scope.error = null;
-
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'pronounForm');
-
-        return false;
-      }
-
-// Create new Pronoun object
-      var pronoun = new Pronouns({
-        subject: this.subject,
-        object: this.object,
-        determiner: this.determiner,
-        possessive: this.possessive,
-        reflexive: this.reflexive
-      });
-
-// Redirect after save
-      pronoun.$save(function (response) {
-        $location.path('pronouns/' + response._id);
-
-// Clear form fields
-        $scope.subject = '';
-        $scope.object = '';
-        $scope.determiner = '';
-        $scope.possessive = '';
-        $scope.reflexive = '';
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-    };
-
 // Remove existing Pronoun
     $scope.remove = function (pronoun) {
       if (pronoun) {
@@ -814,6 +905,7 @@ angular.module('pronouns').factory('Pronouns', ['$resource',
     });
   }
 ]);
+
 
 'use strict';
 
@@ -1405,15 +1497,35 @@ angular.module('users').controller('SettingsController', ['$scope', 'Authenticat
 
 angular.module('users').controller('UpdatePronounsController', ['$scope', '$http', '$location', 'Users', 'Authentication', 'Pronouns',
   function ($scope, $http, $location, Users, Authentication, Pronouns) {
-    $scope.metaPronouns = ['Anything goes', 'No pronouns', 'Only neo-pronouns'];
 
     $scope.user = Authentication.user;
     $scope.pronouns = [];
+    $scope.sortableOptions = {
+      stop: function(e, ui) {
+        $scope.pronouns.forEach(function(value){
+          Pronouns.get({ pronounId: value }, function(data) {
+            $scope.pronouns.push(data);
+          });
+        });
+        $scope.user.pronouns = [];
+        for(var i = 0; i < $scope.pronouns.length; i++){
+          $scope.user.pronouns.push($scope.pronouns[i]._id);
+        }
+        var user = new Users($scope.user);
+        user.$update(function (response) {
+          Authentication.user = response;
+          $scope.user = Authentication.user;
+        }, function (response) {
+          $scope.error = response.data.message;
+        });
+      }
+    };
     $scope.user.pronouns.forEach(function(value){
       Pronouns.get({ pronounId: value }, function(data) {
         $scope.pronouns.push(data);
       });
     });
+
     $scope.removeMine = function (pronoun) {
       var user = new Users($scope.user);
       user.pronouns.splice(user.pronouns.indexOf(pronoun._id), 1);
@@ -1427,26 +1539,6 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$http
             $scope.pronouns.push(data);
           });
         });
-      }, function (response) {
-        $scope.error = response.data.message;
-      });
-    };
-    $scope.updateMetaPronoun = function (isValid) {
-      $scope.success = $scope.error = null;
-
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'userForm');
-
-        return false;
-      }
-
-      var user = new Users($scope.user);
-
-      user.$update(function (response) {
-        $scope.$broadcast('show-errors-reset', 'userForm');
-
-        $scope.success = true;
-        Authentication.user = response;
       }, function (response) {
         $scope.error = response.data.message;
       });

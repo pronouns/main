@@ -48,11 +48,10 @@ exports.userByUsernameOrId = function(req, res, next, usernameOrId) {
     }).exec(function (err, user) {
       if (err) {
         return next(err);
-      } else if (!user) {
-        return next(new Error('Failed to load User ' + usernameOrId));
       }
-
-      req.profile = user;
+      if(!!user) {
+        req.profile = user;
+      }
       next();
     });
   }
@@ -60,9 +59,12 @@ exports.userByUsernameOrId = function(req, res, next, usernameOrId) {
     User.findOne({
       username: usernameOrId
     }).exec(function(err, user) {
-      if (err) return next(err);
-      if (!user) return next(new Error('Failed to load User ' + usernameOrId));
-      req.profile = user;
+      if (err) {
+        return next(err);
+      }
+      if(!!user) {
+        req.profile = user;
+      }
       next();
     });
   }

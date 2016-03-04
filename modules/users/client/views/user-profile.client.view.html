@@ -1,54 +1,67 @@
 <section>
-  <div class="page-header">
-    <h1><span ng-bind="profile.displayName"></span> <small ng-bind="profile.username"></small>
-      <span ng-hide="user._id === profile._id">
-        <a class="btn btn-info pull-right" ng-click="addFriend();" ng-show="user.friends.indexOf(profile._id) === -1">Add friend</a>
-        <a class="btn btn-danger pull-right" ng-click="removeFriend();" ng-show="user.friends.indexOf(profile._id) !== -1">Unfriend</a>
-      </span>
-    </h1>
-  </div>
-  <span class="label label-default" ng-show="profile.roles.indexOf('user') !== -1">User</span>
-  <span class="label label-danger" ng-show="profile.roles.indexOf('admin') !== -1" tooltip="This user is a member of the website staff and can make edits to the pronoun list.">Admin</span>
-  <div class="row">
-    <div class="col-md-6 col-sm-12">
-      <h2>User information</h2>
-      <table class="table table-striped">
-        <tbody>
-          <tr>
-            <td>Name</td>
-            <td ng-bind="profile.displayName"></td>
-          </tr>
-          <tr>
-            <td>Email</td>
-            <td ng-bind="profile.email"></td>
-          </tr>
-          <tr>
-            <td>Username</td>
-            <td ng-bind="profile.username"></td>
-          </tr>
-          <tr>
-            <td>User id</td>
-            <td ng-bind="profile._id"></td>
-          </tr>
-        </tbody>
-      </table>
+  <div ng-show="profile._id">
+    <div class="page-header">
+      <h1><span ng-bind="profile.displayName"></span> <small ng-bind="profile.username"></small>
+        <span ng-hide="user._id === profile._id">
+          <a class="btn btn-info pull-right" ng-click="addFriend();" ng-show="user.friends.indexOf(profile._id) === -1">Add friend</a>
+          <a class="btn btn-danger pull-right" ng-click="removeFriend();" ng-show="user.friends.indexOf(profile._id) !== -1">Unfriend</a>
+        </span>
+      </h1>
     </div>
-    <div class="col-md-6 col-sm-12">
-      <h2>Pronouns</h2>
-      <div class="list-group">
-        <div ng-show="!profile.pronouns.length" class="list-group-item" >
-          <h4 class="list-group-item-heading text-muted" tooltip-placement="bottom" tooltip="This user has not set any pronouns" ng-show="profile.metaPronoun == ''">Pronouns not set</h4>
-        </div>
-        <div ng-repeat="pronoun in profile.pronouns" class="list-group-item">
-          <div class="pull-right">
-            <span class="label label-default" ng-show="pronoun.listed" tooltip="This pronoun is listed on the public pronoun list and can be used by anyone.">Public</span>
-            <span class="label label-default" ng-show="!pronoun.listed" tooltip="This pronoun was created by you and can only be used by you. You can make edits to it.">Unlisted</span>
-            <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">Standard</span>
-            <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">Non-standard</span>
+    <span class="label label-default" ng-show="profile.roles.indexOf('user') !== -1">User</span>
+    <span class="label label-danger" ng-show="profile.roles.indexOf('admin') !== -1" tooltip="This user is a member of the website staff and can make edits to the pronoun list.">Admin</span>
+    <div class="row">
+      <div class="col-md-6 col-sm-12">
+        <h2>User information</h2>
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <td>Name</td>
+              <td ng-bind="profile.displayName"></td>
+            </tr>
+            <tr>
+              <td>Email</td>
+              <td ng-bind="profile.email"></td>
+            </tr>
+            <tr>
+              <td>Username</td>
+              <td ng-bind="profile.username"></td>
+            </tr>
+            <tr>
+              <td>User id</td>
+              <td ng-bind="profile._id"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <h2>Pronouns</h2>
+        <div class="list-group">
+          <div ng-show="!profile.pronouns.length" class="list-group-item" >
+            <h4 class="list-group-item-heading text-muted" tooltip-placement="bottom" tooltip="This user has not set any pronouns" ng-show="profile.metaPronoun == ''">Pronouns not set</h4>
           </div>
-          <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="pronoun.pronounType == 'X'"></h4><h4 class="list-group-item-heading" ng-bind="pronoun.title" ng-show="pronoun.pronounType == 'M'"></h4></a>
-          <small class="list-group-item-heading" ng-bind="pronoun.title" ng-show="pronoun.pronounType == 'X'"></small>
+          <div ng-repeat="pronoun in profile.pronouns" class="list-group-item">
+            <div class="pull-right">
+              <span class="label label-default" ng-show="pronoun.listed" tooltip="This pronoun is listed on the public pronoun list and can be used by anyone.">Public</span>
+              <span class="label label-default" ng-show="!pronoun.listed" tooltip="This pronoun was created by you and can only be used by you. You can make edits to it.">Unlisted</span>
+              <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">Standard</span>
+              <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">Non-standard</span>
+            </div>
+            <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="pronoun.pronounType == 'X'"></h4><h4 class="list-group-item-heading" ng-bind="pronoun.title" ng-show="pronoun.pronounType == 'M'"></h4></a>
+            <small class="list-group-item-heading" ng-bind="pronoun.title" ng-show="pronoun.pronounType == 'X'"></small>
+          </div>
         </div>
+      </div>
+    </div>
+  </div>
+  <div ng-show="!profile._id">
+    <br>
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        <div class="panel-title">User not found</div>
+      </div>
+      <div class="panel-body">
+        This user does not exist.
       </div>
     </div>
   </div>

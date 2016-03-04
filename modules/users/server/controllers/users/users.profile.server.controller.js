@@ -58,17 +58,24 @@ exports.update = function (req, res) {
  * Return public user details
  */
 exports.getUser = function (req, res) {
-  User.populate(req.profile, { path: 'pronouns' }, function(err, user) {
-    User.populate(user, { path: 'friends', select: 'username displayName' }, function(err, user) {
-      //TODO remove non-public data !!!
+  if(req.profile !== undefined) {
+    User.populate(req.profile, { path: 'pronouns' }, function (err, user) {
+      User.populate(user, { path: 'friends', select: 'username displayName' }, function (err, user) {
+        //TODO remove non-public data !!!
         // But like I already did that, sooooooooooo...
-          // Just going to have this chain of comments
-          // > Br
-      user.salt = undefined;
-      user.password = undefined;
-      res.json(user);
+        // Just going to have this chain of comments
+        // > Br
+        user.salt = undefined;
+        user.password = undefined;
+        res.json(user);
+      });
     });
-  });
+  }
+  else{
+    res.status(400).send({
+      message: 'That user doesn\'t exist'
+    });
+  }
 };
 /**
  * Update profile picture

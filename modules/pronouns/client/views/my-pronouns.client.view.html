@@ -21,10 +21,8 @@
         by
         <a ng-bind="pronoun.user.displayName" ui-sref="profile({username: pronoun.user.username})"></a>
       </small>-->
-      <h4 class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="pronoun.pronounType == 'X'"></h4>
-      <small class="list-group-item-heading" ng-bind="pronoun.title" ng-show="pronoun.pronounType == 'X'"></small>
-
-      <h4 class="list-group-item-heading" ng-bind="pronoun.title" ng-show="pronoun.pronounType == 'M'"></h4>
+      <h4 class="list-group-item-heading" ng-bind="pronoun.pattern" ng-hide="!!pronoun.title"></h4><h4 class="list-group-item-heading" ng-bind="pronoun.title"></h4>
+      <small class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
     </a>
   </div>
 

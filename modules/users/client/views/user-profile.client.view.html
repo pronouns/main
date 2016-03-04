@@ -37,7 +37,7 @@
       <div class="col-md-6 col-sm-12">
         <h2>Pronouns</h2>
         <div class="list-group">
-          <div ng-show="!profile.pronouns.length" class="list-group-item" >
+          <div ng-show="profile.pronouns.length === 0 || !profile.pronouns.length" class="list-group-item" >
             <h4 class="list-group-item-heading text-muted" tooltip-placement="bottom" tooltip="This user has not set any pronouns" ng-show="profile.metaPronoun == ''">Pronouns not set</h4>
           </div>
           <div ng-repeat="pronoun in profile.pronouns" class="list-group-item">
@@ -47,8 +47,8 @@
               <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">Standard</span>
               <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">Non-standard</span>
             </div>
-            <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="pronoun.pronounType == 'X'"></h4><h4 class="list-group-item-heading" ng-bind="pronoun.title" ng-show="pronoun.pronounType == 'M'"></h4></a>
-            <small class="list-group-item-heading" ng-bind="pronoun.title" ng-show="pronoun.pronounType == 'X'"></small>
+            <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading" ng-bind="pronoun.pattern" ng-hide="!!pronoun.title"></h4><h4 class="list-group-item-heading" ng-bind="pronoun.title"></h4></a>
+            <small class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
           </div>
         </div>
       </div>
@@ -63,6 +63,16 @@
       <div class="panel-body">
         This user does not exist.
       </div>
+    </div>
+  </div>
+  <div ng-show="!profile.$resolved">
+    <br>
+    <div class="sk-wave">
+      <div class="sk-rect sk-rect1"></div>
+      <div class="sk-rect sk-rect2"></div>
+      <div class="sk-rect sk-rect3"></div>
+      <div class="sk-rect sk-rect4"></div>
+      <div class="sk-rect sk-rect5"></div>
     </div>
   </div>
 </section>

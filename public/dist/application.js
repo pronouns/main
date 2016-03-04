@@ -889,6 +889,7 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
       $scope.pronoun = Pronouns.get({
         pronounId: $stateParams.pronounId
       });
+      console.log($scope.pronoun);
     };
   }
 ]);
@@ -1285,7 +1286,6 @@ angular.module('users').controller('UserProfileController', ['$scope', 'Authenti
   function ($scope, Authentication, Users, Pronouns, profileResolve) {
     $scope.authentication = Authentication;
     $scope.profile = profileResolve;
-    console.log($scope.profile);
 
     $scope.user = Authentication.user;
 

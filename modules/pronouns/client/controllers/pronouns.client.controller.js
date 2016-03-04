@@ -83,6 +83,7 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
       $scope.pronoun = Pronouns.get({
         pronounId: $stateParams.pronounId
       });
+      console.log($scope.pronoun);
     };
   }
 ]);

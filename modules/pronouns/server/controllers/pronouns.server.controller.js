@@ -21,7 +21,9 @@ exports.create = function (req, res) {
     });
   }
   pronoun.user = req.user;
-  pronoun.pattern = pronoun.subject + '/' + pronoun.object + '/' + pronoun.determiner + '/' + pronoun.possessive + '/' + pronoun.reflexive;
+  if(pronoun.pronounType === 'X') {
+    pronoun.pattern = pronoun.subject + '/' + pronoun.object + '/' + pronoun.determiner + '/' + pronoun.possessive + '/' + pronoun.reflexive;
+  }
   pronoun.save(function (err) {
     console.log(err);
     if (err) {

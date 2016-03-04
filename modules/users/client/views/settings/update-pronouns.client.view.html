@@ -29,8 +29,8 @@
             <i class="glyphicon glyphicon-minus"></i>
           </button>
         </div>
-        <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="pronoun.pronounType == 'X'"></h4><h4 class="list-group-item-heading" ng-bind="pronoun.title" ng-show="pronoun.pronounType == 'M'"></h4></a>
-        <small class="list-group-item-heading" ng-bind="pronoun.title" ng-show="pronoun.pronounType == 'X'"></small>
+        <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading" ng-bind="pronoun.pattern" ng-hide="!!pronoun.title"></h4><h4 class="list-group-item-heading" ng-bind="pronoun.title"></h4></a>
+        <small class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
       </div>
     </div>
   </div>

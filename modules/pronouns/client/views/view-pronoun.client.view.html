@@ -1,87 +1,106 @@
 <section ng-controller="PronounsController" ng-init="findOne()">
-  <div class="page-header">
+  <div ng-show="!!pronoun._id">
+    <div class="page-header">
+      <h1 style="font-size: 5.6vw">
+        <span ng-show="!pronoun.listed"><a class="text-muted" ui-sref="profile({username: pronoun.user.username})" ng-bind="pronoun.user.username"></a>:</span>
+        <span ng-bind="pronoun.title"></span>
+        <span ng-bind="pronoun.pattern" ng-hide="!!pronoun.title"></span><br>
+        <small ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
+      </h1>
+    </div>
 
-    <h1 style="font-size: 5.6vw;" ng-show="!pronoun.listed"><a class="text-muted" ui-sref="profile({username: pronoun.user.username})" ng-bind="pronoun.user.username"></a>:<span ng-bind="pronoun.pattern" ng-show="pronoun.pronounType == 'X'"></span><span ng-bind="pronoun.title" ng-show="pronoun.pronounType == 'M'"></span></h1>
-    <h1 style="font-size: 5.6vw;" ng-show="pronoun.listed"><span ng-bind="pronoun.pattern" ng-show="pronoun.pronounType == 'X'"></span> <span ng-bind="pronoun.title" ng-show="pronoun.pronounType == 'M'"></span></h1>
-  </div>
-
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6 col-sm-12">
-        <!-- This isn't private data, but only admins really need to see it -->
-        <small ng-show="user && user.roles.indexOf('admin') != -1">
-          <em class="text-muted">
-            Posted on
-            <span ng-bind="pronoun.created | date:'mediumDate'"></span>
-            by
-            <a ng-bind="pronoun.user.displayName" ui-sref="profile({username: pronoun.user.username})"></a>
-          </em>
-        </small>
-        <span class="label label-default" ng-show="pronoun.listed" tooltip="This pronoun is listed on the public pronoun list and can be used by anyone.">Public</span>
-        <span class="label label-default" ng-show="!pronoun.listed && user._id === pronoun.user._id" tooltip="This pronoun was created by you and can only be used by you. You can make edits to it.">Unlisted</span>
-        <span class="label label-default" ng-show="!pronoun.listed && user._id !== pronoun.user._id" tooltip="This pronoun was created by another user and belong to them. You can't add it to your profile.">Unlisted</span>
-        <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">Standard</span>
-        <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">Non-standard</span>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
+          <!-- This isn't private data, but only admins really need to see it -->
+          <small ng-show="user && user.roles.indexOf('admin') != -1">
+            <em class="text-muted">
+              Posted on
+              <span ng-bind="pronoun.created | date:'mediumDate'"></span>
+              by
+              <a ng-bind="pronoun.user.displayName" ui-sref="profile({username: pronoun.user.username})"></a>
+            </em>
+          </small>
+          <span class="label label-default" ng-show="pronoun.listed" tooltip="This pronoun is listed on the public pronoun list and can be used by anyone.">Public</span>
+          <span class="label label-default" ng-show="!pronoun.listed && user._id === pronoun.user._id" tooltip="This pronoun was created by you and can only be used by you. You can make edits to it.">Unlisted</span>
+          <span class="label label-default" ng-show="!pronoun.listed && user._id !== pronoun.user._id" tooltip="This pronoun was created by another user and belong to them. You can't add it to your profile.">Unlisted</span>
+          <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">Standard</span>
+          <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">Non-standard</span>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <div class="pull-right">
+            <a class="btn btn-info" ng-click="makeMine(pronoun);" ng-show="user && !hasPronoun(pronoun._id) && (pronoun.listed || pronoun.user._id == user._id)">
+              <i class="glyphicon glyphicon-plus"></i>
+            </a>
+            <a class="btn btn-info" ng-click="removeMine(pronoun);" ng-show="user && hasPronoun(pronoun._id)">
+              <i class="glyphicon glyphicon-minus"></i>
+            </a>
+            <a class="btn btn-primary" ui-sref="pronouns.edit({pronounId: pronoun._id})" ng-show="user && (user.roles.indexOf('admin') != -1 || (!pronoun.listed && pronoun.user._id == user._id))">
+              <i class="glyphicon glyphicon-edit"></i>
+            </a>
+            <a class="btn btn-primary" ng-click="remove();" ng-show="user && (user.roles.indexOf('admin') != -1 || (!pronoun.listed && pronoun.user._id == user._id))">
+              <i class="glyphicon glyphicon-trash"></i>
+            </a>
+          </div>
+        </div>
       </div>
-      <div class="col-md-6 col-sm-12">
-        <div class="pull-right">
-          <a class="btn btn-info" ng-click="makeMine(pronoun);" ng-show="user && !hasPronoun(pronoun._id) && (pronoun.listed || pronoun.user._id == user._id)">
-            <i class="glyphicon glyphicon-plus"></i>
-          </a>
-          <a class="btn btn-info" ng-click="removeMine(pronoun);" ng-show="user && hasPronoun(pronoun._id)">
-            <i class="glyphicon glyphicon-minus"></i>
-          </a>
-          <a class="btn btn-primary" ui-sref="pronouns.edit({pronounId: pronoun._id})" ng-show="user && (user.roles.indexOf('admin') != -1 || (!pronoun.listed && pronoun.user._id == user._id))">
-            <i class="glyphicon glyphicon-edit"></i>
-          </a>
-          <a class="btn btn-primary" ng-click="remove();" ng-show="user && (user.roles.indexOf('admin') != -1 || (!pronoun.listed && pronoun.user._id == user._id))">
-            <i class="glyphicon glyphicon-trash"></i>
-          </a>
+      <div class="row">
+        <div class="col-sm-12">
+          <p class="lead" ng-bind="pronoun.content"></p>
+        </div>
+      </div>
+      <div class="row" ng-show="pronoun.pronounType == 'X'">
+        <div class="col-md-6 col-sm-12">
+          <table class="table">
+            <tbody>
+            <tr>
+              <td>Subject Pronoun</td>
+              <td ng-bind="pronoun.subject"></td>
+            </tr>
+            <tr>
+              <td>Object Pronoun</td>
+              <td ng-bind="pronoun.object"></td>
+            </tr>
+            <tr>
+              <td>Possessive Determiner</td>
+              <td ng-bind="pronoun.determiner"></td>
+            </tr>
+            <tr>
+              <td>Possessive Pronoun</td>
+              <td ng-bind="pronoun.possessive"></td>
+            </tr>
+            <tr>
+              <td>Reflexive Pronoun</td>
+              <td ng-bind="pronoun.reflexive"></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col col-md-6 col-sm-12">
+          <div class="well">
+            <p>This morning, <b><span ng-bind="pronoun.subject"></span></b> went to the park.</p>
+            <p>I went with <b><span ng-bind="pronoun.object"></span></b>.</p>
+            <p>And <b><span ng-bind="pronoun.subject"></span></b> brought <b><span ng-bind="pronoun.determiner"></span></b> frisbee.</p>
+            <p>At least I think it was <b><span ng-bind="pronoun.possessive"></span></b>.</p>
+            <p>By the end of the day, <b><span ng-bind="pronoun.subject"></span></b> started throwing the frisbee to <b><span ng-bind="pronoun.reflexive"></span>.</b></p>
+          </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-sm-12">
-        <p class="lead" ng-bind="pronoun.content"></p>
-      </div>
-    </div>
-    <div class="row" ng-show="pronoun.pronounType == 'X'">
-      <div class="col-md-6 col-sm-12">
-        <table class="table">
-          <tbody>
-          <tr>
-            <td>Subject Pronoun</td>
-            <td ng-bind="pronoun.subject"></td>
-          </tr>
-          <tr>
-            <td>Object Pronoun</td>
-            <td ng-bind="pronoun.object"></td>
-          </tr>
-          <tr>
-            <td>Possessive Determiner</td>
-            <td ng-bind="pronoun.determiner"></td>
-          </tr>
-          <tr>
-            <td>Possessive Pronoun</td>
-            <td ng-bind="pronoun.possessive"></td>
-          </tr>
-          <tr>
-            <td>Reflexive Pronoun</td>
-            <td ng-bind="pronoun.reflexive"></td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="col col-md-6 col-sm-12">
-        <div class="well">
-          <p>This morning, <b><span ng-bind="pronoun.subject"></span></b> went to the park.</p>
-          <p>I went with <b><span ng-bind="pronoun.object"></span></b>.</p>
-          <p>And <b><span ng-bind="pronoun.subject"></span></b> brought <b><span ng-bind="pronoun.determiner"></span></b> frisbee.</p>
-          <p>At least I think it was <b><span ng-bind="pronoun.possessive"></span></b>.</p>
-          <p>By the end of the day, <b><span ng-bind="pronoun.subject"></span></b> started throwing the frisbee to <b><span ng-bind="pronoun.reflexive"></span>.</b></p>
-        </div>
-      </div>
+  </div>
+  <div ng-show="!!pronoun.$resolved && !pronoun._id">
+    <div class="page-header">
+      <h1 style="font-size: 5.6vw;">Pronoun doesn't exist</h1>
     </div>
   </div>
-
+  <div ng-show="!pronoun.$resolved && !pronoun._id">
+    <br>
+    <div class="sk-wave">
+      <div class="sk-rect sk-rect1"></div>
+      <div class="sk-rect sk-rect2"></div>
+      <div class="sk-rect sk-rect3"></div>
+      <div class="sk-rect sk-rect4"></div>
+      <div class="sk-rect sk-rect5"></div>
+    </div>
+  </div>
 </section>

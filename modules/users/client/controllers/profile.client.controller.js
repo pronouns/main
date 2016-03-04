@@ -4,7 +4,6 @@ angular.module('users').controller('UserProfileController', ['$scope', 'Authenti
   function ($scope, Authentication, Users, Pronouns, profileResolve) {
     $scope.authentication = Authentication;
     $scope.profile = profileResolve;
-    console.log($scope.profile);
 
     $scope.user = Authentication.user;
 

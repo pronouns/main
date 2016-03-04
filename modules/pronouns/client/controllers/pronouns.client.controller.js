@@ -21,6 +21,7 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
 
       user.$update(function (response) {
         Authentication.user = response;
+        $scope.user = response;
       }, function (response) {
         $scope.error = response.data.message;
       });
@@ -31,6 +32,7 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
 
       user.$update(function (response) {
         Authentication.user = response;
+        $scope.user = response;
       }, function (response) {
         $scope.error = response.data.message;
       });

@@ -1,6 +1,6 @@
 <section class="row" ng-controller="UpdatePronounsController">
   <div class="col-xs-offset-1 col-xs-10 col-md-offset-2 col-md-12">
-    <div ng-show="!pronouns.length" class="panel" >
+    <div ng-show="!pronouns.length && !user.pronouns.length" class="panel">
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">You haven't added any pronouns</h3>
@@ -9,6 +9,13 @@
           <p>You haven't added any pronouns to your profile.</p>
         </div>
       </div>
+    </div>
+    <div class="sk-wave" ng-show="!pronouns.length && !!user.pronouns.length">
+      <div class="sk-rect sk-rect1"></div>
+      <div class="sk-rect sk-rect2"></div>
+      <div class="sk-rect sk-rect3"></div>
+      <div class="sk-rect sk-rect4"></div>
+      <div class="sk-rect sk-rect5"></div>
     </div>
 
     <div class="list-group" ui-sortable="sortableOptions" ng-model="pronouns">

@@ -39,8 +39,15 @@
     </div>
   </div>
   <div ng-show="authentication.user">
-    <div class="alert alert-warning" ng-show="!friends.length">
+    <div class="alert alert-warning" ng-show="!friends.length && !user.friends.length">
       <p>You are <b>really</b> cool. You also haven't added any friends yet, so if you want to do that, you cn go to their profile and click "Add friend".</p>
+    </div>
+    <div class="sk-wave" ng-show="!friends.length && !!user.friends.length">
+      <div class="sk-rect sk-rect1"></div>
+      <div class="sk-rect sk-rect2"></div>
+      <div class="sk-rect sk-rect3"></div>
+      <div class="sk-rect sk-rect4"></div>
+      <div class="sk-rect sk-rect5"></div>
     </div>
     <div class="panel panel-default" ng-repeat="friend in friends">
       <div class="panel-heading">

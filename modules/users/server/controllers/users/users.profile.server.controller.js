@@ -58,27 +58,42 @@ exports.update = function (req, res) {
 exports.sendAlerts = function(req, res){
   var user = req.user;
   if(user) {
-    var userHasFacebook = user.additionalProvidersData && user.additionalProvidersData.facebook;
-    User.find({ friends: user._id }, function (err, docs) {
-      docs.forEach(function (target) {
-        if (target.additionalProvidersData && target.additionalProvidersData.facebook) {
-          console.log('sending to ' + target.username);
-          request
-            .post('https://graph.facebook.com/' + target.additionalProvidersData.facebook.id + '/notifications')
-            .on('response', function (response) {
-              if (response.statusCode === 200) {
-                //YAY
-              }
-            })
-            .form({
-              'access_token': config.facebook.clientID + '|' + config.facebook.clientSecret,
-              'href': 'users/' + user.username,
-              'template': 'Your friend ' + (userHasFacebook ? '@[' + user.additionalProvidersData.facebook.id + ']' : user.displayName) + ' has posted new pronouns.'
-            });
+    if(user.nextAlertAt === null || user.nextAlertAt < Date.now()) {
+      user.nextAlertAt = Date.now() + (120 * 1000); // 2 minutes
+      user.save(function(err){
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
         }
+        var userHasFacebook = user.additionalProvidersData && user.additionalProvidersData.facebook;
+        User.find({friends: user._id}, function (err, docs) {
+          docs.forEach(function (target) {
+            if (target.additionalProvidersData && target.additionalProvidersData.facebook) {
+              console.log('sending to ' + target.username);
+              request
+                .post('https://graph.facebook.com/' + target.additionalProvidersData.facebook.id + '/notifications')
+                .on('response', function (response) {
+                  if (response.statusCode === 200) {
+                    //YAY
+                  }
+                })
+                .form({
+                  'access_token': config.facebook.clientID + '|' + config.facebook.clientSecret,
+                  'href': 'users/' + user.username,
+                  'template': 'Your friend ' + (userHasFacebook ? '@[' + user.additionalProvidersData.facebook.id + ']' : user.displayName) + ' has posted new pronouns.'
+                });
+            }
+          });
+          res.json(user);
+        });
       });
-      res.json(user);
-    });
+    }
+    else{
+      res.status(400).send({
+        message: 'Rate limited'
+      });
+    }
   }
   else{
     res.status(400).send({

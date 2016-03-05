@@ -58,7 +58,7 @@ exports.update = function (req, res) {
 exports.sendAlerts = function(req, res){
   var user = req.user;
   if(user) {
-    if(user.nextAlertAt === null || user.nextAlertAt < Date.now()) {
+    if(user.nextAlertAt === undefined || user.nextAlertAt < Date.now()) {
       user.nextAlertAt = Date.now() + (30 * 1000); // 2 minutes
       user.save(function(err){
         if (err) {

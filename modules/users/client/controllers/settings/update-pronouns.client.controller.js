@@ -38,12 +38,13 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$http
       });
     });
     $scope.sendAlerts = function(){
+      console.log("hey");
       $http({
         method: 'GET',
         url: '/api/users/sendAlerts'
-      }).then(function successCallback(response) {
+      }).then(function(response) {
         console.log(response);
-      }, function errorCallback(response) {
+      }, function(response) {
         console.log(response);
       });
     };

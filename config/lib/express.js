@@ -139,7 +139,7 @@ module.exports.initModulesConfiguration = function (app, db) {
 module.exports.initHelmetHeaders = function (app) {
   // Use helmet to secure Express headers
   var SIX_MONTHS = 15778476000;
-  app.use(helmet.xframe());
+  //app.use(helmet.xframe());
   app.use(helmet.xssFilter());
   app.use(helmet.nosniff());
   app.use(helmet.ienoopen());

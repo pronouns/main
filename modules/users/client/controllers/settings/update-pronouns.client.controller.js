@@ -31,23 +31,20 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$http
         });
       }
     };
+    $scope.sendAlerts = function(){
+      console.log("hey");
+      $http.get('/api/users/sendAlerts', {}).then(function(response) {
+        console.log(response);
+      }, function(response) {
+        console.log(response);
+      });
+    };
     $scope.user.pronouns.forEach(function(value){
       $scope.testPronouns.push(value);
       Pronouns.get({ pronounId: value }, function(data) {
         $scope.pronouns[$scope.testPronouns.indexOf(data._id)] = data;
       });
     });
-    $scope.sendAlerts = function(){
-      console.log("hey");
-      $http({
-        method: 'GET',
-        url: '/api/users/sendAlerts'
-      }).then(function(response) {
-        console.log(response);
-      }, function(response) {
-        console.log(response);
-      });
-    };
     $scope.removeMine = function (pronoun) {
       var user = new Users($scope.user);
       user.pronouns.splice(user.pronouns.indexOf(pronoun._id), 1);

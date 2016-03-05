@@ -32,7 +32,6 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$http
       }
     };
     $scope.sendAlerts = function(){
-      console.log("hey");
       $http.get('/api/users/sendAlerts', {}).then(function(response) {
         console.log(response);
       }, function(response) {

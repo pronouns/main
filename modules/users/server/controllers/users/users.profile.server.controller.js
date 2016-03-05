@@ -67,8 +67,7 @@ exports.sendAlerts = function(req, res){
             .post('https://graph.facebook.com/' + target.additionalProvidersData.facebook.id + '/notifications')
             .on('response', function (response) {
               if (response.statusCode === 200) {
-                target.additionalProvidersData.facebook.nextMessageAt = Date.now() + 60 * 5; // 5 minutes
-                target.save();
+                //YAY
               }
             })
             .form({

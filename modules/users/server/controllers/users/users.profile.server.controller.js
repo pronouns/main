@@ -59,7 +59,7 @@ exports.sendAlerts = function(req, res){
   var user = req.user;
   if(user) {
     if(user.nextAlertAt === null || user.nextAlertAt < Date.now()) {
-      user.nextAlertAt = Date.now() + (120 * 1000); // 2 minutes
+      user.nextAlertAt = Date.now() + (30 * 1000); // 2 minutes
       user.save(function(err){
         if (err) {
           return res.status(400).send({

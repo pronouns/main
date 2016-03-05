@@ -1,5 +1,13 @@
 <section class="row" ng-controller="UpdatePronounsController">
   <div class="col-xs-offset-1 col-xs-10 col-md-offset-2 col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Send an update</h3>
+      </div>
+      <div class="panel-body">
+        <button class="btn btn-info" ng-click="sendAlerts()">Send alerts</button>
+      </div>
+    </div>
     <div ng-show="!pronouns.length && !user.pronouns.length" class="panel">
       <div class="panel panel-default">
         <div class="panel-heading">

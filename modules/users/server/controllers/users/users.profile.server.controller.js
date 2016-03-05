@@ -9,6 +9,7 @@ var _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   multer = require('multer'),
+  request = require('request'),
   config = require(path.resolve('./config/config')),
   User = mongoose.model('User');
 
@@ -49,6 +50,38 @@ exports.update = function (req, res) {
       }
     });
   } else {
+    res.status(400).send({
+      message: 'User is not signed in'
+    });
+  }
+};
+exports.sendAlerts = function(req, res){
+  var user = req.user;
+  if(user) {
+    var userHasFacebook = user.additionalProvidersData && user.additionalProvidersData.facebook;
+    User.find({ friends: user._id }, function (err, docs) {
+      docs.forEach(function (target) {
+        if (target.additionalProvidersData && target.additionalProvidersData.facebook) {
+          console.log('sending to ' + target.username);
+          request
+            .post('https://graph.facebook.com/' + target.additionalProvidersData.facebook.id + '/notifications')
+            .on('response', function (response) {
+              if (response.statusCode === 200) {
+                target.additionalProvidersData.facebook.nextMessageAt = Date.now() + 60 * 5; // 5 minutes
+                target.save();
+              }
+            })
+            .form({
+              'access_token': config.facebook.clientID + '|' + config.facebook.clientSecret,
+              'href': 'users/' + user.username,
+              'template': 'Your friend ' + (userHasFacebook ? '@[' + user.additionalProvidersData.facebook.id + ']' : user.displayName) + ' has posted new pronouns.'
+            });
+        }
+      });
+      res.json(user);
+    });
+  }
+  else{
     res.status(400).send({
       message: 'User is not signed in'
     });

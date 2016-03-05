@@ -37,7 +37,16 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$http
         $scope.pronouns[$scope.testPronouns.indexOf(data._id)] = data;
       });
     });
-
+    $scope.sendAlerts = function(){
+      $http({
+        method: 'GET',
+        url: '/api/users/sendAlerts'
+      }).then(function successCallback(response) {
+        console.log(response);
+      }, function errorCallback(response) {
+        console.log(response);
+      });
+    };
     $scope.removeMine = function (pronoun) {
       var user = new Users($scope.user);
       user.pronouns.splice(user.pronouns.indexOf(pronoun._id), 1);

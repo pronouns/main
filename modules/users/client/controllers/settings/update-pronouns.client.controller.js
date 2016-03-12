@@ -39,10 +39,16 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$http
       });
     };
     $scope.user.pronouns.forEach(function(value){
-      $scope.testPronouns.push(value);
-      Pronouns.get({ pronounId: value }, function(data) {
-        $scope.pronouns[$scope.testPronouns.indexOf(data._id)] = data;
-      });
+      if(typeof value !== 'string'){ // Pronoun has already been loaded into user object
+        $scope.testPronouns.push(value._id);
+        $scope.pronouns[$scope.testPronouns.indexOf(value._id)] = value;
+      }
+      else {
+        $scope.testPronouns.push(value);
+        Pronouns.get({ pronounId: value }, function (data) {
+          $scope.pronouns[$scope.testPronouns.indexOf(data._id)] = data;
+        });
+      }
     });
     $scope.removeMine = function (pronoun) {
       var user = new Users($scope.user);

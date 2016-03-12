@@ -67,7 +67,7 @@ exports.sendAlerts = function(req, res){
           });
         }
         var userHasFacebook = user.additionalProvidersData && user.additionalProvidersData.facebook;
-        User.find({friends: user._id}, function (err, docs) {
+        User.find({ friends: user._id }, function (err, docs) {
           docs.forEach(function (target) {
             if (target.additionalProvidersData && target.additionalProvidersData.facebook) {
               console.log('sending to ' + target.username);

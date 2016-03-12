@@ -1,12 +1,13 @@
 <section class="row" ng-controller="UpdatePronounsController">
   <div class="col-xs-offset-1 col-xs-10 col-md-offset-2 col-md-12">
-    <div class="panel panel-default">
+    <div class="panel panel-default" ng-show="user.canSendAlert">
       <div class="panel-heading">
         <h3 class="panel-title">Send an update <span class="label label-danger">beta</span></h3>
       </div>
       <div class="panel-body">
         <p>If you have made an update to your pronouns, you can tell your friends about it quickly. Sending alerts will dispatch alerts over Facebook to all of your friends who have connected their accounts to Facebook.</p>
         <button class="btn btn-info" ng-click="sendAlerts();">Send alerts</button>
+        <span ng-bind="error.alert"></span>
       </div>
     </div>
     <div ng-show="!pronouns.length && !user.pronouns.length" class="panel">

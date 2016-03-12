@@ -24,6 +24,9 @@ exports.update = function (req, res) {
   delete req.body.roles;
 
   if (user) {
+    if(req.body.pronouns !== user.pronouns){
+      req.body.canSendAlert = true;
+    }
     // Merge existing user
     user = _.extend(user, req.body);
     user.pronouns = user.pronouns.filter(function (value, index, self){
@@ -58,8 +61,9 @@ exports.update = function (req, res) {
 exports.sendAlerts = function(req, res){
   var user = req.user;
   if(user) {
-    if(user.nextAlertAt === undefined || user.nextAlertAt < Date.now()) {
+    if((user.nextAlertAt === undefined || user.nextAlertAt < Date.now()) && user.canSendAlert) {
       user.nextAlertAt = Date.now() + (30 * 1000); // 2 minutes
+      user.canSendAlert = false;
       user.save(function(err){
         if (err) {
           return res.status(400).send({

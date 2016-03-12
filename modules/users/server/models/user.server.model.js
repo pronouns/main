@@ -105,6 +105,9 @@ var UserSchema = new Schema({
   },
   nextAlertAt: {
     type: Date
+  },
+  canSendAlert: {
+    type: Boolean
   }
 });
 

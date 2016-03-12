@@ -4,6 +4,9 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$http
   function ($scope, $http, $location, Users, Authentication, Pronouns) {
 
     $scope.user = Authentication.user;
+    $scope.error = {
+      alert: ''
+    };
     $scope.pronouns = [];
     $scope.testPronouns = [];
     $scope.sortableOptions = {
@@ -33,9 +36,11 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$http
     };
     $scope.sendAlerts = function(){
       $http.get('/api/users/sendAlerts', {}).then(function(response) {
-        console.log(response);
+        $scope.error.alert = response.message;
+        $scope.user.canSendAlert = false;
       }, function(response) {
-        console.log(response);
+        $scope.error.alert = response.message;
+        $scope.user.canSendAlert = false;
       });
     };
     $scope.user.pronouns.forEach(function(value){

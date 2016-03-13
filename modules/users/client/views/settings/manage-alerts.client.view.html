@@ -1,0 +1,63 @@
+<section class="row" ng-controller="ManageAlertsController">
+  <div class="col-xs-offset-1 col-xs-10 col-md-offset-2 col-md-10">
+    <div class="alert alert-warning">
+      <p><b>Please note.</b> Only Facebook alerts are supported at this time.</p>
+    </div>
+    <form name="userForm" ng-submit="updateAlerts(userForm.$valid)" novalidate autocomplete="off">
+      <fieldset>
+        <div class="form-group panel panel-primary" show-errors ng-show="user.additionalProvidersData && user.additionalProvidersData.facebook">
+          <div class="panel-body">
+            <label for="facebook">Facebook</label>
+            <input type="checkbox" id="facebook" name="facebook" class="form-control" ng-model="alerts.facebook">
+            <div ng-messages="userForm.facebook.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">Can't enable Facebook alerts.</p>
+            </div>
+            <div ng-show="alerts.facebook">
+              <p>Facebook alerts will be sent to <b>{{user.additionalProvidersData.facebook.displayName}}</b>.</p>
+            </div>
+          </div>
+        </div>
+        <div class="form-group panel panel-default" show-errors>
+          <div class="panel-body">
+            <label for="email">Email</label>
+            <input type="checkbox" id="email" name="email" class="form-control" ng-model="alerts.email">
+            <div ng-messages="userForm.email.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">Can't enable email alerts.</p>
+            </div>
+            <div ng-show="alerts.email">
+              <p>Emails will be sent to <b>{{user.email}}</b></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="form-group" show-errors>
+              <label for="facebook">Pushbullet</label>
+              <input type="checkbox" id="pushbullet" name="pushbullet" class="form-control" ng-model="alerts.pushbullet">
+              <div ng-messages="userForm.pushbullet.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Can't enable Pushbullet alerts.</p>
+              </div>
+            </div>
+            <div class="form-group" show-errors ng-show="alerts.pushbullet">
+              <label for="facebook">Pushbullet Key</label>
+              <input type="text" id="pushbulletKey" name="pushbulletKey" class="form-control" ng-model="user.pushbulletKey" placeholder="You must enter an API key to push to.">
+              <div ng-messages="userForm.pushbulletKey.$error" role="alert">
+                <p class="help-block error-text">Can't enable Pushbullet alerts.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center form-group">
+          <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+        <div ng-show="success" class="text-center text-success">
+          <strong>Alerts Saved Successfully</strong>
+        </div>
+        <div ng-show="error" class="text-center text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

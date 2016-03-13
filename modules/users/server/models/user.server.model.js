@@ -103,6 +103,15 @@ var UserSchema = new Schema({
   resetPasswordExpires: {
     type: Date
   },
+  alertChannels: {
+    type: [{
+      type: String,
+      enum: ['facebook', 'email', 'pushbullet']
+    }]
+  },
+  pushbulletKey: {
+    type: String
+  },
   nextAlertAt: {
     type: Date
   },

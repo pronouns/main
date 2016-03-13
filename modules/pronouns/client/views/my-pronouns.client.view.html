@@ -12,8 +12,8 @@
   <div class="list-group">
     <a ui-sref="pronouns.view({pronounId: pronoun._id})" ng-repeat="pronoun in pagedItems" class="list-group-item">
       <div class="pull-right">
-        <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">Standard</span>
-        <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">Non-standard</span>
+        <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">S</span>
+        <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">NS</span>
       </div>
       <!--<small class="list-group-item-text">
         Created on

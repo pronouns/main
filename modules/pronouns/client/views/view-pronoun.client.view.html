@@ -11,7 +11,7 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-md-6 col-sm-12">
+        <div class="col-md-12">
           <!-- This isn't private data, but only admins really need to see it -->
           <small ng-show="user && user.roles.indexOf('admin') != -1">
             <em class="text-muted">
@@ -21,13 +21,10 @@
               <a ng-bind="pronoun.user.displayName" ui-sref="profile({username: pronoun.user.username})"></a>
             </em>
           </small>
-          <span class="label label-default" ng-show="pronoun.listed" tooltip="This pronoun is listed on the public pronoun list and can be used by anyone.">Public</span>
-          <span class="label label-default" ng-show="!pronoun.listed && user._id === pronoun.user._id" tooltip="This pronoun was created by you and can only be used by you. You can make edits to it.">Unlisted</span>
-          <span class="label label-default" ng-show="!pronoun.listed && user._id !== pronoun.user._id" tooltip="This pronoun was created by another user and belong to them. You can't add it to your profile.">Unlisted</span>
-          <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">Standard</span>
-          <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">Non-standard</span>
-        </div>
-        <div class="col-md-6 col-sm-12">
+          <span class="label label-default" ng-show="pronoun.listed" tooltip="This pronoun is listed on the public pronoun list and can be used by anyone.">P</span>
+          <span class="label label-default" ng-show="!pronoun.listed" tooltip="This pronoun was created by you and can only be used by you. You can make edits to it.">U</span>
+          <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">S</span>
+          <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">NS</span>
           <div class="pull-right">
             <a class="btn btn-info" ng-click="makeMine(pronoun);" ng-show="user && !hasPronoun(pronoun._id) && (pronoun.listed || pronoun.user._id == user._id)">
               <i class="glyphicon glyphicon-plus"></i>

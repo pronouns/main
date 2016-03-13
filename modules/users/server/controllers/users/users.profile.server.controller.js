@@ -11,7 +11,8 @@ var _ = require('lodash'),
   multer = require('multer'),
   request = require('request'),
   config = require(path.resolve('./config/config')),
-  User = mongoose.model('User');
+  User = mongoose.model('User'),
+  PushBullet = require('pushbullet');
 
 /**
  * Update user details
@@ -73,6 +74,7 @@ exports.sendAlerts = function(req, res){
         var userHasFacebook = user.additionalProvidersData && user.additionalProvidersData.facebook;
         User.find({ friends: user._id }, function (err, docs) {
           docs.forEach(function (target) {
+            // FACEBOOK
             if (target.additionalProvidersData && target.additionalProvidersData.facebook && target.alertChannels.indexOf('facebook') > -1) {
               console.log('sending to ' + target.username);
               request
@@ -87,6 +89,11 @@ exports.sendAlerts = function(req, res){
                   'href': 'users/' + user.username,
                   'template': 'Your friend ' + (userHasFacebook ? '@[' + user.additionalProvidersData.facebook.id + ']' : user.displayName) + ' has posted new pronouns.'
                 });
+            }
+            // PUSHBULLET
+            if(target.alertChannels.indexOf('pushbullet') > -1 && target.pushbulletKey){
+              var pusher = new PushBullet(target.pushbulletKey);
+              pusher.link({}, user.displayName + ' has posted new pronouns', 'https://pronouny.xyz/users/' + user.username, function(error, response) {});
             }
           });
           res.json(user);

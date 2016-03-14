@@ -22,10 +22,7 @@ var getUniqueErrorMessage = function (err) {
  */
 exports.getErrorMessage = function (err) {
   var message = '';
-  if(err.message && err.errors === undefined){
-    message = err.message;
-  }
-  else if (err.code) {
+  if (err.code) {
     switch (err.code) {
       case 11000:
       case 11001:
@@ -34,12 +31,15 @@ exports.getErrorMessage = function (err) {
       default:
         message = 'Something went wrong';
     }
-  } else {
+  } else if(err.errors !== undefined && err.errors.length !== 0) {
     for (var errName in err.errors) {
       if (err.errors[errName].message) {
         message = err.errors[errName].message;
       }
     }
+  }
+  else if(err.message){
+    message = err.message;
   }
 
   return message;

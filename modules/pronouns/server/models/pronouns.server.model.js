@@ -82,6 +82,8 @@ PronounSchema.pre('validate', function(next) {
     else{
       next(new Error('Pronoun must have content and a title.'));
     }
+  } else {
+    next(new Error('Pronoun must have a type.'));
   }
 });
 mongoose.model('Pronoun', PronounSchema);

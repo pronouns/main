@@ -1322,10 +1322,9 @@ angular.module('users').controller('UserProfileController', ['$scope', 'Authenti
 
 'use strict';
 
-angular.module('users').controller('ChangePasswordController', ['$scope', '$http', 'Authentication', 'PasswordValidator',
-  function ($scope, $http, Authentication, PasswordValidator) {
+angular.module('users').controller('ChangePasswordController', ['$scope', '$http', 'Authentication',
+  function ($scope, $http, Authentication) {
     $scope.user = Authentication.user;
-    $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 
     // Change user password
     $scope.changeUserPassword = function (isValid) {
@@ -1333,7 +1332,6 @@ angular.module('users').controller('ChangePasswordController', ['$scope', '$http
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'passwordForm');
-
         return false;
       }
 

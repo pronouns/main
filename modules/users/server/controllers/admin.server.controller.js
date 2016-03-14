@@ -22,9 +22,10 @@ exports.update = function (req, res) {
   var user = req.model;
 
   //For security purposes only merge these parameters
-  user.email = req.body.email;
-  user.username = req.body.username;
-  user.roles = req.body.roles;
+  user.email = req.body.email || user.email;
+  user.displayName = req.body.displayName || user.displayName;
+  user.username = req.body.username || user.username;
+  user.roles = req.body.roles || user.roles;
 
   user.save(function (err) {
     if (err) {

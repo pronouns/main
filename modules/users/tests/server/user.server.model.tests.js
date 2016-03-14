@@ -19,8 +19,6 @@ describe('User Model Unit Tests:', function () {
 
   before(function () {
     user1 = {
-      firstName: 'Full',
-      lastName: 'Name',
       displayName: 'Full Name',
       email: 'test@test.com',
       username: 'username',
@@ -30,8 +28,6 @@ describe('User Model Unit Tests:', function () {
     // user2 is a clone of user1
     user2 = user1;
     user3 = {
-      firstName: 'Different',
-      lastName: 'User',
       displayName: 'Full Different Name',
       email: 'test3@test.com',
       username: 'different_username',
@@ -75,10 +71,10 @@ describe('User Model Unit Tests:', function () {
       });
     });
 
-    it('should be able to show an error when trying to save without first name', function (done) {
+    it('should be able to show an error when trying to save without name', function (done) {
       var _user1 = new User(user1);
 
-      _user1.firstName = '';
+      _user1.displayName = '';
       _user1.save(function (err) {
         should.exist(err);
         done();
@@ -139,7 +135,7 @@ describe('User Model Unit Tests:', function () {
       _user1.save(function (err) {
         should.not.exist(err);
         var passwordBefore = _user1.password;
-        _user1.firstName = 'test';
+        _user1.disName = 'test';
         _user1.save(function (err) {
           var passwordAfter = _user1.password;
           passwordBefore.should.equal(passwordAfter);
@@ -260,66 +256,6 @@ describe('User Model Unit Tests:', function () {
 
       _user1.validate(function (err) {
         should.not.exist(err);
-      });
-    });
-
-    it('should not allow a less than 10 characters long - "P@$$w0rd!"', function (done) {
-      var _user1 = new User(user1);
-      _user1.password = 'P@$$w0rd!';
-
-      _user1.validate(function (err) {
-        err.errors.password.message.should.equal('The password must be at least 10 characters long.');
-        done();
-      });
-    });
-
-    it('should not allow a greater than 128 characters long.', function (done) {
-      var _user1 = new User(user1);
-      _user1.password = ')!/uLT="lh&:`6X!]|15o!$!TJf,.13l?vG].-j],lFPe/QhwN#{Z<[*1nX@n1^?WW-%_.*D)m$toB+N7z}kcN#B_d(f41h%w@0F!]igtSQ1gl~6sEV&r~}~1ub>If1c+';
-
-      _user1.validate(function (err) {
-        err.errors.password.message.should.equal('The password must be fewer than 128 characters.');
-        done();
-      });
-    });
-
-    it('should not allow more than 3 or more repeating characters - "P@$$w0rd!!!"', function (done) {
-      var _user1 = new User(user1);
-      _user1.password = 'P@$$w0rd!!!';
-
-      _user1.validate(function (err) {
-        err.errors.password.message.should.equal('The password may not contain sequences of three or more repeated characters.');
-        done();
-      });
-    });
-
-    it('should not allow a password with no uppercase letters - "p@$$w0rd!!"', function (done) {
-      var _user1 = new User(user1);
-      _user1.password = 'p@$$w0rd!!';
-
-      _user1.validate(function (err) {
-        err.errors.password.message.should.equal('The password must contain at least one uppercase letter.');
-        done();
-      });
-    });
-
-    it('should not allow a password with less than one number - "P@$$word!!"', function (done) {
-      var _user1 = new User(user1);
-      _user1.password = 'P@$$word!!';
-
-      _user1.validate(function (err) {
-        err.errors.password.message.should.equal('The password must contain at least one number.');
-        done();
-      });
-    });
-
-    it('should not allow a password with less than one special character - "Passw0rdss"', function (done) {
-      var _user1 = new User(user1);
-      _user1.password = 'Passw0rdss';
-
-      _user1.validate(function (err) {
-        err.errors.password.message.should.equal('The password must contain at least one special character.');
-        done();
       });
     });
   });

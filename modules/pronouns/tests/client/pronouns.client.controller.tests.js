@@ -53,7 +53,9 @@
       mockPronoun = new Pronouns({
         _id: '525a8422f6d0f87f0e407a33',
         title: 'An Pronoun about MEAN',
-        content: 'MEAN rocks!'
+        pronounType: 'M',
+        content: 'MEAN rocks!',
+        listed: false
       });
 
       // Mock logged in user
@@ -96,52 +98,6 @@
       // Test scope value
       expect(scope.pronoun).toEqualData(mockPronoun);
     }));
-
-    describe('$scope.create()', function () {
-      var samplePronounPostData;
-
-      beforeEach(function () {
-        // Create a sample pronoun object
-        samplePronounPostData = new Pronouns({
-          title: 'An Pronoun about MEAN',
-          content: 'MEAN rocks!'
-        });
-
-        // Fixture mock form input values
-        scope.title = 'An Pronoun about MEAN';
-        scope.content = 'MEAN rocks!';
-
-        spyOn($location, 'path');
-      });
-
-      it('should send a POST request with the form input values and then locate to new object URL', inject(function (Pronouns) {
-        // Set POST response
-        $httpBackend.expectPOST('api/pronouns', samplePronounPostData).respond(mockPronoun);
-
-        // Run controller functionality
-        scope.create(true);
-        $httpBackend.flush();
-
-        // Test form inputs are reset
-        expect(scope.title).toEqual('');
-        expect(scope.content).toEqual('');
-
-        // Test URL redirection after the pronoun was created
-        expect($location.path.calls.mostRecent().args[0]).toBe('pronouns/' + mockPronoun._id);
-      }));
-
-      it('should set scope.error if save error', function () {
-        var errorMessage = 'this is an error message';
-        $httpBackend.expectPOST('api/pronouns', samplePronounPostData).respond(400, {
-          message: errorMessage
-        });
-
-        scope.create(true);
-        $httpBackend.flush();
-
-        expect(scope.error).toBe(errorMessage);
-      });
-    });
 
     describe('$scope.update()', function () {
       beforeEach(function () {

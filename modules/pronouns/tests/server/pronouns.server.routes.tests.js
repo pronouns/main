@@ -41,14 +41,22 @@ describe('Pronoun CRUD tests', function () {
       email: 'test@test.com',
       username: credentials.username,
       password: credentials.password,
-      provider: 'local'
+      provider: 'local',
+      roles: ['user', 'admin']
     });
 
     // Save a user to the test db and create new pronoun
     user.save(function () {
       pronoun = {
-        title: 'Pronoun Title',
-        content: 'Pronoun Content'
+        pronounType: 'X',
+        subject: 'they',
+        object: 'them',
+        determiner: 'their',
+        possessive: 'theirs',
+        reflexive: 'themself',
+        pattern: 'they/them/their/theirs/themself',
+        user: user,
+        listed: true
       };
 
       done();
@@ -91,7 +99,7 @@ describe('Pronoun CRUD tests', function () {
 
                 // Set assertions
                 (pronouns[0].user._id).should.equal(userId);
-                (pronouns[0].title).should.match('Pronoun Title');
+                (pronouns[0].subject).should.match('they');
 
                 // Call the assertion callback
                 done();
@@ -110,9 +118,9 @@ describe('Pronoun CRUD tests', function () {
       });
   });
 
-  it('should not be able to save an pronoun if no title is provided', function (done) {
+  it('should not be able to save an pronoun if missing a component', function (done) {
     // Invalidate title field
-    pronoun.title = '';
+    pronoun.reflexive = '';
 
     agent.post('/api/auth/signin')
       .send(credentials)
@@ -132,7 +140,7 @@ describe('Pronoun CRUD tests', function () {
           .expect(400)
           .end(function (pronounSaveErr, pronounSaveRes) {
             // Set message assertion
-            (pronounSaveRes.body.message).should.match('Title cannot be blank');
+            (pronounSaveRes.body.message).should.match('Pronoun is missing a grammatical argument.');
 
             // Handle pronoun save error
             done(pronounSaveErr);
@@ -215,7 +223,7 @@ describe('Pronoun CRUD tests', function () {
       request(app).get('/api/pronouns/' + pronounObj._id)
         .end(function (req, res) {
           // Set assertion
-          res.body.should.be.instanceof(Object).and.have.property('title', pronoun.title);
+          res.body.should.be.instanceof(Object).and.have.property('reflexive', pronoun.reflexive);
 
           // Call the assertion callback
           done();

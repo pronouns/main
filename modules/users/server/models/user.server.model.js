@@ -80,9 +80,6 @@ var UserSchema = new Schema({
       ref: 'Pronoun'
     }]
   },
-  metaPronoun: {
-    type: String
-  },
   friends: {
     type: [{
       type: Schema.Types.ObjectId,

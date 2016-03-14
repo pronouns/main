@@ -12,7 +12,11 @@ var _ = require('lodash'),
   request = require('request'),
   config = require(path.resolve('./config/config')),
   User = mongoose.model('User'),
-  PushBullet = require('pushbullet');
+  PushBullet = require('pushbullet'),
+  nodemailer = require('nodemailer'),
+  sgTransport = require('nodemailer-sendgrid-transport');
+
+var smtpTransport = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 /**
  * Update user details
@@ -94,6 +98,22 @@ exports.sendAlerts = function(req, res){
             if(target.alertChannels.indexOf('pushbullet') > -1 && target.pushbulletKey){
               var pusher = new PushBullet(target.pushbulletKey);
               pusher.link({}, user.displayName + ' has posted new pronouns', 'https://pronouny.xyz/users/' + user.username, function(error, response) {});
+            }
+
+            // EMAIL
+            if(target.alertChannels.indexOf('email') > -1){
+              res.render(path.resolve('modules/users/server/templates/pronoun-update-alert-email'), {
+                user: user,
+                target: target
+              }, function (err, emailHTML) {
+                var mailOptions = {
+                  to: target.email,
+                  from: config.mailer.from,
+                  subject: 'Pronoun update',
+                  html: emailHTML
+                };
+                smtpTransport.sendMail(mailOptions, function (err) {});
+              });
             }
           });
           res.json(user);

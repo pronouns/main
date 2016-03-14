@@ -1,4 +1,6 @@
 # pronouns
+[![Build Status](https://travis-ci.org/pronouns/main.svg?branch=master)](https://travis-ci.org/pronouns/main)
+
 This is a cool application for managing pronoun sets.
 
 ## Prerequisites

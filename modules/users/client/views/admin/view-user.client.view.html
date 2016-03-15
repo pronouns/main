@@ -51,6 +51,16 @@
         </div>
 
       </div>
+      <hr/>
+      <div class="row">
+        <div class="col-md-3"><strong>Owned pronouns</strong></div>
+        <div class="col-md-6">
+          <ul ng-repeat="pronoun in ownedPronouns">
+            <li><a ui-sref="pronouns.view({pronounId: pronoun._id})"><span ng-show="pronoun.pronounType === 'X'" ng-bind="pronoun.pattern"></span><span ng-show="pronoun.pronounType === 'M'" ng-bind="pronoun.title"></span></a></li>
+          </ul>
+        </div>
+
+      </div>
     </div>
   </div>
 </section>

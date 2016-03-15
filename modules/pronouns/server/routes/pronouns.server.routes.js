@@ -15,6 +15,9 @@ module.exports = function (app) {
   app.route('/api/pronouns/mine').all(pronounsPolicy.isAllowed)
     .get(pronouns.listMine);
 
+  app.route('/api/pronouns/user/:userId').all(pronounsPolicy.isAllowed)
+    .get(pronouns.listUser);
+
   // Single pronoun routes
   app.route('/api/pronouns/:pronounId').all(pronounsPolicy.isAllowed)
     .get(pronouns.read)

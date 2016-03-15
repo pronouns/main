@@ -34,6 +34,11 @@ var UserSchema = new Schema({
     default: '',
     validate: [validateLocalStrategyProperty, 'Please fill in your name']
   },
+  //TODO
+  isPublic: {
+    type: Boolean,
+    default: true
+  },
   email: {
     type: String,
     unique: true,

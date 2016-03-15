@@ -18,6 +18,17 @@ angular.module('users.admin.routes').config(['$stateProvider',
             return Admin.get({
               userId: $stateParams.userId
             });
+          }],
+          ownedPronounsResolve: ['$stateParams', '$http', '$q', function ($stateParams, $http, $q) {
+            var deferred = $q.defer();
+
+            $http.get('/api/pronouns/user/' + $stateParams.userId, {}).then(function(response){
+              deferred.resolve(response.data);
+            }, function(response){
+              deferred.resolve([]);
+            });
+
+            return deferred.promise;
           }]
         }
       })
@@ -30,6 +41,17 @@ angular.module('users.admin.routes').config(['$stateProvider',
             return Admin.get({
               userId: $stateParams.userId
             });
+          }],
+          ownedPronounsResolve: ['$stateParams', '$http', '$q', function ($stateParams, $http, $q) {
+            var deferred = $q.defer();
+
+            $http.get('/api/pronouns/user/' + $stateParams.userId, {}).then(function(response){
+              deferred.resolve(response.data);
+            }, function(response){
+              deferred.resolve([]);
+            });
+
+            return deferred.promise;
           }]
         }
       });

@@ -23,6 +23,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/pronouns/mine',
       permissions: '*'
+    }, {
+      resources: '/api/pronouns/user/:userId',
+      permissions: '*'
     }]
   }, {
     roles: ['user'],

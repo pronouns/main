@@ -942,6 +942,17 @@ angular.module('users.admin.routes').config(['$stateProvider',
             return Admin.get({
               userId: $stateParams.userId
             });
+          }],
+          ownedPronounsResolve: ['$stateParams', '$http', '$q', function ($stateParams, $http, $q) {
+            var deferred = $q.defer();
+
+            $http.get('/api/pronouns/user/' + $stateParams.userId, {}).then(function(response){
+              deferred.resolve(response.data);
+            }, function(response){
+              deferred.resolve([]);
+            });
+
+            return deferred.promise;
           }]
         }
       })
@@ -954,6 +965,17 @@ angular.module('users.admin.routes').config(['$stateProvider',
             return Admin.get({
               userId: $stateParams.userId
             });
+          }],
+          ownedPronounsResolve: ['$stateParams', '$http', '$q', function ($stateParams, $http, $q) {
+            var deferred = $q.defer();
+
+            $http.get('/api/pronouns/user/' + $stateParams.userId, {}).then(function(response){
+              deferred.resolve(response.data);
+            }, function(response){
+              deferred.resolve([]);
+            });
+
+            return deferred.promise;
           }]
         }
       });
@@ -1118,10 +1140,12 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
 
 'use strict';
 
-angular.module('users.admin').controller('UserController', ['$scope', '$state', 'Authentication', 'userResolve',
-  function ($scope, $state, Authentication, userResolve) {
+angular.module('users.admin').controller('UserController', ['$scope', '$state', 'Authentication', 'userResolve', 'ownedPronounsResolve',
+  function ($scope, $state, Authentication, userResolve, ownedPronounsResolve) {
     $scope.authentication = Authentication;
     $scope.user = userResolve;
+    $scope.ownedPronouns = ownedPronounsResolve;
+
 
     $scope.remove = function (user) {
       if (confirm('Are you sure you want to delete this user?')) {

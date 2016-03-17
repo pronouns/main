@@ -54,4 +54,3 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$http
     };
   }
 ]);
-

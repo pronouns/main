@@ -17,7 +17,8 @@
     "owasp-password-strength-test": "~1.3.0",
     "jquery": "~2.2.1",
     "jquery-ui": "~1.11.4",
-    "angular-ui-sortable": "~0.13.4"
+    "angular-ui-sortable": "~0.13.4",
+    "jqueryui-touch-punch": "furf/jquery-ui-touch-punch"
   },
   "resolutions": {
     "angular": "~1.3"

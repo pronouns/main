@@ -10,20 +10,20 @@
     </div>
   </div>
   <div class="list-group">
-    <a ui-sref="pronouns.view({pronounId: pronoun._id})" ng-repeat="pronoun in pagedItems" class="list-group-item">
-      <div class="pull-right">
-        <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">S</span>
-        <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">NS</span>
+    <div ui-sref="pronouns.view({pronounId: pronoun._id})" ng-repeat="pronoun in pagedItems" class="list-group-item">
+      <div class="row">
+        <div class="col-sm-10 col-xs-12">
+          <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading titleOnPhone" ng-bind="pronoun.pattern" ng-hide="!!pronoun.title"></h4><h4 class="list-group-item-heading titleOnPhone" ng-bind="pronoun.title"></h4></a>
+          <small class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
+        </div>
+        <div class="col-sm-2 col-xs-12">
+          <div class="pull-right hideOnPhone">
+            <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">S</span>
+            <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">NS</span>
+          </div>
+        </div>
       </div>
-      <!--<small class="list-group-item-text">
-        Created on
-        <span ng-bind="pronoun.created | date:'mediumDate'"></span>
-        by
-        <a ng-bind="pronoun.user.displayName" ui-sref="profile({username: pronoun.user.username})"></a>
-      </small>-->
-      <h4 class="list-group-item-heading" ng-bind="pronoun.pattern" ng-hide="!!pronoun.title"></h4><h4 class="list-group-item-heading" ng-bind="pronoun.title"></h4>
-      <small class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
-    </a>
+    </div>
   </div>
 
   <pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></pagination>

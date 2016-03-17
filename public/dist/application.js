@@ -1667,7 +1667,6 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$http
   }
 ]);
 
-
 'use strict';
 
 angular.module('users')

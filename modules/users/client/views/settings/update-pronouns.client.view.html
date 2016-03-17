@@ -30,17 +30,19 @@
 
     <div class="list-group" ui-sortable="sortableOptions" ng-model="pronouns">
       <div ng-repeat="pronoun in pronouns" class="list-group-item">
-        <div class="pull-right">
-          <span class="label label-default" ng-show="pronoun.listed" tooltip="This pronoun is listed on the public pronoun list and can be used by anyone.">P</span>
-          <span class="label label-default" ng-show="!pronoun.listed" tooltip="This pronoun was created by you and can only be used by you. You can make edits to it.">U</span>
-          <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">S</span>
-          <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">NS</span>
-          <button class="btn btn-info btn-sm" ng-click="removeMine(pronoun);">
-            <i class="glyphicon glyphicon-minus"></i>
-          </button>
+        <div class="row">
+          <div class="col-sm-10 col-xs-12">
+            <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading titleOnPhone" ng-bind="pronoun.pattern" ng-hide="!!pronoun.title"></h4><h4 class="list-group-item-heading titleOnPhone" ng-bind="pronoun.title"></h4></a>
+            <small class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
+          </div>
+          <div class="col-sm-2 col-xs-12">
+            <div class="pull-right">
+              <button class="btn btn-info btn-sm" ng-click="removeMine(pronoun);">
+                <i class="glyphicon glyphicon-minus"></i>
+              </button>
+            </div>
+          </div>
         </div>
-        <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading" ng-bind="pronoun.pattern" ng-hide="!!pronoun.title"></h4><h4 class="list-group-item-heading" ng-bind="pronoun.title"></h4></a>
-        <small class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
       </div>
     </div>
   </div>

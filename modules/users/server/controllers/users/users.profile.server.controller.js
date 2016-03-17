@@ -202,7 +202,16 @@ exports.changeProfilePicture = function (req, res) {
     });
   }
 };
-
+exports.runSearch = function(req, res){
+  User.find({ $text : { $search : req.params.searchData } }).select('username displayName email').exec(function(err, results) {
+    if(err){
+      res.json([]);
+    }
+    else{
+      res.json(results);
+    }
+  });
+};
 /**
  * Send User
  */

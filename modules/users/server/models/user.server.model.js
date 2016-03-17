@@ -121,6 +121,7 @@ var UserSchema = new Schema({
     type: Boolean
   }
 });
+UserSchema.index({ displayName: 'text', email: 'text', username: 'text' });
 
 /**
  * Hook a pre save method to hash the password
@@ -223,5 +224,4 @@ UserSchema.statics.generateRandomPassphrase = function () {
     }
   });
 };
-
 mongoose.model('User', UserSchema);

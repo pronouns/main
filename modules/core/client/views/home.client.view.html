@@ -9,6 +9,17 @@
   </div>
   <div ng-show="authentication.user">
     <br>
+    <div class="row">
+      <div class="col-md-10" style="padding-top: 20px;">
+        <input type="text" ng-model="selectedUser" placeholder="Search for a user" typeahead="user as user.displayName for user in getUsers($viewValue)" typeahead-loading="loadingUsers" typeahead-no-results="noResults" typeahead-editable="false" typeahead-show-hint="true" class="form-control">
+        <!-- <i ng-show="loadingUsers" class="glyphicon glyphicon-refresh"></i> -->
+      </div>
+      <div class="col-md-2" style="padding-top: 20px;">
+        <button class="btn btn-primary" ng-class="{disabled: selectedUser === undefined}" style="width: 100%;" ng-click="addFriend()">Add friend</button>
+      </div>
+    </div>
+    <br>
+
     <div class="alert alert-warning" ng-show="!friends.length && !user.friends.length">
       <p>You are <b>really</b> cool. You also haven't added any friends yet, so if you want to do that, you can go to a user's profile and click "Add friend".</p>
     </div>

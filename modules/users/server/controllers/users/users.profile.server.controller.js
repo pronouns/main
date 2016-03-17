@@ -136,7 +136,7 @@ exports.sendAlerts = function(req, res){
  * Return public user details
  */
 exports.getUser = function (req, res) {
-  if(req.profile !== undefined) {
+  if(req.profile !== null) {
     User.populate(req.profile, { path: 'pronouns' }, function (err, user) {
       User.populate(user, { path: 'friends', select: 'username displayName' }, function (err, user) {
         //TODO remove non-public data !!!
@@ -145,6 +145,9 @@ exports.getUser = function (req, res) {
         // > Br
         user.salt = undefined;
         user.password = undefined;
+        user.resetPasswordToken = undefined;
+        user.pushbulletKey = undefined;
+
         res.json(user);
       });
     });

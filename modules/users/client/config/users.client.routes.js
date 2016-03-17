@@ -82,7 +82,7 @@ angular.module('users').config(['$stateProvider',
         controller: 'UserProfileController',
         resolve: {
           profileResolve: ['$stateParams', 'Profile', function ($stateParams, Profile) {
-            return Profile.get({
+            return Profile.byUsername({
               username: $stateParams.username
             });
           }]

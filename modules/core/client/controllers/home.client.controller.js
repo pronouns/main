@@ -9,7 +9,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.friends = [];
     if($scope.user) {
       $scope.user.friends.forEach(function (value) {
-        Profile.get({ username: value }, function (data) {
+        Profile.byId({ id: value }, function (data) {
           $scope.friends.push(data);
         });
       });

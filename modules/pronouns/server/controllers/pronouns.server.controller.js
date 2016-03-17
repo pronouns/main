@@ -134,7 +134,11 @@ exports.listUser = function (req, res) {
     }
   });
 };
-exports.findByPattern = function(req, res){
+exports.findByPattern = function(req, res, next){
+  if(req.params.subject === 'api'){
+    next();
+    return;
+  }
   Pronoun.findOne({ pattern: req.params.subject + '/' + req.params.object + '/' + req.params.determiner + '/' + req.params.possessive + '/' + req.params.reflexive, listed: true }, '_id', function(err, pronoun){
     if(err !== null || pronoun === null){
       res.redirect('/pronouns');

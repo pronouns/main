@@ -85,7 +85,7 @@ var UserSchema = new Schema({
       ref: 'Pronoun'
     }]
   },
-  friends: {
+  following: {
     type: [{
       type: Schema.Types.ObjectId,
       ref: 'User'

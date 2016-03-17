@@ -6,8 +6,8 @@
     <span class="label label-default" ng-show="profile.roles.indexOf('user') !== -1">User</span>
     <span class="label label-danger" ng-show="profile.roles.indexOf('admin') !== -1" tooltip="This user is a member of the website staff and can make edits to the pronoun list.">Admin</span>
     <span ng-hide="user._id === profile._id">
-          <a class="btn btn-info pull-right" ng-click="addFriend();" ng-show="user.friends.indexOf(profile._id) === -1">Add friend</a>
-          <a class="btn btn-danger pull-right" ng-click="removeFriend();" ng-show="user.friends.indexOf(profile._id) > -1">Unfriend</a>
+          <a class="btn btn-info pull-right" ng-click="addFollowing();" ng-show="user.following.indexOf(profile._id) === -1">Follow</a>
+          <a class="btn btn-danger pull-right" ng-click="removeFollowing();" ng-show="user.following.indexOf(profile._id) > -1">Unfollow</a>
       </span>
     <div class="row">
       <div class="col-md-6 col-sm-12">

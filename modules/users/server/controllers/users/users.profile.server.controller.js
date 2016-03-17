@@ -37,7 +37,7 @@ exports.update = function (req, res) {
     user.pronouns = user.pronouns.filter(function (value, index, self){
       return self.indexOf(value) === index;
     });
-    user.friends = user.friends.filter(function (value, index, self){
+    user.following = user.following.filter(function (value, index, self){
       return self.indexOf(value) === index && value !== user._id;
     });
     user.updated = Date.now();
@@ -76,7 +76,7 @@ exports.sendAlerts = function(req, res){
           });
         }
         var userHasFacebook = user.additionalProvidersData && user.additionalProvidersData.facebook;
-        User.find({ friends: user._id }, function (err, docs) {
+        User.find({ following: user._id }, function (err, docs) {
           docs.forEach(function (target) {
             // FACEBOOK
             if (target.additionalProvidersData && target.additionalProvidersData.facebook && target.alertChannels.indexOf('facebook') > -1) {
@@ -91,7 +91,7 @@ exports.sendAlerts = function(req, res){
                 .form({
                   'access_token': config.facebook.clientID + '|' + config.facebook.clientSecret,
                   'href': 'users/' + user.username,
-                  'template': 'Your friend ' + (userHasFacebook ? '@[' + user.additionalProvidersData.facebook.id + ']' : user.displayName) + ' has posted new pronouns.'
+                  'template': (userHasFacebook ? '@[' + user.additionalProvidersData.facebook.id + ']' : user.displayName) + ' has posted new pronouns.'
                 });
             }
             // PUSHBULLET
@@ -138,7 +138,7 @@ exports.sendAlerts = function(req, res){
 exports.getUser = function (req, res) {
   if(req.profile !== null) {
     User.populate(req.profile, { path: 'pronouns' }, function (err, user) {
-      User.populate(user, { path: 'friends', select: 'username displayName' }, function (err, user) {
+      User.populate(user, { path: 'following', select: 'username displayName' }, function (err, user) {
         //TODO remove non-public data !!!
         // But like I already did that, sooooooooooo...
         // Just going to have this chain of comments

@@ -256,20 +256,20 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
-    $scope.friends = [];
+    $scope.following = [];
     $scope.searchResults = [];
     $scope.selectedUser = undefined;
 
-    $scope.reloadFriends = function() {
-      $scope.friends = [];
+    $scope.reloadFollowing = function() {
+      $scope.following = [];
       if ($scope.user) {
-        $scope.user.friends.forEach(function (value) {
-          if (typeof value !== 'string') { // Friend has already been loaded into user object
-            $scope.friends[$scope.user.friends.indexOf(value._id)] = value;
+        $scope.user.following.forEach(function (value) {
+          if (typeof value !== 'string') { // Following has already been loaded into user object
+            $scope.following[$scope.user.following.indexOf(value._id)] = value;
           }
           else {
             Profile.byId({ id: value }, function (data) {
-              $scope.friends[$scope.user.friends.indexOf(data._id)] = data;
+              $scope.following[$scope.user.following.indexOf(data._id)] = data;
             });
           }
         });
@@ -279,7 +279,7 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
     $scope.getUsers = function(val) {
       return $http.get('/api/users/search/' + val).then(function(response){
         for(var i = response.data.length -1; i >= 0; i--){
-          if(response.data[i]._id === $scope.user._id || $scope.user.friends.indexOf(response.data[i]._id) > -1){
+          if(response.data[i]._id === $scope.user._id || $scope.user.following.indexOf(response.data[i]._id) > -1){
             response.data.splice(i, 1);
           }
         }
@@ -287,10 +287,10 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
         return response.data;
       });
     };
-    /*$scope.addFriend = function () {
+    /*$scope.addFollowing = function () {
       if($scope.profile._id !== $scope.user._id) {
         var user = new Users($scope.user);
-        user.friends.push($scope.profile._id);
+        user.following.push($scope.profile._id);
 
         user.$update(function (response) {
           Authentication.user = response;
@@ -299,18 +299,18 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
         });
       }
     };*/
-    $scope.addFriend = function(){
+    $scope.addFollowing = function(){
       console.log($scope.selectedUser);
       if($scope.selectedUser !== undefined && $scope.selectedUser._id){
         if($scope.selectedUser._id !== $scope.user._id) {
           var user = new Users($scope.user);
-          user.friends.push($scope.selectedUser._id);
+          user.following.push($scope.selectedUser._id);
 
           user.$update(function (response) {
             $scope.selectedUser = undefined;
             Authentication.user = response;
             $scope.user = Authentication.user;
-            $scope.reloadFriends();
+            $scope.reloadFollowing();
 
           }, function (response) {
             $scope.error = response.data.message;
@@ -318,7 +318,7 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
         }
       }
     };
-    $scope.reloadFriends();
+    $scope.reloadFollowing();
   }
 ]);
 
@@ -1408,25 +1408,29 @@ angular.module('users').controller('UserProfileController', ['$scope', 'Authenti
 
     $scope.user = Authentication.user;
 
-    $scope.addFriend = function () {
+    $scope.addFollowing = function () {
       if($scope.profile._id !== $scope.user._id) {
         var user = new Users($scope.user);
-        user.friends.push($scope.profile._id);
+        user.following.push($scope.profile._id);
+        console.log(user);
 
         user.$update(function (response) {
           Authentication.user = response;
+          $scope.user = response;
         }, function (response) {
           $scope.error = response.data.message;
         });
       }
     };
-    $scope.removeFriend = function () {
+    $scope.removeFollowing = function () {
       if($scope.profile._id !== $scope.user._id) {
         var user = new Users($scope.user);
-        user.friends.splice(user.friends.indexOf($scope.profile._id), 1);
+        user.following.splice(user.following.indexOf($scope.profile._id), 1);
+        console.log(user);
 
         user.$update(function (response) {
           Authentication.user = response;
+          $scope.user = response;
         }, function (response) {
           $scope.error = response.data.message;
         });

@@ -7,25 +7,29 @@ angular.module('users').controller('UserProfileController', ['$scope', 'Authenti
 
     $scope.user = Authentication.user;
 
-    $scope.addFriend = function () {
+    $scope.addFollowing = function () {
       if($scope.profile._id !== $scope.user._id) {
         var user = new Users($scope.user);
-        user.friends.push($scope.profile._id);
+        user.following.push($scope.profile._id);
+        console.log(user);
 
         user.$update(function (response) {
           Authentication.user = response;
+          $scope.user = response;
         }, function (response) {
           $scope.error = response.data.message;
         });
       }
     };
-    $scope.removeFriend = function () {
+    $scope.removeFollowing = function () {
       if($scope.profile._id !== $scope.user._id) {
         var user = new Users($scope.user);
-        user.friends.splice(user.friends.indexOf($scope.profile._id), 1);
+        user.following.splice(user.following.indexOf($scope.profile._id), 1);
+        console.log(user);
 
         user.$update(function (response) {
           Authentication.user = response;
+          $scope.user = response;
         }, function (response) {
           $scope.error = response.data.message;
         });

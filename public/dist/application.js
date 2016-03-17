@@ -1033,8 +1033,8 @@ angular.module('users').config(['$stateProvider',
         templateUrl: 'modules/users/client/views/settings/update-pronouns.client.view.html',
         'controller': 'UpdatePronounsController',
         resolve: {
-          pronounsResolve: ['$stateParams', 'Pronouns', 'Authentication', '$q', function ($stateParams, Pronouns, Authentication, $q) {
-            var deferred = $q.defer();
+          pronounsResolve: ['$stateParams', 'Pronouns', 'Profile', 'Authentication', '$q', function ($stateParams, Pronouns, Profile, Authentication, $q) {
+            /*var deferred = $q.defer();
             var processed = 0;
             var pronouns = [];
             var testPronouns = [];
@@ -1057,6 +1057,12 @@ angular.module('users').config(['$stateProvider',
                   }
                 });
               }
+            });
+            return deferred.promise;*/
+            //TODO make a better way for this
+            var deferred = $q.defer();
+            Profile.byId({ id: Authentication.user._id }, function (data) {
+              deferred.resolve(data.pronouns);
             });
             return deferred.promise;
           }]

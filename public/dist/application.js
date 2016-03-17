@@ -265,12 +265,10 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
       if ($scope.user) {
         $scope.user.following.forEach(function (value) {
           if (typeof value !== 'string') { // Following has already been loaded into user object
-            $scope.following[$scope.user.following.indexOf(value._id)] = value;
+            $scope.following.push(value);
           }
           else {
-            Profile.byId({ id: value }, function (data) {
-              $scope.following[$scope.user.following.indexOf(data._id)] = data;
-            });
+            $scope.following.push(Profile.byId({ id: value }));
           }
         });
       }
@@ -310,6 +308,7 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
             $scope.selectedUser = undefined;
             Authentication.user = response;
             $scope.user = Authentication.user;
+
             $scope.reloadFollowing();
 
           }, function (response) {
@@ -1191,6 +1190,11 @@ angular.module('users').config(['$stateProvider',
             return Profile.byUsername({
               username: $stateParams.username
             });
+          }],
+          followersResolve: ['$stateParams', 'Followers', function ($stateParams, Followers) {
+            return Followers.byUsername({
+              username: $stateParams.username
+            });
           }]
         }
       });
@@ -1401,10 +1405,32 @@ angular.module('users').controller('PasswordController', ['$scope', '$stateParam
 
 'use strict';
 
-angular.module('users').controller('UserProfileController', ['$scope', 'Authentication', 'Users', 'Pronouns', 'profileResolve',
-  function ($scope, Authentication, Users, Pronouns, profileResolve) {
+angular.module('users').controller('UserProfileController', ['$scope', 'Authentication', 'Users', 'Pronouns', 'profileResolve', 'followersResolve',
+  function ($scope, Authentication, Users, Pronouns, profileResolve, followersResolve) {
     $scope.authentication = Authentication;
     $scope.profile = profileResolve;
+    $scope.limits = {
+      friends: 5,
+      followers: 5,
+      following: 5
+    };
+    $scope.profile.$promise.then(function() {
+      $scope.profile.followers = followersResolve;
+      $scope.createFriendList();
+    });
+
+    $scope.createFriendList = function() {
+      $scope.profile.friends = [];
+      for (var i = $scope.profile.following.length - 1; i >= 0; i--) {
+        for(var j = $scope.profile.followers.length - 1; j >= 0; j--){
+          if($scope.profile.following[i]._id === $scope.profile.followers[j]._id){
+            $scope.profile.friends.push($scope.profile.following[i]);
+            $scope.profile.followers.splice(j, 1);
+            $scope.profile.following.splice(i, 1);
+          }
+        }
+      }
+    };
 
     $scope.user = Authentication.user;
 
@@ -1412,11 +1438,12 @@ angular.module('users').controller('UserProfileController', ['$scope', 'Authenti
       if($scope.profile._id !== $scope.user._id) {
         var user = new Users($scope.user);
         user.following.push($scope.profile._id);
-        console.log(user);
 
         user.$update(function (response) {
           Authentication.user = response;
           $scope.user = response;
+          $scope.profile.followers.push($scope.user);
+          $scope.createFriendList();
         }, function (response) {
           $scope.error = response.data.message;
         });
@@ -1426,15 +1453,28 @@ angular.module('users').controller('UserProfileController', ['$scope', 'Authenti
       if($scope.profile._id !== $scope.user._id) {
         var user = new Users($scope.user);
         user.following.splice(user.following.indexOf($scope.profile._id), 1);
-        console.log(user);
 
         user.$update(function (response) {
           Authentication.user = response;
           $scope.user = response;
+          for(var i = $scope.profile.followers.length - 1; i >= 0; i--){
+            if($scope.profile.followers[i]._id === $scope.user._id){
+              $scope.profile.followers.splice(i, 1);
+            }
+          }
+          for(var j = $scope.profile.friends.length - 1; j >= 0; j--){
+            if($scope.profile.friends[j]._id === $scope.user._id){
+              $scope.profile.friends.splice(j, 1);
+              $scope.profile.following.push($scope.user);
+            }
+          }
         }, function (response) {
           $scope.error = response.data.message;
         });
       }
+    };
+    $scope.loadMore = function(thing) {
+      $scope.limits[thing] = $scope.profile[thing].length + 5; //Just to be safe :P
     };
   }
 ]);
@@ -1873,6 +1913,25 @@ angular.module('users').factory('Profile', ['$resource',
       'byId': {
         method: 'GET',
         url: 'api/users/profile/id/:id'
+      }
+    });
+  }
+]);
+angular.module('users').factory('Followers', ['$resource',
+  function ($resource) {
+    return $resource('api/users/followers/get/:id/:username', {
+      username: '@username',
+      id: '@id'
+    }, {
+      'byUsername': {
+        method: 'GET',
+        url: 'api/users/followers/username/:username',
+        isArray: true
+      },
+      'byId': {
+        method: 'GET',
+        url: 'api/users/followers/id/:id',
+        isArray: true
       }
     });
   }

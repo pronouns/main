@@ -19,6 +19,11 @@ module.exports = function (app) {
 
   app.route('/api/users/profile/get/:usernameOrId').get(users.getUser);
 
+  app.route('/api/users/followers/id/:userIdSafe').get(users.getFollowers);
+  app.route('/api/users/followers/username/:username').get(users.getFollowers);
+
+  app.route('/api/users/followers/get/:usernameOrId').get(users.getFollowers);
+
   // Finish by binding the user middleware
 
   app.param('userIdSafe', users.userByIdSafe);

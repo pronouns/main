@@ -121,6 +121,11 @@ angular.module('users').config(['$stateProvider',
             return Profile.byUsername({
               username: $stateParams.username
             });
+          }],
+          followersResolve: ['$stateParams', 'Followers', function ($stateParams, Followers) {
+            return Followers.byUsername({
+              username: $stateParams.username
+            });
           }]
         }
       });

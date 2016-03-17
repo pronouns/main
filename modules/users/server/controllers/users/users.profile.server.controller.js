@@ -138,7 +138,7 @@ exports.sendAlerts = function(req, res){
 exports.getUser = function (req, res) {
   if(req.profile !== null) {
     User.populate(req.profile, { path: 'pronouns' }, function (err, user) {
-      User.populate(user, { path: 'following', select: 'username displayName' }, function (err, user) {
+      User.populate(user, { path: 'following', select: 'username displayName email' }, function (err, user) {
         //TODO remove non-public data !!!
         // But like I already did that, sooooooooooo...
         // Just going to have this chain of comments
@@ -150,6 +150,23 @@ exports.getUser = function (req, res) {
 
         res.json(user);
       });
+    });
+  }
+  else{
+    res.status(400).send({
+      message: 'That user doesn\'t exist'
+    });
+  }
+};
+exports.getFollowers = function (req, res){
+  if(req.profile !== null) {
+    User.find({ following: req.profile._id }).select('displayName email username').exec(function (err, docs) {
+      if(err){
+        res.json([]);
+      }
+      else {
+        res.json(docs);
+      }
     });
   }
   else{

@@ -52,6 +52,39 @@
         </div>
       </div>
     </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4 col-sm-12">
+        <h2>Friends</h2>
+        <p ng-show="!profile.friends.length">This user doesn't have any friends yet.</p>
+        <div class="list-group">
+          <div ng-repeat="friend in profile.friends | limitTo:limits.friends" class="list-group-item" ui-sref="profile({username: friend.username})">
+            <span class="list-group-item-heading" ng-bind="friend.displayName"></span>
+          </div>
+          <a ng-show="profile.friends.length > limits.friends" ng-click="loadMore('friends')">Load more...</a>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-12" >
+        <h2>Following</h2>
+        <p ng-show="!profile.following.length">This user isn't following anyone.</p>
+        <div class="list-group">
+          <div ng-repeat="followed in profile.following | limitTo:limits.following" class="list-group-item" ui-sref="profile({username: followed.username})">
+            <span class="list-group-item-heading" ng-bind="followed.displayName"></span>
+          </div>
+          <a ng-show="profile.following.length > limits.following" ng-click="loadMore('following')">Load more...</a>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-12">
+        <h2>Followers</h2>
+        <p ng-show="!profile.followers.length">This user doesn't have any followers.</p>
+        <div class="list-group">
+          <div ng-repeat="follower in profile.followers | limitTo:limits.followers" class="list-group-item" ui-sref="profile({username: follower.username})">
+            <span class="list-group-item-heading" ng-bind="follower.displayName"></span>
+          </div>
+          <a ng-show="profile.followers.length > limits.followers" ng-click="loadMore('followers')">Load more...</a>
+        </div>
+      </div>
+    </div>
   </div>
   <div ng-show="!profile._id && !!profile.$resolved">
     <br>

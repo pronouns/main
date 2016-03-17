@@ -15,12 +15,10 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
       if ($scope.user) {
         $scope.user.following.forEach(function (value) {
           if (typeof value !== 'string') { // Following has already been loaded into user object
-            $scope.following[$scope.user.following.indexOf(value._id)] = value;
+            $scope.following.push(value);
           }
           else {
-            Profile.byId({ id: value }, function (data) {
-              $scope.following[$scope.user.following.indexOf(data._id)] = data;
-            });
+            $scope.following.push(Profile.byId({ id: value }));
           }
         });
       }
@@ -60,6 +58,7 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
             $scope.selectedUser = undefined;
             Authentication.user = response;
             $scope.user = Authentication.user;
+
             $scope.reloadFollowing();
 
           }, function (response) {

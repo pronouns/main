@@ -15,7 +15,37 @@ angular.module('users').config(['$stateProvider',
       })
       .state('settings.pronouns', {
         url: '/pronouns',
-        templateUrl: 'modules/users/client/views/settings/update-pronouns.client.view.html'
+        templateUrl: 'modules/users/client/views/settings/update-pronouns.client.view.html',
+        'controller': 'UpdatePronounsController',
+        resolve: {
+          pronounsResolve: ['$stateParams', 'Pronouns', 'Authentication', '$q', function ($stateParams, Pronouns, Authentication, $q) {
+            var deferred = $q.defer();
+            var processed = 0;
+            var pronouns = [];
+            var testPronouns = [];
+            Authentication.user.pronouns.forEach(function(value){
+              if(typeof value !== 'string'){ // Pronoun has already been loaded into user object
+                testPronouns.push(value._id);
+                pronouns[testPronouns.indexOf(value._id)] = value;
+                processed++;
+                if(processed === Authentication.user.pronouns.length){
+                  deferred.resolve(pronouns);
+                }
+              }
+              else {
+                testPronouns.push(value);
+                Pronouns.get({ pronounId: value }, function (data) {
+                  pronouns[testPronouns.indexOf(data._id)] = data;
+                  processed++;
+                  if(processed === Authentication.user.pronouns.length){
+                    deferred.resolve(pronouns);
+                  }
+                });
+              }
+            });
+            return deferred.promise;
+          }]
+        }
       })
       .state('settings.profile', {
         url: '/profile',

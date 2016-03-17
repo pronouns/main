@@ -11,6 +11,7 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
     $scope.selectedUser = undefined;
 
     $scope.reloadFriends = function() {
+      $scope.friends = [];
       if ($scope.user) {
         $scope.user.friends.forEach(function (value) {
           if (typeof value !== 'string') { // Friend has already been loaded into user object

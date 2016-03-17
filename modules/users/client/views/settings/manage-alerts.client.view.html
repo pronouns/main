@@ -17,7 +17,7 @@
         <div class="form-group panel panel-default" show-errors>
           <div class="panel-body">
             <label for="email">Email</label>
-            <input type="checkbox" id="email" name="email" class="form-control" ng-model="alerts.email">
+            <input type="checkbox" id="email" name="email" class="form-control" ng-model="alerts.email" ng-show="user.email">
             <div ng-messages="userForm.email.$error" role="alert">
               <p class="help-block error-text" ng-message="required">Can't enable email alerts.</p>
             </div>

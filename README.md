@@ -1,4 +1,4 @@
-# pronouns
+# pronouny
 [![Build Status](https://travis-ci.org/pronouns/main.svg?branch=master)](https://travis-ci.org/pronouns/main)
 
 This is a cool application for managing pronoun sets.
@@ -27,78 +27,24 @@ $ cd pronouns
 $ npm install
 ```
 
-## Running Your Application
-After the install process is over, you'll be able to run your application using Grunt, just run grunt default task:
+## Running pronouny
+After the install process is over, you'll be able to run pronouny:
 
 ```
-$ grunt
+$ npm start
 ```
 
-Your application should run on port 3000 with the *development* environment configuration, so in your browser just go to [http://localhost:3000](http://localhost:3000)
+pronouny should be running on port 3000 with the *development* environment configuration, so in your browser just go to [http://localhost:3000](http://localhost:3000)
 
-That's it! Your application should be running. To proceed with your development, check the other sections in this documentation.
-If you encounter any problems, try the Troubleshooting section.
 
-* explore `config/env/development.js` for development environment configuration options
-
-### Running in Production mode
-To run your application with *production* environment configuration, execute grunt as follows:
+## Tests
 
 ```bash
-$ grunt prod
+$ npm test
 ```
 
-* explore `config/env/production.js` for production environment configuration options
+This will run both the server-side tests and the client-side tests.
 
-## Testing the Application
-
-```bash
-$ grunt test
-```
-
-This will run both the server-side tests (located in the app/tests/ directory) and the client-side tests (located in the public/modules/*/tests/).
-
-To execute only the server tests, run the test:server task:
-
-```bash
-$ grunt test:server
-```
-
-And to run only the client tests, run the test:client task:
-
-```bash
-$ grunt test:client
-```
-
-## Running application with Gulp
-
-After the install process, you can easily run your project with:
-
-```bash
-$ gulp
-```
-or
-
-```bash
-$ gulp default
-```
-
-The server is now running on http://localhost:3000 if you are using the default settings. 
-
-### Running Gulp Development Environment
-
-Start the development environment with:
-
-```bash
-$ gulp dev
-```
-
-### Running in Production mode
-To run the application with *production* environment configuration, execute gulp as follows:
-
-```bash
-$ gulp prod
-```
 
 ## License
 (The MIT License)

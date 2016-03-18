@@ -60,8 +60,15 @@ angular.module('users').controller('UserProfileController', ['$scope', 'Authenti
         user.$update(function (response) {
           Authentication.user = response;
           $scope.user = response;
+          for(var i = $scope.profile.following.length - 1; i >= 0; i--){
+            if($scope.profile.following[i]._id === $scope.user._id){
+              $scope.profile.following.splice(i, 1);
+              $scope.profile.friends.push($scope.user);
+              return;
+            }
+          }
           $scope.profile.followers.push($scope.user);
-          $scope.createFriendList();
+
         }, function (response) {
           $scope.error = response.data.message;
         });

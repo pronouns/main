@@ -1405,20 +1405,21 @@ angular.module('users').controller('PasswordController', ['$scope', '$stateParam
 
 'use strict';
 
-angular.module('users').controller('UserProfileController', ['$scope', 'Authentication', 'Users', 'Pronouns', 'profileResolve', 'followersResolve',
-  function ($scope, Authentication, Users, Pronouns, profileResolve, followersResolve) {
+angular.module('users').controller('UserProfileController', ['$scope', 'Authentication', 'Users', 'Pronouns', '$q', 'profileResolve', 'followersResolve',
+  function ($scope, Authentication, Users, Pronouns, $q, profileResolve, followersResolve) {
     $scope.authentication = Authentication;
-    $scope.profile = profileResolve;
     $scope.limits = {
       friends: 5,
       followers: 5,
       following: 5
     };
-    $scope.profile.$promise.then(function() {
-      $scope.profile.followers = followersResolve;
-      $scope.profile.$promise.then(function(){
-        $scope.createFriendList();
-      });
+    $q.all([
+      profileResolve.$promise,
+      followersResolve.$promise
+    ]).then(function(data){
+      $scope.profile = data[0];
+      $scope.profile.followers = data[1];
+      $scope.createFriendList();
     });
     var intersect = function(a, b) {
       var t;

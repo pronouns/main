@@ -1416,20 +1416,42 @@ angular.module('users').controller('UserProfileController', ['$scope', 'Authenti
     };
     $scope.profile.$promise.then(function() {
       $scope.profile.followers = followersResolve;
-      $scope.createFriendList();
+      $scope.profile.$promise.then(function(){
+        $scope.createFriendList();
+      });
     });
-
-    $scope.createFriendList = function() {
-      $scope.profile.friends = [];
-      for (var i = $scope.profile.following.length - 1; i >= 0; i--) {
-        for(var j = $scope.profile.followers.length - 1; j >= 0; j--){
-          if($scope.profile.following[i]._id === $scope.profile.followers[j]._id){
-            $scope.profile.friends.push($scope.profile.following[i]);
-            $scope.profile.followers.splice(j, 1);
-            $scope.profile.following.splice(i, 1);
+    var intersect = function(a, b) {
+      var t;
+      if (b.length > a.length){
+        t = b;
+        b = a;
+        a = t;
+      }
+      return a.filter(function (e) {
+        for(var i = 0; i < b.length; i++){
+          if(b[i]._id === e._id){
+            return true;
           }
         }
-      }
+        return false;
+      });
+    };
+    var remove = function(array, remove) {
+      return array.filter(function (e) {
+        for(var i = 0; i < remove.length; i++){
+          if(remove[i]._id === e._id){
+            return false;
+          }
+        }
+        return true;
+      });
+    };
+    $scope.createFriendList = function() {
+      $scope.profile.friends = intersect($scope.profile.following, $scope.profile.followers);
+
+      $scope.profile.followers = remove($scope.profile.followers, $scope.profile.friends);
+
+      $scope.profile.following = remove($scope.profile.following, $scope.profile.friends);
     };
 
     $scope.user = Authentication.user;

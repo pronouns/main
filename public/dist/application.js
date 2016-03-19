@@ -1759,6 +1759,7 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$q', 
     $scope.pronouns = pronounsResolve;
     $scope.myList = myListResolve;
     $scope.publicList = publicListResolve;
+    $scope.resolved = false;
 
     $q.all([
       $scope.pronouns,
@@ -1788,6 +1789,7 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$q', 
         }
       }
       $scope.buildPager();
+      $scope.resolved = true;
     });
 
 

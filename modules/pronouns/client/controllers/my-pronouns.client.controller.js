@@ -1,16 +1,13 @@
 'use strict';
 
-angular.module('pronouns').controller('MyPronounListController', ['$http', '$scope', '$filter', 'Users', 'Authentication',
-  function ($http, $scope, $filter, Users, Authentication) {
+angular.module('pronouns').controller('MyPronounListController', ['$http', '$scope', '$filter', 'Users', 'Authentication', 'Pronouns',
+  function ($http, $scope, $filter, Users, Authentication, Pronouns) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
-    $http.get('/api/pronouns/mine', {}).then(function(response){
-      $scope.pronouns = response.data;
+    Pronouns.mine(function (data) {
+      $scope.pronouns = data;
       $scope.buildPager();
-
-    }, function(response){
-      console.log(response);
     });
 
     $scope.buildPager = function () {

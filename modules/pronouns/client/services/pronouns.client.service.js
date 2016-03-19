@@ -8,6 +8,11 @@ angular.module('pronouns').factory('Pronouns', ['$resource',
     }, {
       update: {
         method: 'PUT'
+      },
+      mine: {
+        method: 'GET',
+        url: 'api/pronouns/mine',
+        isArray: true
       }
     });
   }

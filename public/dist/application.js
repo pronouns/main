@@ -820,17 +820,14 @@ angular.module('pronouns').controller('PronounListController', ['$scope', '$filt
 
 'use strict';
 
-angular.module('pronouns').controller('MyPronounListController', ['$http', '$scope', '$filter', 'Users', 'Authentication',
-  function ($http, $scope, $filter, Users, Authentication) {
+angular.module('pronouns').controller('MyPronounListController', ['$http', '$scope', '$filter', 'Users', 'Authentication', 'Pronouns',
+  function ($http, $scope, $filter, Users, Authentication, Pronouns) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
-    $http.get('/api/pronouns/mine', {}).then(function(response){
-      $scope.pronouns = response.data;
+    Pronouns.mine(function (data) {
+      $scope.pronouns = data;
       $scope.buildPager();
-
-    }, function(response){
-      console.log(response);
     });
 
     $scope.buildPager = function () {
@@ -958,6 +955,11 @@ angular.module('pronouns').factory('Pronouns', ['$resource',
     }, {
       update: {
         method: 'PUT'
+      },
+      mine: {
+        method: 'GET',
+        url: 'api/pronouns/mine',
+        isArray: true
       }
     });
   }

@@ -50,6 +50,12 @@ angular.module('users').config(['$stateProvider',
               deferred.resolve(data.pronouns);
             });
             return deferred.promise;
+          }],
+          publicListResolve: ['Pronouns', function (Pronouns) {
+            return Pronouns.query();
+          }],
+          myListResolve: ['Pronouns', function (Pronouns) {
+            return Pronouns.mine();
           }]
         }
       })

@@ -29,7 +29,7 @@
             <a class="btn btn-info" ng-click="makeMine(pronoun);" ng-show="user && !hasPronoun(pronoun._id) && (pronoun.listed || pronoun.user._id == user._id)">
               <i class="glyphicon glyphicon-plus"></i>
             </a>
-            <a class="btn btn-info" ng-click="removeMine(pronoun);" ng-show="user && hasPronoun(pronoun._id)">
+            <a class="btn btn-danger" ng-click="removeMine(pronoun);" ng-show="user && hasPronoun(pronoun._id)">
               <i class="glyphicon glyphicon-minus"></i>
             </a>
             <a class="btn btn-primary" ui-sref="pronouns.edit({pronounId: pronoun._id})" ng-show="user && (user.roles.indexOf('admin') != -1 || (!pronoun.listed && pronoun.user._id == user._id))">

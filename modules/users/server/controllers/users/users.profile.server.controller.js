@@ -147,6 +147,7 @@ exports.getUser = function (req, res) {
         user.password = undefined;
         user.resetPasswordToken = undefined;
         user.pushbulletKey = undefined;
+        user.additionalProvidersData = undefined;
 
         res.json(user);
       });

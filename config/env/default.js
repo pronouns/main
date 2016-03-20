@@ -3,8 +3,8 @@
 module.exports = {
   app: {
     title: 'pronouns',
-    description: 'Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js',
-    keywords: 'mongodb, express, angularjs, node.js, mongoose, passport',
+    description: 'Share your personal pronouns and stay updated on your friends\' pronouns. Pronouny allows you to update your pronouns and send alerts to your friends.',
+    keywords: 'pronouns, gender, personal pronouns, social, pronouny, pronouny, preferred gender pronouns, gender pronouns',
     googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
   },
   port: process.env.PORT || 3000,

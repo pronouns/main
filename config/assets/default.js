@@ -4,7 +4,8 @@ module.exports = {
   client: {
     lib: {
       css: [
-        'public/lib/bootstrap/dist/css/bootstrap.css'
+        'public/lib/bootstrap/dist/css/bootstrap.css',
+        'public/lib/ionicons/css/ionicons.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',
@@ -22,7 +23,7 @@ module.exports = {
         'public/lib/angular-file-upload/angular-file-upload.js',
         'public/lib/angular-ui-sortable/sortable.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
-        'public/lib/jqueryui-touch-punch/jquery.ui.touch-punch.js'
+        'public/lib/jqueryui-touch-punch/jquery.ui.touch-punch.js',
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

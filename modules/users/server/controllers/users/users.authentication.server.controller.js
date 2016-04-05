@@ -81,7 +81,12 @@ exports.signin = function (req, res, next) {
  */
 exports.signout = function (req, res) {
   req.logout();
-  res.redirect('/');
+  if(req.query.noRedirect === undefined){
+    res.redirect('/');
+  }
+  else{
+    res.json({ 'message': 'You have been logged out.' });
+  }
 };
 
 /**

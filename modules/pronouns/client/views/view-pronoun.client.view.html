@@ -27,16 +27,16 @@
           <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">NS</span>
           <div class="pull-right">
             <a class="btn btn-info" ng-click="makeMine(pronoun);" ng-show="user && !hasPronoun(pronoun._id) && (pronoun.listed || pronoun.user._id == user._id)">
-              <i class="glyphicon glyphicon-plus"></i>
+              <i class="icon ion-plus"></i>
             </a>
             <a class="btn btn-danger" ng-click="removeMine(pronoun);" ng-show="user && hasPronoun(pronoun._id)">
-              <i class="glyphicon glyphicon-minus"></i>
+              <i class="icon ion-minus"></i>
             </a>
             <a class="btn btn-primary" ui-sref="pronouns.edit({pronounId: pronoun._id})" ng-show="user && (user.roles.indexOf('admin') != -1 || (!pronoun.listed && pronoun.user._id == user._id))">
-              <i class="glyphicon glyphicon-edit"></i>
+              <i class="icon ion-edit"></i>
             </a>
             <a class="btn btn-primary" ng-click="remove();" ng-show="user && (user.roles.indexOf('admin') != -1 || (!pronoun.listed && pronoun.user._id == user._id))">
-              <i class="glyphicon glyphicon-trash"></i>
+              <i class="icon ion-trash-b"></i>
             </a>
           </div>
         </div>

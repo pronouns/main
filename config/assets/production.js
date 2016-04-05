@@ -4,7 +4,8 @@ module.exports = {
   client: {
     lib: {
       css: [
-        'public/lib/bootstrap/dist/css/bootstrap.min.css'
+        'public/lib/bootstrap/dist/css/bootstrap.min.css',
+        'public/lib/ionicons/css/ionicons.min.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.min.js',

@@ -50,6 +50,10 @@ exports.update = function (req, res) {
   pronoun.content = req.body.content;
   pronoun.title = req.body.title;
 
+  if(req.user.roles.indexOf('admin') !== -1){
+    pronoun.listed = req.body.listed;
+  }
+
   if(pronoun.pronounType === 'X') {
     pronoun.subject = req.body.subject;
     pronoun.object = req.body.object;

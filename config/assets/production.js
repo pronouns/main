@@ -23,7 +23,9 @@ module.exports = {
         'public/lib/angular-file-upload/angular-file-upload.min.js',
         'public/lib/angular-ui-sortable/sortable.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
-        'public/lib/jqueryui-touch-punch/jquery.ui.touch-punch.min.js'
+        'public/lib/jqueryui-touch-punch/jquery.ui.touch-punch.min.js',
+        'public/lib/moment/moment.js',
+        'public/lib/angular-moment/angular-moment.min.js'
       ]
     },
     css: 'public/dist/application.min.css',

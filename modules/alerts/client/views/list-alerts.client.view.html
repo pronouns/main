@@ -1,0 +1,28 @@
+<section>
+  <div class="page-header">
+    <h1>Alerts</h1>
+  </div>
+  <div class="list-group">
+    <div data-ng-repeat="alert in vm.alerts"
+       data-ui-sref="alerts.view({ alertId: alert._id })"
+       class="list-group-item row">
+      <div class="col-md-10">
+        <div ng-show="alert.targetUsers.length === 0">
+          <p>This alert has been opened by <b>{{alert.viewedUsers.length}}</b> recipient<span ng-show="alert.viewedUsers.length !== 1">s</span>. You can now <a ng-click="delete(alert)">delete</a> it.</p>
+        </div>
+        <div ng-hide="alert.targetUsers.length === 0">
+          <p>This alert has been opened by <b>{{alert.viewedUsers.length}}</b> recipient<span ng-show="alert.viewedUsers.length !== 1">s</span> and <b>{{alert.targetUsers.length}}</b> still need<span ng-show="alert.targetUsers.length === 1">s</span> to open it.</p>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <span class="label label-success" ng-show="alert.targetUsers.length === 0">Complete</span>
+        <span class="label label-warning" ng-hide="alert.targetUsers.length === 0">In-progress</span>
+        <br>
+        Created <span am-time-ago="alert.created"></span>
+      </div>
+    </div>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.alerts.$resolved && !vm.alerts.length">
+    No outgoing pronoun alerts! You can check your incoming alerts using the alert channels configured in your settings pane.
+  </div>
+</section>

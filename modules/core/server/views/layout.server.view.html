@@ -38,8 +38,10 @@
 
 <body class="ng-cloak">
   <header ng-include="'/modules/core/client/views/header.client.view.html'" class="navbar navbar-fixed-top navbar-default"></header>
+
   <section class="content">
     <section class="container">
+      <div ng-include="'/modules/core/client/views/alerts.client.view.html'"></div>
       {% block content %}{% endblock %}
     </section>
   </section>

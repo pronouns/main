@@ -1,0 +1,8 @@
+<div ng-controller="AlertsController">
+  <br>
+  <div class="panel panel-default" ng-show="alerts.length">
+    <div class="panel-body">
+      <alert ng-repeat="alert in alerts" type="{{alert.type}}">{{alert.msg}}</alert>
+    </div>
+  </div>
+</div>

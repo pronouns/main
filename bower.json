@@ -19,7 +19,8 @@
     "jquery-ui": "~1.11.4",
     "angular-ui-sortable": "~0.13.4",
     "jqueryui-touch-punch": "furf/jquery-ui-touch-punch",
-    "ionicons": "~2.0.1"
+    "ionicons": "~2.0.1",
+    "angular-moment": "~0.10.3"
   },
   "resolutions": {
     "angular": "~1.3"

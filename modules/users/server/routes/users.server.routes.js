@@ -10,7 +10,6 @@ module.exports = function (app) {
   app.route('/api/users/accounts').delete(users.removeOAuthProvider);
   app.route('/api/users/password').post(users.changePassword);
   app.route('/api/users/picture').post(users.changeProfilePicture);
-  app.route('/api/users/sendAlerts').get(users.sendAlerts);
 
   app.route('/api/users/search/:searchData').get(users.runSearch);
 

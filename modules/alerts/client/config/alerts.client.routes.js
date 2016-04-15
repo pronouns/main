@@ -23,6 +23,15 @@
           pageTitle: 'Alerts List'
         }
       })
+      .state('alerts.open', {
+        url: '/open',
+        templateUrl: 'modules/alerts/client/views/open-alerts.client.view.html',
+        controller: 'OpenAlertsController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Alerts'
+        }
+      })
       .state('alerts.view', {
         url: '/:alertId',
         templateUrl: 'modules/alerts/client/views/view-alert.client.view.html',

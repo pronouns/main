@@ -12,6 +12,10 @@ module.exports = function(app) {
     .get(alerts.list)
     .post(alerts.create);
 
+  app.route('/api/alerts/open').all(alertsPolicy.isAllowed)
+    .get(alerts.listAll)
+    .delete(alerts.readAll);
+
   app.route('/api/alerts/:alertId').all(alertsPolicy.isAllowed)
     .get(alerts.read)
     .delete(alerts.delete);

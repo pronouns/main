@@ -1,0 +1,18 @@
+<section>
+  <div class="page-header">
+    <h1>Alerts</h1>
+  </div>
+  <div class="list-group">
+    <a data-ng-repeat="alert in vm.alerts" class="list-group-item row" target="_self" href="/api/alerts/open/{{alert._id}}/{{alert.openId}}">
+      <div class="col-md-10">
+        <h5>{{alert.user.displayName}} <span class="text-muted">{{alert.user.username}}</span></h5>
+      </div>
+      <div class="col-md-2">
+        Created <span am-time-ago="alert.created"></span>
+      </div>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.alerts.$resolved && !vm.alerts.length">
+    No incoming pronoun alerts!
+  </div>
+</section>

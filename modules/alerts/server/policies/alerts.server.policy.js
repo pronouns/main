@@ -18,6 +18,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/alerts',
       permissions: '*'
     }, {
+      resources: '/api/alerts/open',
+      permissions: '*'
+    }, {
       resources: '/api/alerts/:alertId',
       permissions: '*'
     }]
@@ -29,6 +32,12 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/alerts/open/:alertId/:openId',
       permissions: ['get']
+    }, {
+      resources: '/api/alerts/open',
+      permissions: ['get', 'delete']
+    }, {
+      resources: '/api/alerts/:alertId',
+      permissions: '*'
     }]
   }, {
     roles: ['guest'],

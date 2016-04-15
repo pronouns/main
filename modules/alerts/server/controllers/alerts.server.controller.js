@@ -163,7 +163,7 @@ exports.delete = function (req, res) {
 };
 
 /**
- * List of Alerts
+ * List of Alerts created by a user
  */
 exports.list = function (req, res) {
   Alert.find({ user: req.user._id }).sort('-created').populate('user', 'displayName username').populate('targetUsers').populate('viewedUsers').exec(function (err, alerts) {
@@ -175,6 +175,39 @@ exports.list = function (req, res) {
       res.jsonp(alerts);
     }
   });
+};
+
+/**
+ * List of alerts for a user
+ * @param req
+ * @param res
+ */
+exports.listAll = function(req, res){
+  Alert.find({ 'targetUsers': { $elemMatch: { user: req.user._id } } }).select('user link type created targetUsers').populate('user', 'displayName username').exec(function(err, docs){
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      var result = [];
+      for(var i = 0; i < docs.length; i++) {
+        result[i] = docs[i].toJSON();
+        for (var j = 0; j < result[i].targetUsers.length; j++){
+          if(String(result[i].targetUsers[j].user) === String(req.user._id)){
+            result[i].openId = result[i].targetUsers[j].key;
+            console.log(result[i]);
+            break;
+          }
+        }
+        result[i].targetUsers = undefined;
+      }
+      res.jsonp(result);
+    }
+  });
+};
+
+exports.readAll = function(req, res){
+
 };
 
 exports.open = function (req, res) {

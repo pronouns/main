@@ -14,6 +14,11 @@
     }, {
       update: {
         method: 'PUT'
+      },
+      open: {
+        method: 'GET',
+        url: 'api/alerts/open',
+        isArray: true
       }
     });
   }

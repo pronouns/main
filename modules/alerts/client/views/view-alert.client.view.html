@@ -1,0 +1,43 @@
+<section>
+  <div class="page-header">
+    <h2>Alert from <span am-time-ago="vm.alert.created"></span></h2>
+  </div>
+  <div class="row" style="padding-bottom: 20px;">
+    <div class="col-md-12">
+      <div data-ng-show="vm.alert.targetUsers.length === 0">
+        <a class="btn btn-primary" data-ng-click="vm.remove()">
+          <i class="glyphicon glyphicon-trash"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="progress">
+        <div class="progress-bar" ng-class="{'progress-bar-success': vm.alert.targetUsers.length === 0, 'progress-bar-warning': vm.alert.targetUsers.length !== 0}" role="progressbar" aria-valuenow="{{vm.alert.viewedUsers.length}}" aria-valuemin="0" aria-valuemax="{{vm.alert.targetUsers.length + vm.alert.viewedUsers.length}}" style="width: {{(vm.alert.viewedUsers.length / (vm.alert.targetUsers.length + vm.alert.viewedUsers.length)) * 100}}%;">
+          <span class="sr-only">40% Complete (success)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="list-group">
+        <div data-ng-repeat="user in vm.alert.viewedUsers"
+             data-ui-sref="profile({ username: user.username })"
+             class="list-group-item">
+          <h4><i class="ion-checkmark-circled text-success"></i> {{user.displayName}} <span class="text-muted">{{user.username}}</span></h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="list-group">
+        <div data-ng-repeat="user in vm.alert.targetUsers"
+             data-ui-sref="profile({ username: user.username })"
+             class="list-group-item">
+          <h4><i class="ion-ios-clock text-warning"></i> {{user.displayName}} <span class="text-muted">{{user.username}}</span></h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

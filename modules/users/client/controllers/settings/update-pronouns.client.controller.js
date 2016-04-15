@@ -90,7 +90,7 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$q', 
       }
     };
     $scope.sendAlerts = function(){
-      $http.get('/api/users/sendAlerts', {}).then(function(response) {
+      $http.post('/api/alerts', {}).then(function(response) {
         $scope.error.alert = response.message;
         $scope.user.canSendAlert = false;
       }, function(response) {

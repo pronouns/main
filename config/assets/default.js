@@ -24,6 +24,8 @@ module.exports = {
         'public/lib/angular-ui-sortable/sortable.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/jqueryui-touch-punch/jquery.ui.touch-punch.js',
+        'public/lib/moment/moment.js',
+        'public/lib/angular-moment/angular-moment.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

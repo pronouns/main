@@ -4,7 +4,7 @@
 var ApplicationConfiguration = (function () {
   // Init module configuration options
   var applicationModuleName = 'mean';
-  var applicationModuleVendorDependencies = ['ngResource', 'ngAnimate', 'ngMessages', 'ui.router', 'ui.bootstrap', 'ui.utils', 'angularFileUpload'];
+  var applicationModuleVendorDependencies = ['ngResource', 'ngAnimate', 'ngMessages', 'ui.router', 'ui.bootstrap', 'ui.utils', 'angularFileUpload', 'angularMoment'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {
@@ -103,6 +103,12 @@ angular.element(document).ready(function () {
   angular.bootstrap(document, [ApplicationConfiguration.applicationModuleName]);
 });
 
+(function (app) {
+  'use strict';
+
+  app.registerModule('alerts');
+})(ApplicationConfiguration);
+
 'use strict';
 
 // Use Applicaion configuration module to register a new module
@@ -121,6 +127,133 @@ ApplicationConfiguration.registerModule('pronouns');
 ApplicationConfiguration.registerModule('users', ['core', 'ui.sortable']);
 ApplicationConfiguration.registerModule('users.admin', ['core.admin']);
 ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.routes']);
+
+(function () {
+  'use strict';
+
+  angular
+    .module('alerts')
+    .run(menuConfig);
+
+  menuConfig.$inject = ['Menus'];
+
+  function menuConfig(Menus) {
+
+  }
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('alerts')
+    .config(routeConfig);
+
+  routeConfig.$inject = ['$stateProvider'];
+
+  function routeConfig($stateProvider) {
+    $stateProvider
+      .state('alerts', {
+        abstract: true,
+        url: '/alerts',
+        template: '<ui-view/>'
+      })
+      .state('alerts.list', {
+        url: '',
+        templateUrl: 'modules/alerts/client/views/list-alerts.client.view.html',
+        controller: 'AlertsListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Alerts List'
+        }
+      })
+      .state('alerts.view', {
+        url: '/:alertId',
+        templateUrl: 'modules/alerts/client/views/view-alert.client.view.html',
+        controller: 'AlertsController',
+        controllerAs: 'vm',
+        resolve: {
+          alertResolve: getAlert
+        },
+        data:{
+          pageTitle: 'Alert {{ alertResolve.name }}'
+        }
+      });
+  }
+
+  getAlert.$inject = ['$stateParams', 'AlertsService'];
+
+  function getAlert($stateParams, AlertsService) {
+    return AlertsService.get({
+      alertId: $stateParams.alertId
+    }).$promise;
+  }
+
+})();
+
+(function () {
+  'use strict';
+
+  // Alerts controller
+  angular
+    .module('alerts')
+    .controller('AlertsController', AlertsController);
+
+  AlertsController.$inject = ['$scope', '$state', 'Authentication', 'alertResolve'];
+
+  function AlertsController ($scope, $state, Authentication, alert) {
+    var vm = this;
+
+    vm.authentication = Authentication;
+    vm.alert = alert;
+    vm.error = null;
+    vm.remove = remove;
+
+    // Remove existing Alert
+    function remove() {
+      if (confirm('Are you sure you want to delete?')) {
+        vm.alert.$remove($state.go('alerts.list'));
+      }
+    }
+  }
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('alerts')
+    .controller('AlertsListController', AlertsListController);
+
+  AlertsListController.$inject = ['AlertsService'];
+
+  function AlertsListController(AlertsService) {
+    var vm = this;
+
+    vm.alerts = AlertsService.query();
+  }
+})();
+
+//Alerts service used to communicate Alerts REST endpoints
+(function () {
+  'use strict';
+
+  angular
+    .module('alerts')
+    .factory('AlertsService', AlertsService);
+
+  AlertsService.$inject = ['$resource'];
+
+  function AlertsService($resource) {
+    return $resource('api/alerts/:alertId', {
+      alertId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+})();
 
 'use strict';
 
@@ -196,6 +329,19 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
         ignoreState: true
       }
     });
+  }
+]);
+
+'use strict';
+
+angular.module('core').controller('AlertsController', ['$scope',
+  function ($scope) {
+    $scope.alerts = [
+      { type: 'warning', msg: 'Pronouny is running a new alerts module. You may experience issues with alert processing. You can report issues to hello@pronouny.xyz or on Github.' }
+    ];
+    $scope.closeAlert = function (index) {
+      $scope.alerts.splice(index, 1);
+    };
   }
 ]);
 
@@ -1851,7 +1997,7 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$q', 
       }
     };
     $scope.sendAlerts = function(){
-      $http.get('/api/users/sendAlerts', {}).then(function(response) {
+      $http.post('/api/alerts', {}).then(function(response) {
         $scope.error.alert = response.message;
         $scope.user.canSendAlert = false;
       }, function(response) {

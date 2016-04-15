@@ -32,7 +32,7 @@
           alertResolve: getAlert
         },
         data:{
-          pageTitle: 'Alert {{ alertResolve.name }}'
+          pageTitle: 'Alert'
         }
       });
   }

@@ -124,7 +124,7 @@ exports.oauthCallback = function (strategy) {
         if (err) {
           return res.redirect('/authentication/signin');
         }
-        if(redirectURL === {}){
+        if(Object.keys(redirectURL).length === 0 && JSON.stringify(redirectURL) === JSON.stringify({})){
           redirectURL = undefined;
         }
 

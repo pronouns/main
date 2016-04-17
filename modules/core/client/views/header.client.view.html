@@ -30,6 +30,9 @@
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
+      <li ui-sref-active="active">
+        <a ui-sref="alerts.open"><i class="ion-android-alert"></i> Alerts </a>
+      </li>
       <li class="dropdown" dropdown>
         <a class="dropdown-toggle user-header-dropdown-toggle" dropdown-toggle role="button">
           <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.displayName}}" class="header-profile-image" />

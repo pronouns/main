@@ -167,6 +167,15 @@ ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.route
           pageTitle: 'Alerts List'
         }
       })
+      .state('alerts.open', {
+        url: '/open',
+        templateUrl: 'modules/alerts/client/views/open-alerts.client.view.html',
+        controller: 'OpenAlertsController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Alerts'
+        }
+      })
       .state('alerts.view', {
         url: '/:alertId',
         templateUrl: 'modules/alerts/client/views/view-alert.client.view.html',
@@ -234,6 +243,23 @@ ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.route
   }
 })();
 
+(function () {
+  'use strict';
+
+  angular
+    .module('alerts')
+    .controller('OpenAlertsController', AlertsListController);
+
+  AlertsListController.$inject = ['AlertsService'];
+
+  function AlertsListController(AlertsService) {
+    var vm = this;
+
+    vm.alerts = AlertsService.open();
+  }
+})();
+
+
 //Alerts service used to communicate Alerts REST endpoints
 (function () {
   'use strict';
@@ -250,6 +276,11 @@ ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.route
     }, {
       update: {
         method: 'PUT'
+      },
+      open: {
+        method: 'GET',
+        url: 'api/alerts/open',
+        isArray: true
       }
     });
   }

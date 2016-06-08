@@ -1,91 +1,69 @@
 <section>
   <div ng-show="profile._id">
-    <div class="page-header">
-      <h1><span ng-bind="profile.displayName"></span> <small ng-bind="profile.username"></small></h1>
+    <div class="row">
+      <h1><span ng-bind="profile.displayName"></span> <small ng-bind="profile.username"></small></h1><span class="label label-danger" ng-show="profile.roles.indexOf('admin') !== -1" tooltip="This user is a member of the website staff and can make edits to the pronoun list.">Admin</span>
     </div>
-    <span class="label label-default" ng-show="profile.roles.indexOf('user') !== -1">User</span>
-    <span class="label label-danger" ng-show="profile.roles.indexOf('admin') !== -1" tooltip="This user is a member of the website staff and can make edits to the pronoun list.">Admin</span>
     <span ng-hide="user._id === profile._id">
           <a class="btn btn-info pull-right" ng-click="addFollowing();" ng-show="user.following.indexOf(profile._id) === -1">Follow</a>
           <a class="btn btn-danger pull-right" ng-click="removeFollowing();" ng-show="user.following.indexOf(profile._id) > -1">Unfollow</a>
+      <br>
       </span>
     <div class="row">
-      <div class="col-md-6 col-sm-12">
-        <h2>User information</h2>
-        <table class="table table-striped">
-          <tbody>
-            <tr>
-              <td>Name</td>
-              <td ng-bind="profile.displayName"></td>
-            </tr>
-            <tr>
-              <td>Email</td>
-              <td ng-bind="profile.email"></td>
-            </tr>
-            <tr>
-              <td>Username</td>
-              <td ng-bind="profile.username"></td>
-            </tr>
-            <tr>
-              <td>User id</td>
-              <td ng-bind="profile._id"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="col-md-6 col-sm-12">
-        <h2>Pronouns</h2>
-        <div class="list-group">
-          <div ng-show="!profile.pronouns.length" class="list-group-item">
-            <h4 class="list-group-item-heading text-muted" tooltip-placement="bottom" tooltip="This user has not set any pronouns">Pronouns not set</h4>
-          </div>
-          <div ng-repeat="pronoun in profile.pronouns" class="list-group-item">
-            <div class="pull-right">
-              <span class="label label-default" ng-show="pronoun.listed" tooltip="This pronoun is listed on the public pronoun list and can be used by anyone.">P</span>
-              <span class="label label-default" ng-show="!pronoun.listed" tooltip="This pronoun is unlisted and can only be used by the user who created it.">U</span>
-              <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">S</span>
-              <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">NS</span>
+      <tabset active="active">
+        <tab index="0" heading="Pronouns">
+            <br>
+            <div class="list-group">
+              <div ng-show="!profile.pronouns.length" class="list-group-item">
+                <h4 class="list-group-item-heading text-muted" tooltip-placement="bottom" tooltip="This user has not set any pronouns">Pronouns not set</h4>
+              </div>
+              <div ng-repeat="pronoun in profile.pronouns" class="list-group-item">
+                <div class="pull-right">
+                  <span class="label label-default" ng-show="pronoun.listed" tooltip="This pronoun is listed on the public pronoun list and can be used by anyone.">P</span>
+                  <span class="label label-default" ng-show="!pronoun.listed" tooltip="This pronoun is unlisted and can only be used by the user who created it.">U</span>
+                  <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">S</span>
+                  <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">NS</span>
+                </div>
+                <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading" ng-bind="pronoun.pattern" ng-hide="!!pronoun.title"></h4><h4 class="list-group-item-heading" ng-bind="pronoun.title"></h4></a>
+                <small class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
+              </div>
             </div>
-            <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading" ng-bind="pronoun.pattern" ng-hide="!!pronoun.title"></h4><h4 class="list-group-item-heading" ng-bind="pronoun.title"></h4></a>
-            <small class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
+        </tab>
+        <tab index="1" heading="Social">
+          <div class="row">
+            <div class="col-md-4 col-sm-12">
+              <h2>Friends</h2>
+              <p ng-show="!profile.friends.length">This user doesn't have any friends yet.</p>
+              <div class="list-group">
+                <div ng-repeat="friend in profile.friends | limitTo:limits.friends" class="list-group-item" ui-sref="profile({username: friend.username})">
+                  <span class="list-group-item-heading" ng-bind="friend.displayName"></span>
+                </div>
+                <a ng-show="profile.friends.length > limits.friends" ng-click="loadMore('friends')">Load more...</a>
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-12" >
+              <h2>Following</h2>
+              <p ng-show="!profile.following.length">This user isn't following anyone.</p>
+              <div class="list-group">
+                <div ng-repeat="followed in profile.following | limitTo:limits.following" class="list-group-item" ui-sref="profile({username: followed.username})">
+                  <span class="list-group-item-heading" ng-bind="followed.displayName"></span>
+                </div>
+                <a ng-show="profile.following.length > limits.following" ng-click="loadMore('following')">Load more...</a>
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+              <h2>Followers</h2>
+              <p ng-show="!profile.followers.length">This user doesn't have any followers.</p>
+              <div class="list-group">
+                <div ng-repeat="follower in profile.followers | limitTo:limits.followers" class="list-group-item" ui-sref="profile({username: follower.username})">
+                  <span class="list-group-item-heading" ng-bind="follower.displayName"></span>
+                </div>
+                <a ng-show="profile.followers.length > limits.followers" ng-click="loadMore('followers')">Load more...</a>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </tab>
+      </tabset>
     </div>
-    <hr>
-    <div class="row">
-      <div class="col-md-4 col-sm-12">
-        <h2>Friends</h2>
-        <p ng-show="!profile.friends.length">This user doesn't have any friends yet.</p>
-        <div class="list-group">
-          <div ng-repeat="friend in profile.friends | limitTo:limits.friends" class="list-group-item" ui-sref="profile({username: friend.username})">
-            <span class="list-group-item-heading" ng-bind="friend.displayName"></span>
-          </div>
-          <a ng-show="profile.friends.length > limits.friends" ng-click="loadMore('friends')">Load more...</a>
-        </div>
-      </div>
-      <div class="col-md-4 col-sm-12" >
-        <h2>Following</h2>
-        <p ng-show="!profile.following.length">This user isn't following anyone.</p>
-        <div class="list-group">
-          <div ng-repeat="followed in profile.following | limitTo:limits.following" class="list-group-item" ui-sref="profile({username: followed.username})">
-            <span class="list-group-item-heading" ng-bind="followed.displayName"></span>
-          </div>
-          <a ng-show="profile.following.length > limits.following" ng-click="loadMore('following')">Load more...</a>
-        </div>
-      </div>
-      <div class="col-md-4 col-sm-12">
-        <h2>Followers</h2>
-        <p ng-show="!profile.followers.length">This user doesn't have any followers.</p>
-        <div class="list-group">
-          <div ng-repeat="follower in profile.followers | limitTo:limits.followers" class="list-group-item" ui-sref="profile({username: follower.username})">
-            <span class="list-group-item-heading" ng-bind="follower.displayName"></span>
-          </div>
-          <a ng-show="profile.followers.length > limits.followers" ng-click="loadMore('followers')">Load more...</a>
-        </div>
-      </div>
-    </div>
-  </div>
   <div ng-show="!profile._id && !!profile.$resolved">
     <br>
     <div class="panel panel-danger">

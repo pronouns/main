@@ -7,7 +7,6 @@ var _ = require('lodash'),
   fs = require('fs'),
   path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  alerts = require(path.resolve('./modules/alerts/server/controllers/alerts.server.controller')),
   mongoose = require('mongoose'),
   multer = require('multer'),
   request = require('request'),
@@ -30,13 +29,8 @@ exports.update = function (req, res) {
   delete req.body.roles;
 
   if (user) {
-    var swaped = false;
     if(req.body.pronouns !== user.pronouns){
-      res.send('{');
       req.body.canSendAlert = true;
-      alerts.create(req, res);
-      res.send(',');
-      swaped = true;
     }
     // Merge existing user
     user = _.extend(user, req.body);
@@ -50,7 +44,6 @@ exports.update = function (req, res) {
 
     user.save(function (err) {
       if (err) {
-        if(swaped) res.send('}');
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
@@ -61,7 +54,6 @@ exports.update = function (req, res) {
           } else {
             res.json(user);
           }
-          if(swaped) res.send('}');
         });
       }
     });

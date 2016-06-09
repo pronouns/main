@@ -34,7 +34,6 @@ describe('User CRUD tests', function () {
 
     // Create a new user
     _user = {
-      displayName: 'Full Name',
       email: 'test@test.com',
       username: credentials.username,
       password: credentials.password,

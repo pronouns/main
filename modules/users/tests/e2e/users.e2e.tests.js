@@ -2,14 +2,12 @@
 
 describe('Users E2E Tests:', function () {
   var user1 = {
-    displayName: 'test user',
     email: 'test.user@meanjs.com',
     username: 'testUser',
     password: 'P@$$w0rd!!'
   };
 
   var user2 = {
-    displayName: 'test user2',
     email: 'test.user2@meanjs.com',
     username: 'testUser2',
     password: 'P@$$w0rd!!'
@@ -23,24 +21,8 @@ describe('Users E2E Tests:', function () {
   };
 
   describe('Signup Validation', function () {
-    it('Should report missing name', function () {
-      browser.get('http://localhost:3001/authentication/signup');
-      // Enter Email
-      element(by.model('credentials.email')).sendKeys(user1.email);
-      // Enter Username
-      element(by.model('credentials.username')).sendKeys(user1.username);
-      // Enter Password
-      element(by.model('credentials.password')).sendKeys(user1.password);
-      // Click Submit button
-      element(by.css('button[type=submit]')).click();
-      // First Name Error
-      expect(element.all(by.css('.error-text')).get(0).getText()).toBe('Name is required.');
-    });
-
     it('Should report missing email address', function () {
       browser.get('http://localhost:3001/authentication/signup');
-      // Enter Name
-      element(by.model('credentials.displayName')).sendKeys(user1.displayName);
       // Enter Username
       element(by.model('credentials.username')).sendKeys(user1.username);
       // Enter Password
@@ -53,8 +35,6 @@ describe('Users E2E Tests:', function () {
 
     it('Should report invalid email address - "123"', function () {
       browser.get('http://localhost:3001/authentication/signup');
-      // Enter Name
-      element(by.model('credentials.displayName')).sendKeys(user1.displayName);
       // Enter Email
       element(by.model('credentials.email')).sendKeys('123');
       // Enter Username
@@ -73,8 +53,6 @@ describe('Users E2E Tests:', function () {
      */
     it('Should report invalid email address - "123@123@123"', function () {
       browser.get('http://localhost:3001/authentication/signup');
-      // Enter Name
-      element(by.model('credentials.displayName')).sendKeys(user1.displayName);
       // Enter Email
       element(by.model('credentials.email')).sendKeys('123@123@123');
       // Enter Username
@@ -89,8 +67,6 @@ describe('Users E2E Tests:', function () {
 
     it('Should report missing username', function () {
       browser.get('http://localhost:3001/authentication/signup');
-      // Enter Name
-      element(by.model('credentials.displayName')).sendKeys(user1.displayName);
       // Enter Email
       element(by.model('credentials.email')).sendKeys(user1.email);
       // Enter Password
@@ -103,8 +79,6 @@ describe('Users E2E Tests:', function () {
 
     it('Should Successfully register new user', function () {
       browser.get('http://localhost:3001/authentication/signup');
-      // Enter Name
-      element(by.model('credentials.displayName')).sendKeys(user1.displayName);
       // Enter Email
       element(by.model('credentials.email')).sendKeys(user1.email);
       // Enter UserName
@@ -121,8 +95,6 @@ describe('Users E2E Tests:', function () {
       signout();
       // Signup
       browser.get('http://localhost:3001/authentication/signup');
-      // Enter Name
-      element(by.model('credentials.displayName')).sendKeys(user1.displayName);
       // Enter Email
       element(by.model('credentials.email')).sendKeys(user1.email);
       // Enter Username
@@ -138,8 +110,6 @@ describe('Users E2E Tests:', function () {
     it('Should report Username already exists', function () {
       // Signup
       browser.get('http://localhost:3001/authentication/signup');
-      // Enter Name
-      element(by.model('credentials.displayName')).sendKeys(user1.displayName);
       // Enter Email
       element(by.model('credentials.email')).sendKeys(user2.email);
       // Enter Username

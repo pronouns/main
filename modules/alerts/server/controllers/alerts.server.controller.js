@@ -77,13 +77,13 @@ exports.create = function (req, res) {
                       .form({
                         'access_token': config.facebook.clientID + '|' + config.facebook.clientSecret,
                         'href': alert.linkForUser(target),
-                        'template': (userHasFacebook ? '@[' + user.additionalProvidersData.facebook.id + ']' : user.displayName) + ' has posted new pronouns.'
+                        'template': (userHasFacebook ? '@[' + user.additionalProvidersData.facebook.id + ']' : user.username) + ' has posted new pronouns.'
                       });
                   }
                   // PUSHBULLET
                   if (target.alertChannels.indexOf('pushbullet') > -1 && target.pushbulletKey) {
                     var pusher = new PushBullet(target.pushbulletKey);
-                    pusher.link({}, user.displayName + ' has posted new pronouns', 'https://pronouny.xyz/' + alert.linkForUser(target), function (error, response) {
+                    pusher.link({}, user.username + ' has posted new pronouns', 'https://pronouny.xyz/' + alert.linkForUser(target), function (error, response) {
                     });
                   }
 

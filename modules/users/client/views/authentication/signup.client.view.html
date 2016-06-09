@@ -3,13 +3,13 @@
   <div class="col-xs-offset-2 col-xs-8 col-md-offset-4 col-md-4">
     <form name="userForm" ng-submit="signup(userForm.$valid)" class="signin" novalidate autocomplete="off">
       <fieldset>
-        <div class="form-group" show-errors>
+        <!--<div class="form-group" show-errors>
           <label for="displayName">Name</label>
           <input type="text" id="displayName" name="displayName" class="form-control" ng-model="credentials.displayName" placeholder="Name" required>
           <div ng-messages="userForm.displayName.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Name is required.</p>
           </div>
-        </div>
+        </div>-->
         <div class="form-group" show-errors>
           <label for="email">Email</label>
           <input type="email" id="email" name="email" class="form-control" ng-model="credentials.email" placeholder="Email" lowercase required>

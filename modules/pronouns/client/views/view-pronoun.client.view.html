@@ -21,10 +21,12 @@
               <a ng-bind="pronoun.user.displayName" ui-sref="profile({username: pronoun.user.username})"></a>
             </em>
           </small>
-          <span class="label label-default" ng-show="pronoun.listed" tooltip="This pronoun is listed on the public pronoun list and can be used by anyone.">P</span>
-          <span class="label label-default" ng-show="!pronoun.listed" tooltip="This pronoun was created by you and can only be used by you. You can make edits to it.">U</span>
-          <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">S</span>
-          <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">NS</span>
+          <div ng-show="user.roles.indexOf('admin') > -1">
+            <span class="label label-default" ng-show="pronoun.listed" tooltip="This pronoun is listed on the public pronoun list and can be used by anyone.">P</span>
+            <span class="label label-default" ng-show="!pronoun.listed" tooltip="This pronoun was created by you and can only be used by you. You can make edits to it.">U</span>
+            <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">S</span>
+            <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">NS</span>
+          </div>
           <div class="pull-right">
             <a class="btn btn-info" ng-click="makeMine(pronoun);" ng-show="user && !hasPronoun(pronoun._id) && (pronoun.listed || pronoun.user._id == user._id)">
               <i class="icon ion-plus"></i>

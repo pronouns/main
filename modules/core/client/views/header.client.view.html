@@ -35,8 +35,8 @@
       </li>
       <li class="dropdown" dropdown>
         <a class="dropdown-toggle user-header-dropdown-toggle" dropdown-toggle role="button">
-          <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.displayName}}" class="header-profile-image" />
-          <span ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
+          <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.username}}" class="header-profile-image" />
+          <span ng-bind="authentication.user.username"></span> <b class="caret"></b>
         </a>
         <ul class="dropdown-menu" role="menu">
           <li ui-sref-active="active">
@@ -44,7 +44,10 @@
           </li>
           <li class="divider"></li>
           <li ui-sref-active="active">
-            <a ui-sref="settings.pronouns"><i class="ion-ios-list"></i> Update Pronouns</a>
+            <a ui-sref="settings.pronouns"> Update Pronouns</a>
+          </li>
+          <li ui-sref-active="active">
+            <a ui-sref="settings.names"> Update Names</a>
           </li>
           <li ui-sref-active="active">
             <a ui-sref="settings.profile"><i class="ion-edit"></i> Edit Profile</a>

@@ -18,14 +18,14 @@
   </div>
   <div class="row">
     <div ng-repeat="pronoun in pagedItems" ui-sref="pronouns.view({pronounId: pronoun._id})" class="col-md-6 col-sm-12">
-      <div class="panel panel-default" style="padding: 5px">
+      <div class="panel panel-default" ng-class="{'panel-primary': user.pronouns.indexOf(pronoun._id) > -1}" style="padding: 5px">
         <div class="panel-body">
           <div class="row">
             <div class="col-sm-10 col-xs-12">
               <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading titleOnPhone" ng-bind="pronoun.pattern" ng-hide="!!pronoun.title"></h4><h4 class="list-group-item-heading titleOnPhone" ng-bind="pronoun.title"></h4></a>
               <small class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
             </div>
-            <div class="col-sm-2 col-xs-12">
+            <div class="col-sm-2 col-xs-12" ng-show="user.roles.indexOf('admin') > -1">
               <div class="pull-right hideOnPhone">
                 <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">S</span>
                 <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">NS</span>

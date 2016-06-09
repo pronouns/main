@@ -18,8 +18,8 @@
   <div class="row">
     <div class="col-md-8">
       <div class="row">
-        <div class="col-md-3"><strong>Name</strong></div>
-        <div class="col-md-6" ng-bind="user.displayName"></div>
+        <div class="col-md-3"><strong>Names</strong></div>
+        <div class="col-md-6"><span ng-repeat="name in user.names">{{name}},</span> </div>
       </div>
       <hr/>
       <div class="row">

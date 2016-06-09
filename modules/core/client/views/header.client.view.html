@@ -40,26 +40,30 @@
         </a>
         <ul class="dropdown-menu" role="menu">
           <li ui-sref-active="active">
-            <a ui-sref="settings.pronouns">Update Pronouns</a>
+            <a ui-sref="profile({username: authentication.user.username})"><i class="ion-person"></i> View Profile</a>
+          </li>
+          <li class="divider"></li>
+          <li ui-sref-active="active">
+            <a ui-sref="settings.pronouns"><i class="ion-ios-list"></i> Update Pronouns</a>
           </li>
           <li ui-sref-active="active">
-            <a ui-sref="settings.profile">Edit Profile</a>
+            <a ui-sref="settings.profile"><i class="ion-edit"></i> Edit Profile</a>
           </li>
           <li ui-sref-active="active">
-            <a ui-sref="settings.picture">Change Profile Picture</a>
+            <a ui-sref="settings.picture"><i class="ion-ios-camera"></i> Change Profile Picture</a>
           </li>
           <li ui-sref-active="active" ng-show="authentication.user.provider === 'local'">
-            <a ui-sref="settings.password">Change Password</a>
+            <a ui-sref="settings.password"><i class="ion-locked"></i> Change Password</a>
           </li>
           <li ui-sref-active="active">
-            <a ui-sref="settings.accounts">Manage Social Accounts</a>
+            <a ui-sref="settings.accounts"><i class="ion-at"></i> Manage Social Accounts</a>
           </li>
           <li ui-sref-active="active">
-            <a ui-sref="settings.alerts">Manage Alerts</a>
+            <a ui-sref="settings.alerts"><i class="ion-android-alert"></i> Manage Alerts</a>
           </li>
           <li class="divider"></li>
           <li>
-            <a href="/api/auth/signout" target="_self">Signout</a>
+            <a href="/api/auth/signout" target="_self"><i class="ion-android-exit"></i> Signout</a>
           </li>
         </ul>
       </li>

@@ -2,6 +2,9 @@
 
 angular.module('pronouns').controller('PronounListController', ['$scope', '$filter', 'Users', 'Authentication', 'Pronouns',
   function ($scope, $filter, Users, Authentication, Pronouns) {
+    $scope.authentication = Authentication;
+    $scope.user = Authentication.user;
+
     Pronouns.query(function (data) {
       $scope.pronouns = data;
       $scope.buildPager();

@@ -32,7 +32,7 @@
     </div>
     <div class="panel panel-default" ng-repeat="followed in following">
       <div class="panel-heading">
-        <a ui-sref="profile({username: followed.username})"><h3 class="panel-title" ng-bind="followed.displayName"></h3></a>
+        <a ui-sref="profile({username: followed.username})"><h3 class="panel-title" ng-bind="followed.username"></h3></a>
       </div>
       <div class="panel-body">
         <div class="list-group">

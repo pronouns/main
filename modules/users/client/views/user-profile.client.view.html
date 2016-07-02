@@ -10,6 +10,13 @@
           <a class="btn btn-danger pull-right" ng-click="removeFollowing();" ng-show="user.following.indexOf(profile._id) > -1">Unfollow</a>
       <br>
       </span>
+    <div class="row" ng-show="profile.bio">
+      <div class="col-md-6">
+          <p style="font-size: 12pt;">
+            {{profile.bio}}
+          </p>
+      </div>
+    </div>
     <div class="row">
       <div class="col-md-12">
         <tabset active="active">

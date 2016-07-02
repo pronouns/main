@@ -33,6 +33,9 @@ var UserSchema = new Schema({
     trim: true,
     default: ''
   },
+  bio: {
+    type: String
+  },
   names: {
     type: [String],
     trim: true

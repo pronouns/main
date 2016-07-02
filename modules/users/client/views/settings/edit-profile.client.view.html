@@ -24,6 +24,10 @@
             <p class="help-block error-text" ng-message="required">Username is required.</p>
           </div>
         </div>
+        <div class="form-group" show-errors>
+          <label for="bio" tooltip="You can write whatever you want here, it will be displayed on your profile.">Additional Stuff</label>
+          <textarea id="bio" name="bio" class="form-control" ng-model="user.bio" required></textarea>
+        </div>
         <div class="text-center form-group">
           <button type="submit" class="btn btn-primary">Save Profile</button>
         </div>

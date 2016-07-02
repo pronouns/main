@@ -34,6 +34,9 @@ exports.update = function (req, res) {
     }
     // Merge existing user
     user = _.extend(user, req.body);
+    if(user.bio && user.bio.length > 10000){
+      user.bio = user.bio.substring(0, 10000);
+    }
     user.pronouns = user.pronouns.filter(function (value, index, self){
       return self.indexOf(value) === index;
     });

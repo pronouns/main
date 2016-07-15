@@ -15,18 +15,18 @@ angular.module('users').controller('UpdateNamesController', ['$scope', '$http', 
     $scope.addName = function (){
       if($scope.newName.length > 0) {
         $scope.names.push($scope.newName);
-        $scope.updateNames();
+        $scope.saveAndAlert();
         $scope.newName = '';
       }
     };
 
     $scope.removeName = function(name){
       $scope.names.splice($scope.names.indexOf(name), 1);
-      $scope.updateNames();
+      $scope.saveAndAlert();
     };
 
     // Update a user profile
-    $scope.updateNames = function (isValid) {
+    $scope.updateUser = function (cb) {
       $scope.user.names = $scope.names;
 
       var user = new Users($scope.user);
@@ -36,8 +36,24 @@ angular.module('users').controller('UpdateNamesController', ['$scope', '$http', 
         Authentication.user = response;
         $scope.user = Authentication.user;
         $scope.names = $scope.user.names;
+        cb();
       }, function (response) {
         $scope.error = response.data.message;
+        cb(response);
+      });
+    };
+    $scope.sendAlerts = function(){
+      $http.post('/api/alerts', {}).then(function(response) {
+        $scope.error.alert = response.message;
+        $scope.user.canSendAlert = false;
+      }, function(response) {
+        $scope.error.alert = response.message;
+        $scope.user.canSendAlert = false;
+      });
+    };
+    $scope.saveAndAlert = function(){
+      $scope.updateUser(function(){
+        $scope.sendAlerts();
       });
     };
   }

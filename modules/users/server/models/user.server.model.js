@@ -40,6 +40,23 @@ var UserSchema = new Schema({
     type: [String],
     trim: true
   },
+  nouns: {
+    nounType: {
+      type: String,
+      enum: ['masc', 'femme', 'neutral', 'mascFemme', 'femmeNeutral', 'mascNeutral', 'any', 'custom']
+    },
+    goodWords: {
+      type: [String],
+      trim: true
+    },
+    badWords: {
+      type: [String],
+      trim: true
+    },
+    otherInfo: {
+      type: String
+    }
+  },
   //TODO
   isPublic: {
     type: Boolean,

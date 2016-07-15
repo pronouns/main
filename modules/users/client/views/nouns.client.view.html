@@ -1,0 +1,65 @@
+<section ng-controller="NounsController">
+  <div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+          <label for="nounType">Noun type</label>
+          <select ng-model="user.nouns.nounType" name="nounType" id="nounType" class="form-control" ng-change="suggestSave()">
+            <option value="masc">Masculine</option>
+            <option value="femme">Feminine</option>
+            <option value="mascFemme">Masculine or Feminine</option>
+            <option value="neutral">Neutral</option>
+            <option value="femmeNeutral">Feminine or Neutral</option>
+            <option value="mascNeutral">Masculine or Neutral</option>
+            <option value="any">Any</option>
+            <option value="custom">Other</option>
+          </select>
+        </div>
+    </div>
+    <div class="col-md-6 col-sm-12">
+      <label for="newGood">Good word</label>
+      <div class="input-group">
+        <input type="text" ng-model="newGood" name="newGood" id="newGood" typeahead="noun for noun in nouns | filter:$viewValue | limitTo:8" class="form-control">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button" ng-click="addGood()">Add</button>
+        </span>
+      </div>
+      <br>
+      <div class="panel panel-default" ng-show="user.nouns.goodWords.length > 0">
+        <div class="panel-body">
+          <ul>
+            <li ng-repeat="noun in user.nouns.goodWords">{{noun}} <span class="ion-close" ng-click="removeNoun(noun)"></span> </li>
+          </ul>
+        </div>
+      </div>
+      <alert ng-show="user.nouns.goodWords.length === 0" type="info">You haven't specified any nouns that you like.</alert>
+    </div>
+    <div class="col-md-6 col-sm-12">
+      <label for="newBad">Bad word</label>
+      <div class="input-group">
+        <input type="text" ng-model="newBad" name="newBad" id="newBad" typeahead="noun for noun in nouns | filter:$viewValue | limitTo:8" class="form-control">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button" ng-click="addBad()">Add</button>
+        </span>
+      </div>
+      <br>
+      <div class="panel panel-default" ng-show="user.nouns.badWords.length > 0">
+        <div class="panel-body">
+          <ul>
+            <li ng-repeat="noun in user.nouns.badWords">{{noun}} <span class="ion-close" ng-click="removeNoun(noun)"></span> </li>
+          </ul>
+        </div>
+      </div>
+      <alert ng-show="user.nouns.badWords.length === 0" type="info">You haven't specified any nouns that you dislike.</alert>
+    </div>
+    <div class="col-md-12">
+      <div class="form-group">
+        <label for="otherInfo">Other information</label>
+        <textarea ng-model="user.nouns.otherInfo" name="otherInfo" id="otherInfo" class="form-control" ng-change="suggestSave()"></textarea>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <button class="btn btn-success btn-block" ng-click="saveAndAlert()" ng-show="needsSave">Save</button>
+      <button class="btn btn-default btn-block text-muted" disabled ng-hide="needsSave">Saved</button>
+    </div>
+  </div>
+</section>

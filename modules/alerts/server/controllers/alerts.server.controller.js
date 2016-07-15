@@ -77,19 +77,19 @@ exports.create = function (req, res) {
                       .form({
                         'access_token': config.facebook.clientID + '|' + config.facebook.clientSecret,
                         'href': alert.linkForUser(target),
-                        'template': (userHasFacebook ? '@[' + user.additionalProvidersData.facebook.id + ']' : user.username) + ' has posted new pronouns.'
+                        'template': (userHasFacebook ? '@[' + user.additionalProvidersData.facebook.id + ']' : user.username) + ' has posted updated information.'
                       });
                   }
                   // PUSHBULLET
                   if (target.alertChannels.indexOf('pushbullet') > -1 && target.pushbulletKey) {
                     var pusher = new PushBullet(target.pushbulletKey);
-                    pusher.link({}, user.username + ' has posted new pronouns', 'https://pronouny.xyz/' + alert.linkForUser(target), function (error, response) {
+                    pusher.link({}, user.username + ' has posted updated information on Pronouny', 'https://pronouny.xyz/' + alert.linkForUser(target), function (error, response) {
                     });
                   }
 
                   // EMAIL
                   if (target.alertChannels.indexOf('email') > -1) {
-                    res.render(path.resolve('modules/users/server/templates/pronoun-update-alert-email'), {
+                    res.render(path.resolve('modules/alerts/server/templates/alert-email'), {
                       user: user,
                       target: target,
                       link: alert.linkForUser(target)
@@ -97,7 +97,7 @@ exports.create = function (req, res) {
                       var mailOptions = {
                         to: target.email,
                         from: config.mailer.from,
-                        subject: 'Pronoun update',
+                        subject: 'Pronouny alert',
                         html: emailHTML
                       };
                       smtpTransport.sendMail(mailOptions, function (err) {

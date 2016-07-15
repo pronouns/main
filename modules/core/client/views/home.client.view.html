@@ -1,7 +1,8 @@
 <section ng-controller="HomeController">
   <div ng-hide="authentication.user">
     <div class="page-header"><h1>Pronouny</h1></div>
-    <p class="lead">Share your personal pronouns and stay updated on your friends' pronouns. Pronouny allows you to update your pronouns and send alerts to your friends.</p>
+    <p class="lead">Share your personal pronouns and stay updated on your friends' pronouns. Pronouny allows you to
+      update your pronouns and send alerts to your friends.</p>
     <br>
     <a class="btn btn-lg btn-info" ui-sref="authentication.signup">Sign Up</a>
     <a class="btn btn-lg" ui-sref="authentication.signin">Sign In</a>
@@ -12,16 +13,15 @@
     <div class="row">
       <div class="col-md-10" style="padding-top: 20px;">
         <input type="text" ng-model="selectedUser" placeholder="Search for a user" typeahead="user as user.username for user in getUsers($viewValue)" typeahead-loading="loadingUsers" typeahead-no-results="noResults" typeahead-editable="false" typeahead-show-hint="true" class="form-control">
-        <!-- <i ng-show="loadingUsers" class="glyphicon glyphicon-refresh"></i> -->
       </div>
       <div class="col-md-2" style="padding-top: 20px;">
         <button class="btn btn-primary" ng-class="{disabled: selectedUser === undefined}" style="width: 100%;" ng-click="addFollowing()">Follow</button>
       </div>
     </div>
     <br>
-
     <div class="alert alert-warning" ng-show="!following.length && !user.following.length">
-      <p>You are <b>really</b> cool. You also haven't followed anyone yet, so if you want to do that, you can go to a user's profile and click "follow".</p>
+      <p>You are <b>really</b> cool. You also haven't followed anyone yet, so if you want to do that, you can go to a
+        user's profile and click "follow".</p>
     </div>
     <div class="sk-wave" ng-show="!following.length && !!user.following.length">
       <div class="sk-rect sk-rect1"></div>
@@ -30,30 +30,32 @@
       <div class="sk-rect sk-rect4"></div>
       <div class="sk-rect sk-rect5"></div>
     </div>
-    <div class="panel panel-default" ng-repeat="followed in following">
-      <div class="panel-heading">
-        <a ui-sref="profile({username: followed.username})"><h3 class="panel-title" ng-bind="followed.username"></h3></a>
-      </div>
-      <div class="panel-body">
-        <div class="list-group">
-          <div ng-show="!followed.pronouns.length" class="list-group-item" >
-            <h4 class="list-group-item-heading text-muted" tooltip-placement="bottom" tooltip="This user has not set any pronouns">Pronouns not set</h4>
+    <div class="row">
+      <div class="col-md-6" ng-repeat="followed in following">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <a ui-sref="profile({username: followed.username})"><h3 class="panel-title"
+                                                                    ng-bind="followed.username"></h3></a>
           </div>
-          <div ng-repeat="pronoun in followed.pronouns" ui-sref="pronouns.view({pronounId: pronoun._id})" class="list-group-item">
-              <div class="row">
-                <div class="col-sm-10 col-xs-12">
-                  <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading titleOnPhone" ng-bind="pronoun.pattern" ng-hide="!!pronoun.title"></h4><h4 class="list-group-item-heading titleOnPhone" ng-bind="pronoun.title"></h4></a>
-                  <small class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
-                </div>
-                <div class="col-sm-2 col-xs-12">
-                  <div class="pull-right hideOnPhone">
-                    <span class="label label-default" ng-show="pronoun.listed" tooltip="This pronoun is listed on the public pronoun list and can be used by anyone.">P</span>
-                    <span class="label label-default" ng-show="!pronoun.listed" tooltip="This pronoun is unlisted and can only be used by the user who created it.">U</span>
-                    <span class="label label-default" ng-show="pronoun.pronounType == 'X'" tooltip="This pronoun has a list of grammatical pronouns allowing it to be parsed by a computer.">S</span>
-                    <span class="label label-default" ng-show="pronoun.pronounType == 'M'" tooltip="This pronoun only contains a title and a description.">NS</span>
+          <div class="panel-body">
+            <div class="list-group">
+              <div ng-show="!followed.pronouns.length" class="list-group-item">
+                <h4 class="list-group-item-heading text-muted" tooltip-placement="bottom"
+                    tooltip="This user has not set any pronouns">Pronouns not set</h4>
+              </div>
+              <div ng-repeat="pronoun in followed.pronouns" ui-sref="pronouns.view({pronounId: pronoun._id})"
+                   class="list-group-item">
+                <div class="row">
+                  <div class="col-sm-10 col-xs-12">
+                    <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4
+                      class="list-group-item-heading titleOnPhone" ng-bind="pronoun.pattern"
+                      ng-hide="!!pronoun.title"></h4><h4 class="list-group-item-heading titleOnPhone"
+                                                         ng-bind="pronoun.title"></h4></a>
+                    <small class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
                   </div>
                 </div>
               </div>
+            </div>
           </div>
         </div>
       </div>

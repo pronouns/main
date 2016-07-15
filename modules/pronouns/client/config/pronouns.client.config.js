@@ -5,28 +5,22 @@ angular.module('pronouns').run(['Menus',
   function (Menus) {
     // Add the pronouns dropdown item
     Menus.addMenuItem('topbar', {
-      title: 'List pronouns',
-      state: 'pronouns.list',
-      type: 'dropdown',
-      roles: ['*']
+      title: 'Pronouns',
+      state: 'pronouns.update',
+      roles: ['user']
     });
 
     // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'pronouns.list', {
+    /*Menus.addSubMenuItem('topbar', 'pronouns.list', {
       title: 'Public pronouns',
       state: 'pronouns.list.all'
     });
 
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'pronouns.list', {
-      title: 'My pronouns',
+      title: 'Private pronouns',
       state: 'pronouns.list.mine',
       roles: ['user']
-    });
-    Menus.addMenuItem('topbar', {
-      title: 'Create pronouns',
-      state: 'pronouns.create',
-      roles: ['user']
-    });
+    });*/
   }
 ]);

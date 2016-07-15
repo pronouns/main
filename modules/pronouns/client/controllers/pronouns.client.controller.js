@@ -1,8 +1,8 @@
 'use strict';
 
 // Pronouns controller
-angular.module('pronouns').controller('PronounsController', ['$scope', '$stateParams', '$location', 'Users', 'Authentication', 'Pronouns',
-  function ($scope, $stateParams, $location, Users, Authentication, Pronouns) {
+angular.module('pronouns').controller('PronounsController', ['$scope', '$stateParams', '$http', '$location', 'Users', 'Authentication', 'Pronouns',
+  function ($scope, $stateParams, $http, $location, Users, Authentication, Pronouns) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     $scope.pronounType = 'X';
@@ -22,8 +22,18 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
       user.$update(function (response) {
         Authentication.user = response;
         $scope.user = response;
+        $scope.sendAlerts();
       }, function (response) {
         $scope.error = response.data.message;
+      });
+    };
+    $scope.sendAlerts = function(){
+      $http.post('/api/alerts', {}).then(function(response) {
+        $scope.error.alert = response.message;
+        $scope.user.canSendAlert = false;
+      }, function(response) {
+        $scope.error.alert = response.message;
+        $scope.user.canSendAlert = false;
       });
     };
     $scope.removeMine = function (pronoun) {
@@ -33,6 +43,7 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
       user.$update(function (response) {
         Authentication.user = response;
         $scope.user = response;
+        $scope.sendAlerts();
       }, function (response) {
         $scope.error = response.data.message;
       });

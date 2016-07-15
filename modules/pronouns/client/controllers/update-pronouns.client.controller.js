@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('UpdatePronounsController', ['$scope', '$q', '$http', '$location', '$filter', 'Users', 'Authentication', 'pronounsResolve', 'publicListResolve', 'myListResolve',
-  function ($scope, $q, $http, $location, $filter, Users, Authentication, pronounsResolve, publicListResolve, myListResolve) {
+angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q', '$state', '$http', '$location', '$filter', 'Users', 'Authentication', 'pronounsResolve', 'publicListResolve', 'myListResolve',
+  function ($scope, $q, $state, $http, $location, $filter, Users, Authentication, pronounsResolve, publicListResolve, myListResolve) {
 
     $scope.user = Authentication.user;
     $scope.error = {
@@ -11,6 +11,7 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$q', 
     $scope.myList = myListResolve;
     $scope.publicList = publicListResolve;
     $scope.resolved = false;
+    $scope.canSave = false;
 
     $q.all([
       $scope.pronouns,
@@ -79,13 +80,7 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$q', 
               $scope.user.pronouns.push($scope.pronouns[i]._id);
             }
           }
-          var user = new Users($scope.user);
-          user.$update(function (response) {
-            Authentication.user = response;
-            $scope.user = Authentication.user;
-          }, function (response) {
-            $scope.error = response.data.message;
-          });
+          $scope.canSave = true;
         }
       }
     };
@@ -98,26 +93,27 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$q', 
         $scope.user.canSendAlert = false;
       });
     };
+    $scope.saveAndAlert = function(){
+      if($scope.canSave) {
+        $scope.updateUser(function(){
+          $scope.sendAlerts();
+        });
+      }
+    };
     $scope.removeMine = function (pronoun) {
       var user = new Users($scope.user);
       var index = user.pronouns.indexOf(pronoun._id);
       console.log(pronoun);
-      user.pronouns.splice(index, 1);
-
-      user.$update(function (response) {
-        Authentication.user = response;
-        $scope.user = Authentication.user;
-        $scope.pronouns.splice(index, 1);
-        if(pronoun.listed){
-          $scope.publicList.push(pronoun);
-          $scope.figureOutItemsToDisplay();
-        }
-        else{
-          $scope.myList.push(pronoun);
-        }
-      }, function (response) {
-        $scope.error = response.data.message;
-      });
+      $scope.user.pronouns.splice(index, 1);
+      $scope.pronouns.splice(index, 1);
+      if(pronoun.listed){
+        $scope.publicList.push(pronoun);
+        $scope.figureOutItemsToDisplay();
+      }
+      else{
+        $scope.myList.push(pronoun);
+      }
+      $scope.canSave = true;
     };
     $scope.addMine = function (pronoun) {
       var user = new Users($scope.user);
@@ -143,23 +139,32 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$q', 
 
       if(index > -1) {
         console.log(pronoun);
-        user.pronouns.push(pronoun._id);
-
-        user.$update(function (response) {
-          Authentication.user = response;
-          $scope.user = Authentication.user;
-          $scope.pronouns.push(pronoun);
-          if(listed){
-            $scope.publicList.splice(index, 1);
-            $scope.figureOutItemsToDisplay();
-          }
-          else{
-            $scope.myList.splice(index, 1);
-          }
-        }, function (response) {
-          $scope.error = response.data.message;
-        });
+        $scope.user.pronouns.push(pronoun._id);
+        $scope.pronouns.push(pronoun);
+        if(listed){
+          $scope.publicList.splice(index, 1);
+          $scope.figureOutItemsToDisplay();
+        }
+        else{
+          $scope.myList.splice(index, 1);
+        }
+        $scope.canSave = true;
       }
+    };
+    $scope.goCreate = function(){
+      $state.go('pronouns.create');
+    };
+    $scope.updateUser = function(cb){
+      var user = new Users($scope.user);
+      user.$update(function (response) {
+        Authentication.user = response;
+        $scope.user = Authentication.user;
+        $scope.canSave = false;
+        cb();
+      }, function (response) {
+        $scope.error = response.data.message;
+        cb();
+      });
     };
   }
 ]);

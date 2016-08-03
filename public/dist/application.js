@@ -388,11 +388,11 @@ angular.module('core').controller('FaqController', ['$scope', '$sce', 'Authentic
     $scope.faqs = [
       {
         title: 'How do I add a set of pronouns to my profile?',
-        content: 'First, browse through the available list of pronouns and click on the one you want. Then click the "+" icon to add the pronoun. You can also go to the "Update Pronouns" section of your settings to add new pronouns.'
+        content: 'Click on "Pronouns" in the menu when you are logged in. Browse through the public and private pronoun lists and click "+" to add pronouns to your profile.'
       },
       {
         title: 'What if my pronouns don\'t exist in the list yet?',
-        content: 'Click on "Create pronouns" and enter your information. Then you can click the "+" icon on the page and add it right away. If you choose to make the pronoun "listed", it will be reviewed by a staff member later and additional details may appear on the page. Making the pronoun "listed" means that it will appear on the public list and any user will be allowed to use it.'
+        content: 'Go to "Pronouns" and click on "Create new". Now enter your information. Then you can click the "+" icon on the page and add it right away. If you choose to make the pronoun "listed", it will be reviewed by a staff member later and additional details may appear on the page. Making the pronoun "listed" means that it will appear on the public list and any user will be allowed to use it.'
       },
       {
         title: 'Can I order my pronouns by preference?',
@@ -405,6 +405,10 @@ angular.module('core').controller('FaqController', ['$scope', '$sce', 'Authentic
       {
         title: 'Can pronouns be edited after they are submitted?',
         content: 'Yes, but only if you do <b>not</b> check the "listed" box. If you check "listed", the pronoun will be publicly available and only staff members will be able to make revisions to it.'
+      },
+      {
+        title: 'What are "suggested" users? How does Pronouny pick them?',
+        content: 'Suggested users are people Pronouny thinks you may be interested in following. To generate the suggested users list, Pronouny finds the users that are followed by the people you follow and ranks them by the times they are followed by people you follow. You can have up to 10 suggested users and they will be updated every 10 minutes.'
       }
     ];
     for(var i = 0; i < $scope.faqs.length; i++){
@@ -831,29 +835,23 @@ angular.module('pronouns').run(['Menus',
   function (Menus) {
     // Add the pronouns dropdown item
     Menus.addMenuItem('topbar', {
-      title: 'List pronouns',
-      state: 'pronouns.list',
-      type: 'dropdown',
-      roles: ['*']
+      title: 'Pronouns',
+      state: 'pronouns.update',
+      roles: ['user']
     });
 
     // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'pronouns.list', {
+    /*Menus.addSubMenuItem('topbar', 'pronouns.list', {
       title: 'Public pronouns',
       state: 'pronouns.list.all'
     });
 
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'pronouns.list', {
-      title: 'My pronouns',
+      title: 'Private pronouns',
       state: 'pronouns.list.mine',
       roles: ['user']
-    });
-    Menus.addMenuItem('topbar', {
-      title: 'Create pronouns',
-      state: 'pronouns.create',
-      roles: ['user']
-    });
+    });*/
   }
 ]);
 
@@ -870,12 +868,12 @@ angular.module('pronouns').config(['$stateProvider',
         template: '<ui-view/>'
       })
       .state('pronouns.list', {
-        url: '',
+        url: '/list',
         abstract: true,
         template: '<ui-view/>'
       })
       .state('pronouns.list.all', {
-        url: '',
+        url: '/public',
         templateUrl: 'modules/pronouns/client/views/list-pronouns.client.view.html',
         controller: 'PronounListController'
       })
@@ -889,6 +887,52 @@ angular.module('pronouns').config(['$stateProvider',
         templateUrl: 'modules/pronouns/client/views/create-pronoun.client.view.html',
         data: {
           roles: ['user', 'admin']
+        }
+      })
+      .state('pronouns.update', {
+        url: '',
+        templateUrl: 'modules/pronouns/client/views/update-pronouns.client.view.html',
+        'controller': 'UpdatePronounsController',
+        resolve: {
+          pronounsResolve: ['$stateParams', 'Pronouns', 'Profile', 'Authentication', '$q', function ($stateParams, Pronouns, Profile, Authentication, $q) {
+            /*var deferred = $q.defer();
+             var processed = 0;
+             var pronouns = [];
+             var testPronouns = [];
+             Authentication.user.pronouns.forEach(function(value){
+             if(typeof value !== 'string'){ // Pronoun has already been loaded into user object
+             testPronouns.push(value._id);
+             pronouns[testPronouns.indexOf(value._id)] = value;
+             processed++;
+             if(processed === Authentication.user.pronouns.length){
+             deferred.resolve(pronouns);
+             }
+             }
+             else {
+             testPronouns.push(value);
+             Pronouns.get({ pronounId: value }, function (data) {
+             pronouns[testPronouns.indexOf(data._id)] = data;
+             processed++;
+             if(processed === Authentication.user.pronouns.length){
+             deferred.resolve(pronouns);
+             }
+             });
+             }
+             });
+             return deferred.promise;*/
+            //TODO make a better way for this
+            var deferred = $q.defer();
+            Profile.byId({ id: Authentication.user._id }, function (data) {
+              deferred.resolve(data.pronouns);
+            });
+            return deferred.promise;
+          }],
+          publicListResolve: ['Pronouns', function (Pronouns) {
+            return Pronouns.query();
+          }],
+          myListResolve: ['Pronouns', function (Pronouns) {
+            return Pronouns.mine();
+          }]
         }
       })
       .state('pronouns.view', {
@@ -1050,8 +1094,8 @@ angular.module('pronouns').controller('MyPronounListController', ['$http', '$sco
 'use strict';
 
 // Pronouns controller
-angular.module('pronouns').controller('PronounsController', ['$scope', '$stateParams', '$location', 'Users', 'Authentication', 'Pronouns',
-  function ($scope, $stateParams, $location, Users, Authentication, Pronouns) {
+angular.module('pronouns').controller('PronounsController', ['$scope', '$stateParams', '$http', '$location', 'Users', 'Authentication', 'Pronouns',
+  function ($scope, $stateParams, $http, $location, Users, Authentication, Pronouns) {
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     $scope.pronounType = 'X';
@@ -1071,8 +1115,18 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
       user.$update(function (response) {
         Authentication.user = response;
         $scope.user = response;
+        $scope.sendAlerts();
       }, function (response) {
         $scope.error = response.data.message;
+      });
+    };
+    $scope.sendAlerts = function(){
+      $http.post('/api/alerts', {}).then(function(response) {
+        $scope.error.alert = response.message;
+        $scope.user.canSendAlert = false;
+      }, function(response) {
+        $scope.error.alert = response.message;
+        $scope.user.canSendAlert = false;
       });
     };
     $scope.removeMine = function (pronoun) {
@@ -1082,6 +1136,7 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
       user.$update(function (response) {
         Authentication.user = response;
         $scope.user = response;
+        $scope.sendAlerts();
       }, function (response) {
         $scope.error = response.data.message;
       });
@@ -1133,6 +1188,177 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
         pronounId: $stateParams.pronounId
       });
       console.log($scope.pronoun);
+    };
+  }
+]);
+
+'use strict';
+
+angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q', '$state', '$http', '$location', '$filter', 'Users', 'Authentication', 'pronounsResolve', 'publicListResolve', 'myListResolve',
+  function ($scope, $q, $state, $http, $location, $filter, Users, Authentication, pronounsResolve, publicListResolve, myListResolve) {
+
+    $scope.user = Authentication.user;
+    $scope.error = {
+      alert: ''
+    };
+    $scope.pronouns = pronounsResolve;
+    $scope.myList = myListResolve;
+    $scope.publicList = publicListResolve;
+    $scope.resolved = false;
+    $scope.canSave = false;
+
+    $q.all([
+      $scope.pronouns,
+      $scope.myList.$promise,
+      $scope.publicList.$promise
+    ]).then(function(data){
+      $scope.pronouns = data[0];
+      $scope.myList = data[1];
+      $scope.publicList = data[2];
+
+      for(var i = $scope.publicList.length-1; i >= 0; i--){
+        for(var j = 0; j < $scope.pronouns.length; j++){
+          if($scope.publicList[i]._id === $scope.pronouns[j]._id){
+            $scope.publicList.splice(i, 1);
+            break;
+          }
+        }
+      }
+
+      for(var k = $scope.myList.length-1; k >= 0; k--){
+        for(var l = 0; l < $scope.pronouns.length; l++){
+          console.log(k);
+          if($scope.myList[k]._id === $scope.pronouns[l]._id){
+            $scope.myList.splice(k, 1);
+            break;
+          }
+        }
+      }
+      $scope.buildPager();
+      $scope.resolved = true;
+    });
+
+
+    $scope.buildPager = function () {
+      $scope.pagedItems = [];
+      $scope.itemsPerPage = 5;
+      $scope.currentPage = 1;
+      $scope.figureOutItemsToDisplay();
+    };
+
+    $scope.figureOutItemsToDisplay = function () {
+      $scope.filteredItems = $filter('filter')($scope.publicList, {
+        $: $scope.search
+      });
+      $scope.filterLength = $scope.filteredItems.length;
+      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
+      var end = begin + $scope.itemsPerPage;
+      $scope.pagedItems = $scope.filteredItems.slice(begin, end);
+    };
+
+    $scope.pageChanged = function () {
+      $scope.figureOutItemsToDisplay();
+    };
+
+
+    // Build current pronouns
+    $scope.sortableOptions = {
+      stop: function(e, ui) {
+        if($scope.user.pronouns.length === $scope.pronouns.length) {
+          $scope.user.pronouns = [];
+          for (var i = 0; i < $scope.pronouns.length; i++) {
+            if ($scope.pronouns[i]._id === null) {
+              $scope.user.pronouns.push($scope.pronouns[i]); //If pronoun content hasn't been injected yet
+            }
+            else {
+              $scope.user.pronouns.push($scope.pronouns[i]._id);
+            }
+          }
+          $scope.canSave = true;
+        }
+      }
+    };
+    $scope.sendAlerts = function(){
+      $http.post('/api/alerts', {}).then(function(response) {
+        $scope.error.alert = response.message;
+        $scope.user.canSendAlert = false;
+      }, function(response) {
+        $scope.error.alert = response.message;
+        $scope.user.canSendAlert = false;
+      });
+    };
+    $scope.saveAndAlert = function(){
+      if($scope.canSave) {
+        $scope.updateUser(function(){
+          $scope.sendAlerts();
+        });
+      }
+    };
+    $scope.removeMine = function (pronoun) {
+      var user = new Users($scope.user);
+      var index = user.pronouns.indexOf(pronoun._id);
+      console.log(pronoun);
+      $scope.user.pronouns.splice(index, 1);
+      $scope.pronouns.splice(index, 1);
+      if(pronoun.listed){
+        $scope.publicList.push(pronoun);
+        $scope.figureOutItemsToDisplay();
+      }
+      else{
+        $scope.myList.push(pronoun);
+      }
+      $scope.canSave = true;
+    };
+    $scope.addMine = function (pronoun) {
+      var user = new Users($scope.user);
+      var listed = pronoun.listed;
+      var index = -1;
+
+      if(listed){
+        for(var i = 0; i < $scope.publicList.length; i++){
+          if($scope.publicList[i]._id === pronoun._id){
+            index = i;
+            break;
+          }
+        }
+      }
+      else{
+        for(var j = 0; j < $scope.myList.length; j++){
+          if($scope.myList[j]._id === pronoun._id){
+            index = j;
+            break;
+          }
+        }
+      }
+
+      if(index > -1) {
+        console.log(pronoun);
+        $scope.user.pronouns.push(pronoun._id);
+        $scope.pronouns.push(pronoun);
+        if(listed){
+          $scope.publicList.splice(index, 1);
+          $scope.figureOutItemsToDisplay();
+        }
+        else{
+          $scope.myList.splice(index, 1);
+        }
+        $scope.canSave = true;
+      }
+    };
+    $scope.goCreate = function(){
+      $state.go('pronouns.create');
+    };
+    $scope.updateUser = function(cb){
+      var user = new Users($scope.user);
+      user.$update(function (response) {
+        Authentication.user = response;
+        $scope.user = Authentication.user;
+        $scope.canSave = false;
+        cb();
+      }, function (response) {
+        $scope.error = response.data.message;
+        cb();
+      });
     };
   }
 ]);
@@ -1260,6 +1486,25 @@ angular.module('users').config(['$httpProvider',
     ]);
   }
 ]);
+angular.module('users').run(['Menus',
+  function (Menus) {
+    Menus.addMenuItem('topbar', {
+      title: 'Names',
+      state: 'names',
+      roles: ['user']
+    });
+    Menus.addMenuItem('topbar', {
+      title: 'Nouns',
+      state: 'nouns',
+      roles: ['user']
+    });
+    Menus.addMenuItem('topbar', {
+      title: 'Relations',
+      state: 'relations',
+      roles: ['user']
+    });
+  }
+]);
 
 'use strict';
 
@@ -1274,52 +1519,6 @@ angular.module('users').config(['$stateProvider',
         templateUrl: 'modules/users/client/views/settings/settings.client.view.html',
         data: {
           roles: ['user', 'admin']
-        }
-      })
-      .state('settings.pronouns', {
-        url: '/pronouns',
-        templateUrl: 'modules/users/client/views/settings/update-pronouns.client.view.html',
-        'controller': 'UpdatePronounsController',
-        resolve: {
-          pronounsResolve: ['$stateParams', 'Pronouns', 'Profile', 'Authentication', '$q', function ($stateParams, Pronouns, Profile, Authentication, $q) {
-            /*var deferred = $q.defer();
-            var processed = 0;
-            var pronouns = [];
-            var testPronouns = [];
-            Authentication.user.pronouns.forEach(function(value){
-              if(typeof value !== 'string'){ // Pronoun has already been loaded into user object
-                testPronouns.push(value._id);
-                pronouns[testPronouns.indexOf(value._id)] = value;
-                processed++;
-                if(processed === Authentication.user.pronouns.length){
-                  deferred.resolve(pronouns);
-                }
-              }
-              else {
-                testPronouns.push(value);
-                Pronouns.get({ pronounId: value }, function (data) {
-                  pronouns[testPronouns.indexOf(data._id)] = data;
-                  processed++;
-                  if(processed === Authentication.user.pronouns.length){
-                    deferred.resolve(pronouns);
-                  }
-                });
-              }
-            });
-            return deferred.promise;*/
-            //TODO make a better way for this
-            var deferred = $q.defer();
-            Profile.byId({ id: Authentication.user._id }, function (data) {
-              deferred.resolve(data.pronouns);
-            });
-            return deferred.promise;
-          }],
-          publicListResolve: ['Pronouns', function (Pronouns) {
-            return Pronouns.query();
-          }],
-          myListResolve: ['Pronouns', function (Pronouns) {
-            return Pronouns.mine();
-          }]
         }
       })
       .state('settings.profile', {
@@ -1401,6 +1600,15 @@ angular.module('users').config(['$stateProvider',
             });
           }]
         }
+      }).state('relations', {
+        url: '/relations',
+        templateUrl: 'modules/users/client/views/relations.client.view.html'
+      }).state('names', {
+        url: '/names',
+        templateUrl: 'modules/users/client/views/update-names.client.view.html'
+      }).state('nouns', {
+        url: '/nouns',
+        templateUrl: 'modules/users/client/views/nouns.client.view.html'
       });
   }
 ]);
@@ -1543,6 +1751,86 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
 
       // Effectively call OAuth authentication route:
       $window.location.href = url;
+    };
+  }
+]);
+
+'use strict';
+
+angular.module('users').controller('NounsController', ['$scope', '$http', 'Authentication', 'Users', 'Profile',
+  function ($scope, $http, Authentication, Users, Profile) {
+    // This provides Authentication context.
+    $scope.authentication = Authentication;
+    $scope.user = Authentication.user;
+    $scope.needsSave = false;
+    $scope.nouns = ['man'];
+    $scope.newGood = '';
+    $scope.newBad = '';
+    
+    $scope.suggestSave = function(){
+      $scope.needsSave = true;
+    };
+    
+    $scope.removeNoun = function(noun){
+      var index = $scope.user.nouns.goodWords.indexOf(noun);
+      if(index > -1){
+        $scope.user.nouns.goodWords.splice(index, 1);
+        $scope.suggestSave();
+      }
+      else {
+        index = $scope.user.nouns.badWords.indexOf(noun);
+        if (index > -1) {
+          $scope.user.nouns.badWords.splice(index, 1);
+          $scope.suggestSave();
+        }
+      }
+    };
+    
+    $scope.addGood = function(){
+      $scope.newGood = $scope.newGood.trim();
+      if($scope.newGood !== '' && $scope.user.nouns.goodWords.indexOf($scope.newGood) === -1 && $scope.user.nouns.badWords.indexOf($scope.newGood) === -1){
+        $scope.user.nouns.goodWords.push($scope.newGood);
+        $scope.suggestSave();
+      }
+      $scope.newGood = '';
+    };
+
+    $scope.addBad = function(){
+      $scope.newBad = $scope.newBad.trim();
+      if($scope.newBad !== '' && $scope.user.nouns.goodWords.indexOf($scope.newBad) === -1 && $scope.user.nouns.badWords.indexOf($scope.newBad) === -1){
+        $scope.user.nouns.badWords.push($scope.newBad);
+        $scope.suggestSave();
+      }
+      $scope.newBad = '';
+    };
+    $scope.updateUser = function(cb){
+      var user = new Users($scope.user);
+      user.$update(function (response) {
+        Authentication.user = response;
+        $scope.user = response;
+        $scope.needsSave = false;
+        cb();
+
+      }, function (response) {
+        $scope.error = response.data.message;
+        cb(response);
+      });
+    };
+    $scope.sendAlerts = function(){
+      $http.post('/api/alerts', {}).then(function(response) {
+        $scope.error.alert = response.message;
+        $scope.user.canSendAlert = false;
+      }, function(response) {
+        $scope.error.alert = response.message;
+        $scope.user.canSendAlert = false;
+      });
+    };
+    $scope.saveAndAlert = function(){
+      if($scope.needsSave) {
+        $scope.updateUser(function(){
+          $scope.sendAlerts();
+        });
+      }
     };
   }
 ]);
@@ -1710,6 +1998,86 @@ angular.module('users').controller('UserProfileController', ['$scope', 'Authenti
     $scope.loadMore = function(thing) {
       $scope.limits[thing] = $scope.profile[thing].length + 5; //Just to be safe :P
     };
+  }
+]);
+
+'use strict';
+
+angular.module('users').controller('RelationsController', ['$scope', '$http', 'Authentication', 'Users', 'Profile',
+  function ($scope, $http, Authentication, Users, Profile) {
+    // This provides Authentication context.
+    $scope.authentication = Authentication;
+    $scope.user = Authentication.user;
+
+    $scope.following = [];
+    $scope.searchResults = [];
+    $scope.selectedUser = undefined;
+    $scope.suggestedUsers = false;
+
+    $scope.reloadFollowing = function() {
+      $scope.following = [];
+      if ($scope.user) {
+        $scope.user.following.forEach(function (value) {
+          if (typeof value !== 'string') { // Following has already been loaded into user object
+            $scope.following.push(value);
+          }
+          else {
+            $scope.following.push(Profile.byId({ id: value }));
+          }
+        });
+      }
+    };
+
+    $scope.getUsers = function(val) {
+      return $http.get('/api/users/search/' + val).then(function(response){
+        for(var i = response.data.length -1; i >= 0; i--){
+          if(response.data[i]._id === $scope.user._id || $scope.user.following.indexOf(response.data[i]._id) > -1){
+            response.data.splice(i, 1);
+          }
+        }
+        $scope.searchResults = response.data;
+        return response.data;
+      });
+    };
+    $scope.getSuggested = function(val) {
+      return $http.get('/api/users/suggested').then(function(response){
+        $scope.suggestedUsers = response.data;
+      });
+    };
+    /*$scope.addFollowing = function () {
+      if($scope.profile._id !== $scope.user._id) {
+        var user = new Users($scope.user);
+        user.following.push($scope.profile._id);
+
+        user.$update(function (response) {
+          Authentication.user = response;
+        }, function (response) {
+          $scope.error = response.data.message;
+        });
+      }
+    };*/
+    $scope.addFollowing = function(){
+      console.log($scope.selectedUser);
+      if($scope.selectedUser !== undefined && $scope.selectedUser._id){
+        if($scope.selectedUser._id !== $scope.user._id) {
+          var user = new Users($scope.user);
+          user.following.push($scope.selectedUser._id);
+
+          user.$update(function (response) {
+            $scope.selectedUser = undefined;
+            Authentication.user = response;
+            $scope.user = Authentication.user;
+
+            $scope.reloadFollowing();
+
+          }, function (response) {
+            $scope.error = response.data.message;
+          });
+        }
+      }
+    };
+    $scope.reloadFollowing();
+    $scope.getSuggested();
   }
 ]);
 
@@ -1952,7 +2320,7 @@ angular.module('users').controller('UpdateNamesController', ['$scope', '$http', 
     $scope.names = $scope.user.names;
     $scope.newName = '';
 
-    if($scope.user.displayName !== null && $scope.names.length === 0){
+    if($scope.user.displayName !== undefined && $scope.user.displayName !== null && $scope.names.length === 0){
       $scope.names[0] = $scope.user.displayName;
       $scope.user.displayName = null;
     }
@@ -1960,18 +2328,18 @@ angular.module('users').controller('UpdateNamesController', ['$scope', '$http', 
     $scope.addName = function (){
       if($scope.newName.length > 0) {
         $scope.names.push($scope.newName);
-        $scope.updateNames();
+        $scope.saveAndAlert();
         $scope.newName = '';
       }
     };
 
     $scope.removeName = function(name){
       $scope.names.splice($scope.names.indexOf(name), 1);
-      $scope.updateNames();
+      $scope.saveAndAlert();
     };
 
     // Update a user profile
-    $scope.updateNames = function (isValid) {
+    $scope.updateUser = function (cb) {
       $scope.user.names = $scope.names;
 
       var user = new Users($scope.user);
@@ -1981,104 +2349,11 @@ angular.module('users').controller('UpdateNamesController', ['$scope', '$http', 
         Authentication.user = response;
         $scope.user = Authentication.user;
         $scope.names = $scope.user.names;
+        cb();
       }, function (response) {
         $scope.error = response.data.message;
+        cb(response);
       });
-    };
-  }
-]);
-
-
-'use strict';
-
-angular.module('users').controller('UpdatePronounsController', ['$scope', '$q', '$http', '$location', '$filter', 'Users', 'Authentication', 'pronounsResolve', 'publicListResolve', 'myListResolve',
-  function ($scope, $q, $http, $location, $filter, Users, Authentication, pronounsResolve, publicListResolve, myListResolve) {
-
-    $scope.user = Authentication.user;
-    $scope.error = {
-      alert: ''
-    };
-    $scope.pronouns = pronounsResolve;
-    $scope.myList = myListResolve;
-    $scope.publicList = publicListResolve;
-    $scope.resolved = false;
-
-    $q.all([
-      $scope.pronouns,
-      $scope.myList.$promise,
-      $scope.publicList.$promise
-    ]).then(function(data){
-      $scope.pronouns = data[0];
-      $scope.myList = data[1];
-      $scope.publicList = data[2];
-
-      for(var i = $scope.publicList.length-1; i >= 0; i--){
-        for(var j = 0; j < $scope.pronouns.length; j++){
-          if($scope.publicList[i]._id === $scope.pronouns[j]._id){
-            $scope.publicList.splice(i, 1);
-            break;
-          }
-        }
-      }
-
-      for(var k = $scope.myList.length-1; k >= 0; k--){
-        for(var l = 0; l < $scope.pronouns.length; l++){
-          console.log(k);
-          if($scope.myList[k]._id === $scope.pronouns[l]._id){
-            $scope.myList.splice(k, 1);
-            break;
-          }
-        }
-      }
-      $scope.buildPager();
-      $scope.resolved = true;
-    });
-
-
-    $scope.buildPager = function () {
-      $scope.pagedItems = [];
-      $scope.itemsPerPage = 5;
-      $scope.currentPage = 1;
-      $scope.figureOutItemsToDisplay();
-    };
-
-    $scope.figureOutItemsToDisplay = function () {
-      $scope.filteredItems = $filter('filter')($scope.publicList, {
-        $: $scope.search
-      });
-      $scope.filterLength = $scope.filteredItems.length;
-      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
-      var end = begin + $scope.itemsPerPage;
-      $scope.pagedItems = $scope.filteredItems.slice(begin, end);
-    };
-
-    $scope.pageChanged = function () {
-      $scope.figureOutItemsToDisplay();
-    };
-
-
-    // Build current pronouns
-    $scope.sortableOptions = {
-      stop: function(e, ui) {
-        if($scope.user.pronouns.length === $scope.pronouns.length) {
-          $scope.user.pronouns = [];
-          for (var i = 0; i < $scope.pronouns.length; i++) {
-            if ($scope.pronouns[i]._id === null) {
-              $scope.user.pronouns.push($scope.pronouns[i]); //If pronoun content hasn't been injected yet
-            }
-            else {
-              $scope.user.pronouns.push($scope.pronouns[i]._id);
-            }
-          }
-          var user = new Users($scope.user);
-          user.$update(function (response) {
-            Authentication.user = response;
-            $scope.user = Authentication.user;
-          }, function (response) {
-            $scope.error = response.data.message;
-          });
-        }
-      }
     };
     $scope.sendAlerts = function(){
       $http.post('/api/alerts', {}).then(function(response) {
@@ -2089,71 +2364,14 @@ angular.module('users').controller('UpdatePronounsController', ['$scope', '$q', 
         $scope.user.canSendAlert = false;
       });
     };
-    $scope.removeMine = function (pronoun) {
-      var user = new Users($scope.user);
-      var index = user.pronouns.indexOf(pronoun._id);
-      console.log(pronoun);
-      user.pronouns.splice(index, 1);
-
-      user.$update(function (response) {
-        Authentication.user = response;
-        $scope.user = Authentication.user;
-        $scope.pronouns.splice(index, 1);
-        if(pronoun.listed){
-          $scope.publicList.push(pronoun);
-          $scope.figureOutItemsToDisplay();
-        }
-        else{
-          $scope.myList.push(pronoun);
-        }
-      }, function (response) {
-        $scope.error = response.data.message;
+    $scope.saveAndAlert = function(){
+      $scope.updateUser(function(){
+        $scope.sendAlerts();
       });
-    };
-    $scope.addMine = function (pronoun) {
-      var user = new Users($scope.user);
-      var listed = pronoun.listed;
-      var index = -1;
-
-      if(listed){
-        for(var i = 0; i < $scope.publicList.length; i++){
-          if($scope.publicList[i]._id === pronoun._id){
-            index = i;
-            break;
-          }
-        }
-      }
-      else{
-        for(var j = 0; j < $scope.myList.length; j++){
-          if($scope.myList[j]._id === pronoun._id){
-            index = j;
-            break;
-          }
-        }
-      }
-
-      if(index > -1) {
-        console.log(pronoun);
-        user.pronouns.push(pronoun._id);
-
-        user.$update(function (response) {
-          Authentication.user = response;
-          $scope.user = Authentication.user;
-          $scope.pronouns.push(pronoun);
-          if(listed){
-            $scope.publicList.splice(index, 1);
-            $scope.figureOutItemsToDisplay();
-          }
-          else{
-            $scope.myList.splice(index, 1);
-          }
-        }, function (response) {
-          $scope.error = response.data.message;
-        });
-      }
     };
   }
 ]);
+
 
 'use strict';
 

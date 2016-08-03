@@ -30,8 +30,7 @@ var validateLocalStrategyEmail = function (email) {
 var UserSchema = new Schema({
   displayName: {
     type: String,
-    trim: true,
-    default: ''
+    trim: true
   },
   bio: {
     type: String
@@ -43,7 +42,7 @@ var UserSchema = new Schema({
   nouns: {
     nounType: {
       type: String,
-      enum: ['masc', 'femme', 'neutral', 'mascFemme', 'femmeNeutral', 'mascNeutral', 'any', 'custom']
+      enum: ['masc', 'femme', 'neutral', 'nongendered', 'mascFemme', 'femmeNeutral', 'mascNeutral', 'any', 'custom']
     },
     goodWords: {
       type: [String],

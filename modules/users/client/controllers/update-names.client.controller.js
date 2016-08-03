@@ -7,7 +7,7 @@ angular.module('users').controller('UpdateNamesController', ['$scope', '$http', 
     $scope.names = $scope.user.names;
     $scope.newName = '';
 
-    if($scope.user.displayName !== null && $scope.names.length === 0){
+    if($scope.user.displayName !== undefined && $scope.user.displayName !== null && $scope.names.length === 0){
       $scope.names[0] = $scope.user.displayName;
       $scope.user.displayName = null;
     }

@@ -104,7 +104,7 @@
                       <li ng-repeat="noun in profile.nouns.badWords">{{noun}}</li>
                     </ul>
                   </div>
-                  <div class="col-md-12" ng-show="profile.nouns.otherInfo !== ''">
+                  <div class="col-md-12" ng-show="profile.nouns.otherInfo.length > 0">
                     <h3>Other information</h3>
                     <hr>
                     <div class="panel panel-default">

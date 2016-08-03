@@ -12,6 +12,7 @@ module.exports = function (app) {
   app.route('/api/users/picture').post(users.changeProfilePicture);
 
   app.route('/api/users/search/:searchData').get(users.runSearch);
+  app.route('/api/users/suggested').get(users.runSuggested);
 
   app.route('/api/users/profile/id/:userIdSafe').get(users.getUser);
   app.route('/api/users/profile/username/:username').get(users.getUser);

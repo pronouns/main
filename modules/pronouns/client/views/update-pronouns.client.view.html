@@ -1,0 +1,109 @@
+<section class="row" style="padding-top: 10px;">
+  <div class="col-md-12">
+    <!-- <button class="btn btn-info" ng-click="sendAlerts();" ng-show="user.canSendAlert">Send alerts</button>
+    <button class="btn btn-info" disabled ng-hide="user.canSendAlert">Send alerts</button>-->
+    <div class="sk-wave" ng-show="!resolved">
+      <div class="sk-rect sk-rect1"></div>
+      <div class="sk-rect sk-rect2"></div>
+      <div class="sk-rect sk-rect3"></div>
+      <div class="sk-rect sk-rect4"></div>
+      <div class="sk-rect sk-rect5"></div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <h4>Current pronouns</h4>
+
+        <alert ng-show="!pronouns.length && resolved" type="info">You don't have any pronouns added to your profile.
+        </alert>
+        <div class="list-group" ui-sortable="sortableOptions" ng-model="pronouns">
+          <div ng-repeat="pronoun in pronouns" class="list-group-item">
+            <div class="row">
+              <div class="col-xs-10">
+                <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4
+                  class="list-group-item-heading titleOnPhone"
+                  ng-bind="pronoun.pattern"
+                  ng-hide="!!pronoun.title"></h4><h4
+                  class="list-group-item-heading titleOnPhone" ng-bind="pronoun.title"></h4></a>
+                <small class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
+              </div>
+              <div class="col-xs-2">
+                <div class="pull-right">
+                  <button class="btn btn-danger btn-sm" ng-click="removeMine(pronoun);">
+                    <i class="icon ion-minus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-success btn-block" ng-show="canSave" ng-click="saveAndAlert()">Save</button>
+        <button class="btn btn-default btn-block text-muted" ng-hide="canSave" disabled>Saved</button>
+        <hr>
+      </div>
+      <div class="col-md-6">
+        <tabset active="active">
+          <tab index="0" heading="Private">
+            <br>
+            <alert ng-show="!myList.length && resolved" type="info">You don't have any available private pronouns.
+            </alert>
+
+            <div ng-repeat="pronoun in myList" class="list-group-item">
+              <div class="row">
+                <div class="col-sm-10 col-xs-12">
+                  <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4 class="list-group-item-heading titleOnPhone"
+                                                                           ng-bind="pronoun.pattern"
+                                                                           ng-hide="!!pronoun.title"></h4><h4
+                    class="list-group-item-heading titleOnPhone" ng-bind="pronoun.title"></h4></a>
+                  <small class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
+                </div>
+                <div class="col-sm-2 col-xs-12">
+                  <div class="pull-right">
+                    <button class="btn btn-info btn-sm" ng-click="addMine(pronoun);">
+                      <i class="icon ion-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </tab>
+          <tab index="1" heading="Public">
+            <br>
+
+            <div class="list-group">
+              <input class="form-control" type="text" ng-model="search" placeholder="Search"
+                     ng-change="figureOutItemsToDisplay()"/>
+              <br>
+              <alert ng-show="!pagedItems.length && resolved" type="info">You don't have any available public
+                pronouns.
+              </alert>
+              <div ng-repeat="pronoun in pagedItems" class="list-group-item">
+                <div class="row">
+                  <div class="col-sm-10 col-xs-12">
+                    <a ui-sref="pronouns.view({pronounId: pronoun._id})"><h4
+                      class="list-group-item-heading titleOnPhone" ng-bind="pronoun.pattern"
+                      ng-hide="!!pronoun.title"></h4><h4 class="list-group-item-heading titleOnPhone"
+                                                         ng-bind="pronoun.title"></h4></a>
+                    <small class="list-group-item-heading" ng-bind="pronoun.pattern" ng-show="!!pronoun.title"></small>
+                  </div>
+                  <div class="col-sm-2 col-xs-12">
+                    <div class="pull-right">
+                      <button class="btn btn-info btn-sm" ng-click="addMine(pronoun);">
+                        <i class="icon ion-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <pagination max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage"
+                        ng-change="pageChanged()"></pagination>
+          </tab>
+          <tab index="2" heading="Create new" select="goCreate()">
+
+          </tab>
+
+        </tabset>
+      </div>
+    </div>
+  </div>
+</section>

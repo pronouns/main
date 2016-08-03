@@ -6,6 +6,7 @@
 var _ = require('lodash'),
   fs = require('fs'),
   path = require('path'),
+  async = require('async'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   multer = require('multer'),
@@ -14,7 +15,8 @@ var _ = require('lodash'),
   User = mongoose.model('User'),
   PushBullet = require('pushbullet'),
   nodemailer = require('nodemailer'),
-  sgTransport = require('nodemailer-sendgrid-transport');
+  sgTransport = require('nodemailer-sendgrid-transport'),
+  suggestedStore = {};
 
 var smtpTransport = nodemailer.createTransport(sgTransport(config.mailer.options));
 
@@ -29,7 +31,7 @@ exports.update = function (req, res) {
   delete req.body.roles;
 
   if (user) {
-    if(req.body.pronouns !== user.pronouns){
+    if(req.body.pronouns !== user.pronouns || req.body.names.toString() !== user.names.toString() || req.body.nouns.toString() !== user.nouns.toString() || req.body.nouns.goodWords.toString() !== user.nouns.goodWords.toString() || req.body.nouns.badWords.toString() !== user.nouns.badWords.toString()){
       req.body.canSendAlert = true;
     }
     // Merge existing user
@@ -164,6 +166,72 @@ exports.runSearch = function(req, res){
     }
   });
 };
+exports.runSuggested = function(req, res){
+  if(suggestedStore[req.user._id] !== undefined && suggestedStore[req.user._id].time + (1000 * 60 * 5) > Date.now()){
+    console.log('1');
+    for(var i = suggestedStore[req.user._id].result.length - 1; i >= 0; i--){
+      if(req.user.following.indexOf(suggestedStore[req.user._id].result[i]) !== -1){
+        suggestedStore[req.user._id].result.splice(i, 1);
+      }
+    }
+    async.map(suggestedStore[req.user._id].result, function(id, done){
+      User.findOne({ '_id': id }).select('username displayName names email').exec(function(err, user){
+        done(err, user);
+      });
+    }, function(err, results){
+      if(err){
+        return res.status(400).send(err);
+      }
+      res.json(results);
+    });
+  }
+  else {
+    suggestedStore[req.user._id] = {
+      result: [],
+      time: Date.now()
+    };
+    var tempStore = [];
+    async.each(req.user.following, function (id, done) {
+      User.findOne({ '_id': id }).exec(function (err, user) {
+        if (err) {
+          return done(err);
+        }
+        for (var i = 0; i < user.following.length; i++) {
+          if (String(user.following[i]) !== String(req.user._id) && req.user.following.indexOf(user.following[i]) === -1) {
+            if (tempStore[user.following[i]] === undefined) {
+              tempStore[user.following[i]] = 0;
+            }
+            tempStore[user.following[i]]++;
+          }
+        }
+        done();
+      });
+    }, function (err) {
+      if (err) {
+        return res.status(400).send(err);
+      }
+      var result = Object.keys(tempStore).sort(function (a, b) {
+        return tempStore[b] - tempStore[a];
+      });
+      if (result.length > 10) {
+        result.length = 10;
+      }
+      suggestedStore[req.user._id].result = result;
+      async.map(suggestedStore[req.user._id].result, function (id, done) {
+        User.findOne({ '_id': id }).select('username displayName names email').exec(function (err, user) {
+          done(err, user);
+        });
+      }, function (err, results) {
+        if (err) {
+          return res.status(400).send(err);
+        }
+        res.json(results);
+      });
+    });
+  }
+
+};
+
 /**
  * Send User
  */

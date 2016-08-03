@@ -28,3 +28,22 @@ angular.module('users').config(['$httpProvider',
     ]);
   }
 ]);
+angular.module('users').run(['Menus',
+  function (Menus) {
+    Menus.addMenuItem('topbar', {
+      title: 'Names',
+      state: 'names',
+      roles: ['user']
+    });
+    Menus.addMenuItem('topbar', {
+      title: 'Nouns',
+      state: 'nouns',
+      roles: ['user']
+    });
+    Menus.addMenuItem('topbar', {
+      title: 'Relations',
+      state: 'relations',
+      roles: ['user']
+    });
+  }
+]);

@@ -1,4 +1,4 @@
-<section class="row" style="padding-top: 10px;">
+<section ng-controller="UpdatePronounsController" class="row" style="padding-top: 10px;">
   <div class="col-md-12">
     <!-- <button class="btn btn-info" ng-click="sendAlerts();" ng-show="user.canSendAlert">Send alerts</button>
     <button class="btn btn-info" disabled ng-hide="user.canSendAlert">Send alerts</button>-->
@@ -70,8 +70,7 @@
             <br>
 
             <div class="list-group">
-              <input class="form-control" type="text" ng-model="search" placeholder="Search"
-                     ng-change="figureOutItemsToDisplay()"/>
+              <input class="form-control" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay(search)"/>
               <br>
               <alert ng-show="!pagedItems.length && resolved" type="info">You don't have any available public
                 pronouns.
@@ -95,8 +94,7 @@
                 </div>
               </div>
             </div>
-            <pagination max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage"
-                        ng-change="pageChanged()"></pagination>
+            <pagination max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged(currentPage)"></pagination>
           </tab>
           <tab index="2" heading="Create new" select="goCreate()">
 

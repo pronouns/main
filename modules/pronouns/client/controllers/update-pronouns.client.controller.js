@@ -1,22 +1,28 @@
 'use strict';
 
-angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q', '$state', '$http', '$location', '$filter', 'Users', 'Authentication', 'pronounsResolve', 'publicListResolve', 'myListResolve',
-  function ($scope, $q, $state, $http, $location, $filter, Users, Authentication, pronounsResolve, publicListResolve, myListResolve) {
+angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q', '$state', '$http', '$location', '$filter', 'Users', 'Authentication', 'Profile', 'Pronouns',
+  function ($scope, $q, $state, $http, $location, $filter, Users, Authentication, Profile, Pronouns) {
 
     $scope.user = Authentication.user;
     $scope.error = {
       alert: ''
     };
-    $scope.pronouns = pronounsResolve;
-    $scope.myList = myListResolve;
-    $scope.publicList = publicListResolve;
+
+    var deferred = $q.defer();
+    Profile.byId({ id: Authentication.user._id }, function (data) {
+      deferred.resolve(data.pronouns);
+    });
+    $scope.pronouns = deferred.promise;
+    
+    $scope.myList = null;
+    $scope.publicList = null;
     $scope.resolved = false;
     $scope.canSave = false;
 
     $q.all([
       $scope.pronouns,
-      $scope.myList.$promise,
-      $scope.publicList.$promise
+      Pronouns.mine().$promise,
+      Pronouns.query().$promise
     ]).then(function(data){
       $scope.pronouns = data[0];
       $scope.myList = data[1];
@@ -52,9 +58,9 @@ angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q
       $scope.figureOutItemsToDisplay();
     };
 
-    $scope.figureOutItemsToDisplay = function () {
+    $scope.figureOutItemsToDisplay = function (search) {
       $scope.filteredItems = $filter('filter')($scope.publicList, {
-        $: $scope.search
+        $: search
       });
       $scope.filterLength = $scope.filteredItems.length;
       var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
@@ -62,7 +68,8 @@ angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q
       $scope.pagedItems = $scope.filteredItems.slice(begin, end);
     };
 
-    $scope.pageChanged = function () {
+    $scope.pageChanged = function (id) {
+      $scope.currentPage = id;
       $scope.figureOutItemsToDisplay();
     };
 
@@ -102,10 +109,8 @@ angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q
     };
     $scope.removeMine = function (pronoun) {
       var user = new Users($scope.user);
-      var index = user.pronouns.indexOf(pronoun._id);
-      console.log(pronoun);
-      $scope.user.pronouns.splice(index, 1);
-      $scope.pronouns.splice(index, 1);
+      $scope.user.pronouns.splice(user.pronouns.indexOf(pronoun._id), 1);
+      $scope.pronouns.splice($scope.pronouns.indexOf(pronoun._id), 1);
       if(pronoun.listed){
         $scope.publicList.push(pronoun);
         $scope.figureOutItemsToDisplay();

@@ -35,48 +35,7 @@ angular.module('pronouns').config(['$stateProvider',
       .state('pronouns.update', {
         url: '',
         templateUrl: 'modules/pronouns/client/views/update-pronouns.client.view.html',
-        'controller': 'UpdatePronounsController',
-        resolve: {
-          pronounsResolve: ['$stateParams', 'Pronouns', 'Profile', 'Authentication', '$q', function ($stateParams, Pronouns, Profile, Authentication, $q) {
-            /*var deferred = $q.defer();
-             var processed = 0;
-             var pronouns = [];
-             var testPronouns = [];
-             Authentication.user.pronouns.forEach(function(value){
-             if(typeof value !== 'string'){ // Pronoun has already been loaded into user object
-             testPronouns.push(value._id);
-             pronouns[testPronouns.indexOf(value._id)] = value;
-             processed++;
-             if(processed === Authentication.user.pronouns.length){
-             deferred.resolve(pronouns);
-             }
-             }
-             else {
-             testPronouns.push(value);
-             Pronouns.get({ pronounId: value }, function (data) {
-             pronouns[testPronouns.indexOf(data._id)] = data;
-             processed++;
-             if(processed === Authentication.user.pronouns.length){
-             deferred.resolve(pronouns);
-             }
-             });
-             }
-             });
-             return deferred.promise;*/
-            //TODO make a better way for this
-            var deferred = $q.defer();
-            Profile.byId({ id: Authentication.user._id }, function (data) {
-              deferred.resolve(data.pronouns);
-            });
-            return deferred.promise;
-          }],
-          publicListResolve: ['Pronouns', function (Pronouns) {
-            return Pronouns.query();
-          }],
-          myListResolve: ['Pronouns', function (Pronouns) {
-            return Pronouns.mine();
-          }]
-        }
+        'controller': 'UpdatePronounsController'
       })
       .state('pronouns.view', {
         url: '/:pronounId',

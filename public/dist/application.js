@@ -892,48 +892,7 @@ angular.module('pronouns').config(['$stateProvider',
       .state('pronouns.update', {
         url: '',
         templateUrl: 'modules/pronouns/client/views/update-pronouns.client.view.html',
-        'controller': 'UpdatePronounsController',
-        resolve: {
-          pronounsResolve: ['$stateParams', 'Pronouns', 'Profile', 'Authentication', '$q', function ($stateParams, Pronouns, Profile, Authentication, $q) {
-            /*var deferred = $q.defer();
-             var processed = 0;
-             var pronouns = [];
-             var testPronouns = [];
-             Authentication.user.pronouns.forEach(function(value){
-             if(typeof value !== 'string'){ // Pronoun has already been loaded into user object
-             testPronouns.push(value._id);
-             pronouns[testPronouns.indexOf(value._id)] = value;
-             processed++;
-             if(processed === Authentication.user.pronouns.length){
-             deferred.resolve(pronouns);
-             }
-             }
-             else {
-             testPronouns.push(value);
-             Pronouns.get({ pronounId: value }, function (data) {
-             pronouns[testPronouns.indexOf(data._id)] = data;
-             processed++;
-             if(processed === Authentication.user.pronouns.length){
-             deferred.resolve(pronouns);
-             }
-             });
-             }
-             });
-             return deferred.promise;*/
-            //TODO make a better way for this
-            var deferred = $q.defer();
-            Profile.byId({ id: Authentication.user._id }, function (data) {
-              deferred.resolve(data.pronouns);
-            });
-            return deferred.promise;
-          }],
-          publicListResolve: ['Pronouns', function (Pronouns) {
-            return Pronouns.query();
-          }],
-          myListResolve: ['Pronouns', function (Pronouns) {
-            return Pronouns.mine();
-          }]
-        }
+        'controller': 'UpdatePronounsController'
       })
       .state('pronouns.view', {
         url: '/:pronounId',
@@ -1194,23 +1153,29 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
 
 'use strict';
 
-angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q', '$state', '$http', '$location', '$filter', 'Users', 'Authentication', 'pronounsResolve', 'publicListResolve', 'myListResolve',
-  function ($scope, $q, $state, $http, $location, $filter, Users, Authentication, pronounsResolve, publicListResolve, myListResolve) {
+angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q', '$state', '$http', '$location', '$filter', 'Users', 'Authentication', 'Profile', 'Pronouns',
+  function ($scope, $q, $state, $http, $location, $filter, Users, Authentication, Profile, Pronouns) {
 
     $scope.user = Authentication.user;
     $scope.error = {
       alert: ''
     };
-    $scope.pronouns = pronounsResolve;
-    $scope.myList = myListResolve;
-    $scope.publicList = publicListResolve;
+
+    var deferred = $q.defer();
+    Profile.byId({ id: Authentication.user._id }, function (data) {
+      deferred.resolve(data.pronouns);
+    });
+    $scope.pronouns = deferred.promise;
+    
+    $scope.myList = null;
+    $scope.publicList = null;
     $scope.resolved = false;
     $scope.canSave = false;
 
     $q.all([
       $scope.pronouns,
-      $scope.myList.$promise,
-      $scope.publicList.$promise
+      Pronouns.mine().$promise,
+      Pronouns.query().$promise
     ]).then(function(data){
       $scope.pronouns = data[0];
       $scope.myList = data[1];
@@ -1246,9 +1211,9 @@ angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q
       $scope.figureOutItemsToDisplay();
     };
 
-    $scope.figureOutItemsToDisplay = function () {
+    $scope.figureOutItemsToDisplay = function (search) {
       $scope.filteredItems = $filter('filter')($scope.publicList, {
-        $: $scope.search
+        $: search
       });
       $scope.filterLength = $scope.filteredItems.length;
       var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
@@ -1256,7 +1221,8 @@ angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q
       $scope.pagedItems = $scope.filteredItems.slice(begin, end);
     };
 
-    $scope.pageChanged = function () {
+    $scope.pageChanged = function (id) {
+      $scope.currentPage = id;
       $scope.figureOutItemsToDisplay();
     };
 
@@ -1296,10 +1262,8 @@ angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q
     };
     $scope.removeMine = function (pronoun) {
       var user = new Users($scope.user);
-      var index = user.pronouns.indexOf(pronoun._id);
-      console.log(pronoun);
-      $scope.user.pronouns.splice(index, 1);
-      $scope.pronouns.splice(index, 1);
+      $scope.user.pronouns.splice(user.pronouns.indexOf(pronoun._id), 1);
+      $scope.pronouns.splice($scope.pronouns.indexOf(pronoun._id), 1);
       if(pronoun.listed){
         $scope.publicList.push(pronoun);
         $scope.figureOutItemsToDisplay();

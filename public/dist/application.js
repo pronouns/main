@@ -1230,18 +1230,7 @@ angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q
     // Build current pronouns
     $scope.sortableOptions = {
       stop: function(e, ui) {
-        if($scope.user.pronouns.length === $scope.pronouns.length) {
-          $scope.user.pronouns = [];
-          for (var i = 0; i < $scope.pronouns.length; i++) {
-            if ($scope.pronouns[i]._id === null) {
-              $scope.user.pronouns.push($scope.pronouns[i]); //If pronoun content hasn't been injected yet
-            }
-            else {
-              $scope.user.pronouns.push($scope.pronouns[i]._id);
-            }
-          }
-          $scope.canSave = true;
-        }
+        $scope.canSave = true;
       }
     };
     $scope.sendAlerts = function(){
@@ -1261,9 +1250,12 @@ angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q
       }
     };
     $scope.removeMine = function (pronoun) {
-      var user = new Users($scope.user);
-      $scope.user.pronouns.splice(user.pronouns.indexOf(pronoun._id), 1);
-      $scope.pronouns.splice($scope.pronouns.indexOf(pronoun._id), 1);
+      for(var i = 0; i < $scope.pronouns.length; i++){
+        if($scope.pronouns[i]._id === pronoun._id){
+          $scope.pronouns.splice(i, 1);
+          break;
+        }
+      }
       if(pronoun.listed){
         $scope.publicList.push(pronoun);
         $scope.figureOutItemsToDisplay();
@@ -1274,7 +1266,6 @@ angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q
       $scope.canSave = true;
     };
     $scope.addMine = function (pronoun) {
-      var user = new Users($scope.user);
       var listed = pronoun.listed;
       var index = -1;
 
@@ -1296,8 +1287,6 @@ angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q
       }
 
       if(index > -1) {
-        console.log(pronoun);
-        $scope.user.pronouns.push(pronoun._id);
         $scope.pronouns.push(pronoun);
         if(listed){
           $scope.publicList.splice(index, 1);
@@ -1309,10 +1298,19 @@ angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q
         $scope.canSave = true;
       }
     };
+    // Replicates the visual pronoun objects back into the user
+    // When a user leaves the view and returns, the pronoun objects remain mutated, but the user is returned to server state
+    $scope.replicatePronouns = function(){
+      $scope.user.pronouns = [];
+      for(var i = 0; i < $scope.pronouns.length; i++){
+        $scope.user.pronouns.push($scope.pronouns[i]._id);
+      }
+    };
     $scope.goCreate = function(){
       $state.go('pronouns.create');
     };
     $scope.updateUser = function(cb){
+      $scope.replicatePronouns();
       var user = new Users($scope.user);
       user.$update(function (response) {
         Authentication.user = response;

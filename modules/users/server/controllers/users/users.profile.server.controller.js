@@ -33,6 +33,11 @@ exports.update = function (req, res) {
   if (user) {
     if(req.body.pronouns !== user.pronouns || req.body.names.toString() !== user.names.toString() || req.body.nouns.toString() !== user.nouns.toString() || req.body.nouns.goodWords.toString() !== user.nouns.goodWords.toString() || req.body.nouns.badWords.toString() !== user.nouns.badWords.toString()){
       req.body.canSendAlert = true;
+      if(Date.now() - user.lastPronounUpdateAt > user.pronounTimeBest){
+        req.body.pronounTimeBest = Date.now() - user.lastPronounUpdateAt;
+      }
+      req.body.lastPronounUpdateAt = Date.now();
+      
     }
     // Merge existing user
     user = _.extend(user, req.body);

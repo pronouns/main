@@ -9,6 +9,10 @@
       <div class="sk-rect sk-rect4"></div>
       <div class="sk-rect sk-rect5"></div>
     </div>
+    <div class="row" ng-show="congrats.show">
+      <div class="alert alert-success" ng-show="congrats.newBest"><b>Congrats!</b> You beat your record! You started using those pronouns {{congrats.text}}. Your old record was {{congrats.bestScore}}.</div>
+      <div class="alert alert-info" ng-hide="congrats.newBest">You started using those pronouns {{congrats.text}}. Your record is {{congrats.bestScore}}.</div>
+    </div>
     <div class="row">
       <div class="col-md-6">
         <h4>Current pronouns</h4>

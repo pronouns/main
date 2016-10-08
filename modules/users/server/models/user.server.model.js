@@ -141,6 +141,13 @@ var UserSchema = new Schema({
   },
   canSendAlert: {
     type: Boolean
+  },
+  lastPronounUpdateAt: {
+    type: Date
+  },
+  pronounTimeBest: {
+    type: Number,
+    default: 0
   }
 });
 UserSchema.index({ displayName: 'text', email: 'text', username: 'text' });

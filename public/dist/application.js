@@ -1153,13 +1153,17 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
 
 'use strict';
 
-angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q', '$state', '$http', '$location', '$filter', 'Users', 'Authentication', 'Profile', 'Pronouns',
-  function ($scope, $q, $state, $http, $location, $filter, Users, Authentication, Profile, Pronouns) {
-
+angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q', '$state', '$http', '$location', '$filter', 'moment', 'Users', 'Authentication', 'Profile', 'Pronouns',
+  function ($scope, $q, $state, $http, $location, $filter, moment, Users, Authentication, Profile, Pronouns) {
+    $scope.showCongratsTo = ['falk', 'tom catyr todd'];
+    
     $scope.user = Authentication.user;
     $scope.error = {
       alert: ''
     };
+    $scope.congrats = {};
+    $scope.congrats.text = 0;
+    $scope.congrats.show = false;
 
     var deferred = $q.defer();
     Profile.byId({ id: Authentication.user._id }, function (data) {
@@ -1203,7 +1207,7 @@ angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q
       $scope.resolved = true;
     });
 
-
+    
     $scope.buildPager = function () {
       $scope.pagedItems = [];
       $scope.itemsPerPage = 5;
@@ -1310,6 +1314,7 @@ angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q
       $state.go('pronouns.create');
     };
     $scope.updateUser = function(cb){
+      $scope.showCongratsMessage();
       $scope.replicatePronouns();
       var user = new Users($scope.user);
       user.$update(function (response) {
@@ -1321,6 +1326,15 @@ angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q
         $scope.error = response.data.message;
         cb();
       });
+    };
+    $scope.showCongratsMessage = function(){
+      if($scope.showCongratsTo.indexOf($scope.user.username) > -1) {
+        console.log($scope.user.pronounTimeBest);
+        $scope.congrats.newBest = (Date.now() - moment($scope.user.lastPronounUpdateAt).valueOf()) > $scope.user.pronounTimeBest;
+        $scope.congrats.text = moment($scope.user.lastPronounUpdateAt).fromNow();
+        $scope.congrats.show = true;
+        $scope.congrats.bestScore = moment.duration($scope.user.pronounTimeBest).humanize();
+      }
     };
   }
 ]);

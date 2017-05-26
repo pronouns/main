@@ -247,7 +247,6 @@ exports.meWithFollowing = function (req, res) {
         model: 'Pronoun'
       }
     }).exec(function (err, user) {
-      console.log(user.following[0].pronouns);
       if(err !== null){
         res.json(null);
       }

@@ -9,6 +9,7 @@ angular.module('users').controller('NounsController', ['$scope', '$http', 'Authe
     $scope.nouns = ['man'];
     $scope.newGood = '';
     $scope.newBad = '';
+    $scope.error = {};
     
     $scope.suggestSave = function(){
       $scope.needsSave = true;

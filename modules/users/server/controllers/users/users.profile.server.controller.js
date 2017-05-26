@@ -237,6 +237,30 @@ exports.runSuggested = function(req, res){
 
 };
 
+exports.meWithFollowing = function (req, res) {
+  if(req.user !== null){
+    User.findOne({ _id: req.user._id }).populate({
+      path: 'following',
+      select: '-salt -password -resetPasswordToken -additionalProvidersData -pushbulletKey',
+      populate: {
+        path: 'pronouns',
+        model: 'Pronoun'
+      }
+    }).exec(function (err, user) {
+      console.log(user.following[0].pronouns);
+      if(err !== null){
+        res.json(null);
+      }
+      else {
+        res.json(user);
+      }
+    });
+  }
+  else{
+    res.json(null);
+  }
+};
+
 /**
  * Send User
  */

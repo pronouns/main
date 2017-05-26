@@ -13,13 +13,11 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
     $scope.reloadFollowing = function() {
       $scope.following = [];
       if ($scope.user) {
-        $scope.user.following.forEach(function (value) {
-          if (typeof value !== 'string') { // Following has already been loaded into user object
-            $scope.following.push(value);
+        $http.get('/api/users/me/following').then(function(response){
+          if(response.data.following !== null) {
+            $scope.following = response.data.following;
           }
-          else {
-            $scope.following.push(Profile.byId({ id: value }));
-          }
+          console.log(response);
         });
       }
     };

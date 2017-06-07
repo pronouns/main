@@ -23,7 +23,7 @@
       <div class="alert alert-warning">
         <p>You haven't followed anyone yet, so there is nothing to put here. Here is a cat picture instead! If you are having trouble getting started, we have a <a ui-sref="welcome()">checklist for new users</a>.</p>
       </div>
-      <img ng-src="{{(!following.length && !user.following.length && authentication.user) && 'http://thecatapi.com/api/images/get?size=med' || ''}}" class="img-responsive"/>
+      <img ng-src="{{(!following.length && !user.following.length && authentication.user) && 'http://thecatapi.com/api/images/get?size=med&type=png,jpg' || ''}}" class="img-responsive"/>
     </div>
     <div class="sk-wave" ng-show="!following.length && !!user.following.length">
       <div class="sk-rect sk-rect1"></div>

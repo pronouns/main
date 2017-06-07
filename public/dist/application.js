@@ -456,13 +456,11 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
     $scope.reloadFollowing = function() {
       $scope.following = [];
       if ($scope.user) {
-        $scope.user.following.forEach(function (value) {
-          if (typeof value !== 'string') { // Following has already been loaded into user object
-            $scope.following.push(value);
+        $http.get('/api/users/me/following').then(function(response){
+          if(response.data.following !== null) {
+            $scope.following = response.data.following;
           }
-          else {
-            $scope.following.push(Profile.byId({ id: value }));
-          }
+          console.log(response);
         });
       }
     };
@@ -1561,6 +1559,24 @@ angular.module('users').config(['$stateProvider',
         templateUrl: 'modules/users/client/views/password/reset-password.client.view.html'
       })
       .state('profile', {
+        url: '/u/:username',
+        templateUrl: 'modules/users/client/views/user-profile.client.view.html',
+        controller: 'UserProfileController',
+        resolve: {
+          profileResolve: ['$stateParams', 'Profile', function ($stateParams, Profile) {
+            return Profile.byUsername({
+              username: $stateParams.username
+            });
+          }],
+          followersResolve: ['$stateParams', 'Followers', function ($stateParams, Followers) {
+            return Followers.byUsername({
+              username: $stateParams.username
+            });
+          }]
+        }
+      })
+      // TODO remove
+      .state('profileDEPRECATED', {
         url: '/users/:username',
         templateUrl: 'modules/users/client/views/user-profile.client.view.html',
         controller: 'UserProfileController',
@@ -1585,6 +1601,12 @@ angular.module('users').config(['$stateProvider',
       }).state('nouns', {
         url: '/nouns',
         templateUrl: 'modules/users/client/views/nouns.client.view.html'
+      }).state('welcome', {
+        templateUrl: 'modules/users/client/views/welcome.client.view.html',
+        params: {
+          'destination': 'home',
+          'params': []
+        }
       });
   }
 ]);
@@ -1670,6 +1692,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
   function ($scope, $state, $http, $location, $window, Authentication, PasswordValidator) {
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
+    $scope.showSignedUpMsg = false;
 
     // Get an eventual error defined in the URL query string:
     $scope.error = $location.search().err;
@@ -1694,6 +1717,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
 
         // And redirect to the previous or home page
         $state.go($state.previous.state.name || 'home', $state.previous.params);
+        $state.go('welcome', { 'destination': $state.previous.state.name || 'home', 'params': $state.previous.params });
       }).error(function (response) {
         $scope.error = response.message;
       });
@@ -1742,6 +1766,7 @@ angular.module('users').controller('NounsController', ['$scope', '$http', 'Authe
     $scope.nouns = ['man'];
     $scope.newGood = '';
     $scope.newBad = '';
+    $scope.error = {};
     
     $scope.suggestSave = function(){
       $scope.needsSave = true;
@@ -1993,13 +2018,11 @@ angular.module('users').controller('RelationsController', ['$scope', '$http', 'A
     $scope.reloadFollowing = function() {
       $scope.following = [];
       if ($scope.user) {
-        $scope.user.following.forEach(function (value) {
-          if (typeof value !== 'string') { // Following has already been loaded into user object
-            $scope.following.push(value);
+        $http.get('/api/users/me/following').then(function(response){
+          if(response.data.following !== null) {
+            $scope.following = response.data.following;
           }
-          else {
-            $scope.following.push(Profile.byId({ id: value }));
-          }
+          console.log(response);
         });
       }
     };
@@ -2348,6 +2371,32 @@ angular.module('users').controller('UpdateNamesController', ['$scope', '$http', 
   }
 ]);
 
+
+'use strict';
+
+angular.module('users').controller('WelcomeController', ['$scope', '$state', '$http', 'Authentication', 'Users', 'Profile',
+  function ($scope, $state, $http, Authentication, Users, Profile) {
+    // This provides Authentication context.
+    $scope.authentication = Authentication;
+    $scope.user = Authentication.user;
+    $scope.clicks = [];
+
+
+    $scope.navigateAway = function () {
+      $state.go($state.params.destination, $state.params.params);
+    };
+
+    $scope.registerClick = function (id) {
+      $scope.clicks[id] = true;
+    };
+    $scope.wasClicked = function (id) {
+      return $scope.clicks[id] === true ? 'active' : '';
+    };
+    $scope.wasAllClicked = function (id) {
+      return $scope.clicks.pronouns && $scope.clicks.names && $scope.clicks.nouns && $scope.clicks.relations && $scope.clicks.alerts;
+    };
+  }
+]);
 
 'use strict';
 

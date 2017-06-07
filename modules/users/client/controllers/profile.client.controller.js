@@ -1,8 +1,11 @@
 'use strict';
 
-angular.module('users').controller('UserProfileController', ['$scope', 'Authentication', 'Users', 'Pronouns', '$q', 'profileResolve', 'followersResolve',
-  function ($scope, Authentication, Users, Pronouns, $q, profileResolve, followersResolve) {
-    $scope.authentication = Authentication;
+angular.module('users').controller('UserProfileController', ['$scope', '$stateParams', 'Authentication', 'Users', 'Pronouns', '$q', 'profileResolve', 'followersResolve',
+  function ($scope, $stateParams, Authentication, Users, Pronouns, $q, profileResolve, followersResolve) {
+  $scope.authentication = Authentication;
+  $scope.username = $stateParams.username;
+
+  $scope.badRequest = false;
     $scope.limits = {
       friends: 5,
       followers: 5,
@@ -12,9 +15,12 @@ angular.module('users').controller('UserProfileController', ['$scope', 'Authenti
       profileResolve.$promise,
       followersResolve.$promise
     ]).then(function(data){
+      console.log('hhyeieygye');
       $scope.profile = data[0];
       $scope.profile.followers = data[1];
       $scope.createFriendList();
+    }).catch(function(e){
+      $scope.badRequest = true;
     });
     var intersect = function(a, b) {
       var t;

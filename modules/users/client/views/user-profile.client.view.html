@@ -1,4 +1,9 @@
 <section>
+  <div ng-show="badRequest">
+    <h3>That user doesn't exist.</h3>
+    <p class="lead">Pronouny couldn't find a user with the username <b>{{username}}</b>.</p>
+    <p>Perhaps you mistyped the username or the user you are trying to find changed their username.</p>
+  </div>
   <div ng-show="profile._id">
     <div class="row">
       <div class="col-md-12">

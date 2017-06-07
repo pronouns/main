@@ -241,7 +241,7 @@ exports.meWithFollowing = function (req, res) {
   if(req.user !== null){
     User.findOne({ _id: req.user._id }).populate({
       path: 'following',
-      select: '-salt -password -resetPasswordToken -additionalProvidersData -pushbulletKey',
+      select: '-salt -password -resetPasswordToken -additionalProvidersData -providerData -pushbulletKey',
       populate: {
         path: 'pronouns',
         model: 'Pronoun'

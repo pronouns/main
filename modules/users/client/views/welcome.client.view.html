@@ -1,0 +1,56 @@
+<section ng-controller="WelcomeController">
+  <h1>Welcome to Pronouny!</h1>
+
+  <p>Before you get started with Pronouny, here is a checklist to get you started. You can click any of the boxes below to jump to the appropriate page on Pronouny.</p>
+
+  <h3></h3>
+
+  <div class="list-group">
+    <a href="/pronouns" target="_blank" class="list-group-item" ng-click="registerClick('pronouns')" ng-class="wasClicked('pronouns')">
+      <h4 class="list-group-item-heading">Add pronouns</h4>
+      <div class="list-group-item-text">
+        <p>You can start by adding some pronouns to your account. There are three groups of pronouns.</p>
+        <ul>
+          <li>"current pronouns" are the pronouns you are currently using.</li>
+          <li>"public pronouns" is a list of common pronouns to save you time.</li>
+          <li>"private pronouns" is a place for you to add your own personal pronouns that aren't in the public list</li>
+        </ul>
+        <p>To add a pronoun to "current pronouns" just click the "+". To create a new pronoun click "Create new".</p>
+      </div>
+    </a>
+    <a href="/names" target="_blank" class="list-group-item" ng-click="registerClick('names')" ng-class="wasClicked('names')">
+      <h4 class="list-group-item-heading">Add names</h4>
+      <div class="list-group-item-text">
+        <p>Names are easier than pronouns. Just type in a name and click "Add". You can have as many names as you want. If you have no names, the "names" section will be hidden from your profile.</p>
+      </div>
+    </a>
+    <a href="/nouns" target="_blank" class="list-group-item" ng-click="registerClick('nouns')" ng-class="wasClicked('nouns')">
+      <h4 class="list-group-item-heading">Add nouns</h4>
+      <div class="list-group-item-text">
+        <p>Prounouny has a bunch of options to choose which gendered nouns you like. You can use one of the options or a combination.</p>
+        <ul>
+          <li>Selecting a common noun type like "Masculine" or "Neutral".</li>
+          <li>Listing nouns you like and nouns you dislike.</li>
+          <li>Explaining what gendered nouns you want in a text input box.</li>
+        </ul>
+      </div>
+    </a>
+    <a href="/relations" target="_blank" class="list-group-item" ng-click="registerClick('relations')" ng-class="wasClicked('relations')">
+      <h4 class="list-group-item-heading">Find your friends</h4>
+      <div class="list-group-item-text">
+        <p>Prounouny is better with friends. You can share your pronouns with your friends and keep track of your friends' pronouns. To add a friend you can search using their full username or their full email. Then you can go to their profile and follow them. Once you are following some people, Pronouny will start to suggest other people you could follow.</p>
+      </div>
+    </a>
+    <a href="/settings/alerts" target="_blank" class="list-group-item" ng-click="registerClick('alerts')" ng-class="wasClicked('alerts')">
+      <h4 class="list-group-item-heading">Configure alerts</h4>
+      <div class="list-group-item-text">
+        <p>Pronouny can alert you via email when any of the people you follow change their information. Just check "email" and click "save". Pronouny can also send notifications via Facebook or Pushbullet, but that will take extra steps to configure.</p>
+      </div>
+    </a>
+  </div>
+
+  <p>It's awesome that you have joined us and I hope you have a great time using Pronouny. If you have any suggestions or questions you can contact me at <a href="mailto:me@falkirks.com">me@falkirks.com</a>.</p>
+
+  <button class="btn btn-block btn-success" ng-click="navigateAway()" ng-show="wasAllClicked()">Continue</button>
+  <button class="btn btn-block btn-muted" ng-hide="wasAllClicked()">Continue</button>
+</section>

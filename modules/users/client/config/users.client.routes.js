@@ -77,6 +77,24 @@ angular.module('users').config(['$stateProvider',
         templateUrl: 'modules/users/client/views/password/reset-password.client.view.html'
       })
       .state('profile', {
+        url: '/u/:username',
+        templateUrl: 'modules/users/client/views/user-profile.client.view.html',
+        controller: 'UserProfileController',
+        resolve: {
+          profileResolve: ['$stateParams', 'Profile', function ($stateParams, Profile) {
+            return Profile.byUsername({
+              username: $stateParams.username
+            });
+          }],
+          followersResolve: ['$stateParams', 'Followers', function ($stateParams, Followers) {
+            return Followers.byUsername({
+              username: $stateParams.username
+            });
+          }]
+        }
+      })
+      // TODO remove
+      .state('profileDEPRECATED', {
         url: '/users/:username',
         templateUrl: 'modules/users/client/views/user-profile.client.view.html',
         controller: 'UserProfileController',
@@ -101,6 +119,12 @@ angular.module('users').config(['$stateProvider',
       }).state('nouns', {
         url: '/nouns',
         templateUrl: 'modules/users/client/views/nouns.client.view.html'
+      }).state('welcome', {
+        templateUrl: 'modules/users/client/views/welcome.client.view.html',
+        params: {
+          'destination': 'home',
+          'params': []
+        }
       });
   }
 ]);

@@ -19,9 +19,11 @@
       </div>
     </div>
     <br>
-    <div class="alert alert-warning" ng-show="!following.length && !user.following.length">
-      <p>You are <b>really</b> cool. You also haven't followed anyone yet, so if you want to do that, you can go to a
-        user's profile and click "follow".</p>
+    <div ng-show="!following.length && !user.following.length">
+      <div class="alert alert-warning">
+        <p>You haven't followed anyone yet, so there is nothing to put here. Here is a cat picture instead! If you are having trouble getting started, we have a <a ui-sref="welcome()">checklist for new users</a>.</p>
+      </div>
+      <img src="http://thecatapi.com/api/images/get?size=med" class="img-responsive"/>
     </div>
     <div class="sk-wave" ng-show="!following.length && !!user.following.length">
       <div class="sk-rect sk-rect1"></div>

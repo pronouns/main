@@ -2,10 +2,10 @@
 
 angular.module('users').controller('UserProfileController', ['$scope', '$stateParams', 'Authentication', 'Users', 'Pronouns', '$q', 'profileResolve', 'followersResolve',
   function ($scope, $stateParams, Authentication, Users, Pronouns, $q, profileResolve, followersResolve) {
-  $scope.authentication = Authentication;
-  $scope.username = $stateParams.username;
+    $scope.authentication = Authentication;
+    $scope.username = $stateParams.username;
 
-  $scope.badRequest = false;
+    $scope.badRequest = false;
     $scope.limits = {
       friends: 5,
       followers: 5,

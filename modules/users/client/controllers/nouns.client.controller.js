@@ -6,7 +6,7 @@ angular.module('users').controller('NounsController', ['$scope', '$http', 'Authe
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     $scope.needsSave = false;
-    $scope.nouns = ['man'];
+    $scope.nouns = ['man', 'woman', 'boyfriend', 'girlfriend', 'boy', 'girl', 'enby', 'enbyfriend', 'husband', 'wife', 'partner'];
     $scope.newGood = '';
     $scope.newBad = '';
     $scope.error = {};

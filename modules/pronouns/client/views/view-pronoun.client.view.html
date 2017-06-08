@@ -18,7 +18,7 @@
               Posted on
               <span ng-bind="pronoun.created | date:'mediumDate'"></span>
               by
-              <a ng-bind="pronoun.user.displayName" ui-sref="profile({username: pronoun.user.username})"></a>
+              <a ng-bind="pronoun.user.username" ui-sref="profile({username: pronoun.user.username})"></a>
             </em>
           </small>
           <div ng-show="user.roles.indexOf('admin') > -1">
@@ -90,6 +90,7 @@
   <div ng-show="!!pronoun.$resolved && !pronoun._id">
     <div class="page-header">
       <h1 style="font-size: 5.6vw;">Pronoun doesn't exist</h1>
+      <p>Perhaps the pronoun you are looking for was deleted by its owner.</p>
     </div>
   </div>
   <div ng-show="!pronoun.$resolved && !pronoun._id">

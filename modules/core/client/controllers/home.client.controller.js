@@ -16,6 +16,9 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
         $http.get('/api/users/me/following').then(function(response){
           if(response.data.following !== null) {
             $scope.following = response.data.following;
+            if($scope.following.length === 0){
+              $scope.user.following = [];
+            }
           }
           console.log(response);
         });

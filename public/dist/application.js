@@ -459,6 +459,9 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
         $http.get('/api/users/me/following').then(function(response){
           if(response.data.following !== null) {
             $scope.following = response.data.following;
+            if($scope.following.length === 0){
+              $scope.user.following = [];
+            }
           }
           console.log(response);
         });
@@ -1763,7 +1766,7 @@ angular.module('users').controller('NounsController', ['$scope', '$http', 'Authe
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     $scope.needsSave = false;
-    $scope.nouns = ['man'];
+    $scope.nouns = ['man', 'woman', 'boyfriend', 'girlfriend', 'boy', 'girl', 'enby', 'enbyfriend', 'husband', 'wife', 'partner'];
     $scope.newGood = '';
     $scope.newBad = '';
     $scope.error = {};
@@ -1898,9 +1901,12 @@ angular.module('users').controller('PasswordController', ['$scope', '$stateParam
 
 'use strict';
 
-angular.module('users').controller('UserProfileController', ['$scope', 'Authentication', 'Users', 'Pronouns', '$q', 'profileResolve', 'followersResolve',
-  function ($scope, Authentication, Users, Pronouns, $q, profileResolve, followersResolve) {
+angular.module('users').controller('UserProfileController', ['$scope', '$stateParams', 'Authentication', 'Users', 'Pronouns', '$q', 'profileResolve', 'followersResolve',
+  function ($scope, $stateParams, Authentication, Users, Pronouns, $q, profileResolve, followersResolve) {
     $scope.authentication = Authentication;
+    $scope.username = $stateParams.username;
+
+    $scope.badRequest = false;
     $scope.limits = {
       friends: 5,
       followers: 5,
@@ -1910,9 +1916,12 @@ angular.module('users').controller('UserProfileController', ['$scope', 'Authenti
       profileResolve.$promise,
       followersResolve.$promise
     ]).then(function(data){
+      console.log('hhyeieygye');
       $scope.profile = data[0];
       $scope.profile.followers = data[1];
       $scope.createFriendList();
+    }).catch(function(e){
+      $scope.badRequest = true;
     });
     var intersect = function(a, b) {
       var t;
@@ -2389,11 +2398,27 @@ angular.module('users').controller('WelcomeController', ['$scope', '$state', '$h
     $scope.registerClick = function (id) {
       $scope.clicks[id] = true;
     };
+    $scope.hasSavedData = function (id) {
+      switch (id){
+        case 'pronouns':
+          return $scope.user.pronouns.length > 0;
+        case 'names':
+          return $scope.user.names.length > 0;
+        case 'nouns':
+          return $scope.user.nouns.nounType !== undefined || $scope.user.nouns.goodWords.length > 0 || $scope.user.nouns.badWords.length > 0 || ($scope.user.nouns.otherInfo !== undefined && $scope.user.nouns.otherInfo !== '');
+        case 'relations':
+          return $scope.user.following.length > 0;
+        case 'alerts':
+          return $scope.user.alertChannels.length > 0;
+        default:
+          return false;
+      }
+    };
     $scope.wasClicked = function (id) {
-      return $scope.clicks[id] === true ? 'active' : '';
+      return ($scope.clicks[id] === true || $scope.hasSavedData(id)) ? 'active' : '';
     };
     $scope.wasAllClicked = function (id) {
-      return $scope.clicks.pronouns && $scope.clicks.names && $scope.clicks.nouns && $scope.clicks.relations && $scope.clicks.alerts;
+      return $scope.wasClicked('pronouns') && $scope.wasClicked('names') && $scope.wasClicked('nouns') && $scope.wasClicked('relations') && $scope.wasClicked('alerts');
     };
   }
 ]);

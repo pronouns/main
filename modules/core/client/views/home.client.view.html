@@ -9,12 +9,18 @@
 
   </div>
   <div ng-show="authentication.user">
+    <div class="well" style="margin-top: 20px; text-align:center;">
+      <p>You can share your pronouns, names, and nouns using your profile link.</p>
+      <h4><code>https://pronouny.xyz/u/{{user.username}}</code></h4>
+      <a class="btn btn-primary btn-sm" href="https://www.facebook.com/sharer/sharer.php?u=https%3A//pronouny.xyz/u/{{user.username}}" target="_blank">Share on Facebook</a>
+      <a class="btn btn-info btn-sm" href="https://twitter.com/home?status=https%3A//pronouny.xyz/u/{{user.username}}" target="_blank">Share on Twitter</a>
+    </div>
     <br>
     <div class="row">
-      <div class="col-md-10" style="padding-top: 20px;">
+      <div class="col-md-10">
         <input type="text" ng-model="selectedUser" placeholder="Search for a user" typeahead="user as user.username for user in getUsers($viewValue)" typeahead-loading="loadingUsers" typeahead-no-results="noResults" typeahead-editable="false" typeahead-show-hint="true" class="form-control">
       </div>
-      <div class="col-md-2" style="padding-top: 20px;">
+      <div class="col-md-2">
         <button class="btn btn-primary" ng-class="{disabled: selectedUser === undefined}" style="width: 100%;" ng-click="addFollowing()">Follow</button>
       </div>
     </div>

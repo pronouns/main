@@ -71,3 +71,5 @@ mongod
 *.ntvs*
 *.njsproj
 *.sln
+
+package-lock.json

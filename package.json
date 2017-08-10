@@ -11,7 +11,8 @@
     "url": "https://github.com/meanjs/mean.git"
   },
   "engines": {
-    "npm": ">=1.4.28"
+    "npm": ">=1.4.28",
+    "node": "8.2.x"
   },
   "scripts": {
     "start": "grunt",

@@ -17,13 +17,12 @@
           pronouns, referring to a man and a woman, respectively. A gender-neutral pronoun or gender-inclusive pronoun
           is one that gives no implications about gender, and could be used for someone of any gender. Some languages
           only have gender-neutral pronouns, whereas other languages have difficulty establishing any that aren't
-          gender-specific. People with non-binary gender identities offebten choose new third-person pronouns for
-          themselves as part of their transition. They often choose gender-neutral pronouns so that others won't see
-          them as female or male.
+          gender-specific. People with non-binary gender identities often choose new third-person pronouns for
+          themselves as part of their transition.
         </blockquote>
         Read more on the <a href="https://nonbinary.miraheze.org/wiki/Pronouns" target="_blank">Nonbinary wiki</a>.
         <hr>
-
+        <div>
           <h2>Example Pronouns</h2>
           <p>Here are some examples of pronouns you could select on Pronouny. You can also see the <a ui-sref="pronouns.list.all({})">full list</a>.</p> <br>
           <div ng-repeat="randomPronoun in randomPronouns" ui-sref="pronouns.view({pronounId: randomPronoun._id})" class="col-md-12">
@@ -38,8 +37,8 @@
               </div>
             </div>
           </div>
+        </div>
         <hr>
-
           <h2>Supporting Pronouny</h2>
           <p>Pronouny is free software that doesn't use ads or have any sort of revenue. There are a few ways you can
             make sure it stays alive keeps getting better.</p>
@@ -109,7 +108,7 @@
       <div class="alert alert-warning">
         <p>You haven't followed anyone yet, so there is nothing to put here. Here is a cat picture instead! If you are having trouble getting started, we have a <a ui-sref="welcome()">checklist for new users</a>.</p>
       </div>
-      <img ng-src="{{(!following.length && !user.following.length && authentication.user) && 'http://thecatapi.com/api/images/get?size=med&type=png,jpg' || ''}}" class="img-responsive"/>
+      <img ng-src="{{(!following.length && !user.following.length && authentication.user) && 'http://thecatapi.com/api/images/get?size=med&type=png,jpg' || ''}}" class="img-responsive" alt="Random cat image"/>
     </div>
     <div class="sk-wave" ng-show="!following.length && !!user.following.length">
       <div class="sk-rect sk-rect1"></div>

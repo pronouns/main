@@ -10,7 +10,8 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
     $scope.searchResults = [];
     $scope.selectedUser = undefined;
     $scope.pronouns = [];
-    $scope.randomPronoun = undefined;
+    $scope.randomPronouns = undefined;
+    $scope.easyPronouns = ['she', 'he', 'they'];
 
     Pronouns.query(function (data) {
       $scope.pronouns = data;
@@ -20,6 +21,22 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
 
     $scope.pickRandomPronouns = function () {
       $scope.randomPronouns = getRandomSubarray($scope.pronouns, Math.min(3, $scope.pronouns.length));
+      for(var i = 0; i < $scope.randomPronouns.length; i++){
+        if($scope.easyPronouns.indexOf($scope.randomPronouns[i].subject) > -1){
+          return;
+        }
+      }
+
+      var subject = $scope.easyPronouns[Math.floor(Math.random()*$scope.easyPronouns.length)];
+      for(var j = 0; j < $scope.pronouns.length; j++){
+        if($scope.pronouns[j].subject === subject){
+          $scope.randomPronouns[0] = $scope.pronouns[j];
+          return;
+        }
+      }
+
+      console.log('Error: One of the defined easy pronouns was not available.');
+
     };
 
     function getRandomSubarray(arr, size) {

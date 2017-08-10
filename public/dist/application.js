@@ -462,7 +462,7 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
     });
 
     $scope.pickRandomPronouns = function () {
-      $scope.randomPronouns = getRandomSubarray($scope.pronouns, Math.max(3, $scope.pronouns.length));
+      $scope.randomPronouns = getRandomSubarray($scope.pronouns, Math.min(3, $scope.pronouns.length));
     };
 
     function getRandomSubarray(arr, size) {

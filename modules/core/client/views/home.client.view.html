@@ -1,14 +1,94 @@
 <section ng-controller="HomeController">
   <div ng-hide="authentication.user">
-    <div class="page-header"><h1>Pronouny</h1></div>
-    <p class="lead">Share your personal pronouns and stay updated on your friends' pronouns. Pronouny allows you to
-      update your pronouns and send alerts to your friends.</p>
-    <br>
-    <a class="btn btn-lg btn-info" ui-sref="authentication.signup">Sign Up</a>
-    <a class="btn btn-lg" ui-sref="authentication.signin">Sign In</a>
+    <div class="bg"></div>
+    <div class="jumbotron">
+      <h1>Pronouny</h1>
+      <p class="lead"><b>Share your personal pronouns and stay updated on your friends' pronouns.</b></p>
+      <a class="btn btn-lg btn-primary" ui-sref="authentication.signup" href="/authentication/signup">Sign Up</a>
+      <a class="btn btn-lg btn-info" ui-sref="authentication.signin" href="/authentication/signin">Sign In</a>
+    </div>
 
+    <div class="container">
+      <div class="row">
+        <h2>Pronouns</h2>
+        <blockquote>
+          Pronouns are a part of language used to refer to someone or something without using proper nouns. In standard
+          English, some singular third-person pronouns are "he" and "she," which are usually seen as gender-specific
+          pronouns, referring to a man and a woman, respectively. A gender-neutral pronoun or gender-inclusive pronoun
+          is one that gives no implications about gender, and could be used for someone of any gender. Some languages
+          only have gender-neutral pronouns, whereas other languages have difficulty establishing any that aren't
+          gender-specific. People with non-binary gender identities offebten choose new third-person pronouns for
+          themselves as part of their transition. They often choose gender-neutral pronouns so that others won't see
+          them as female or male.
+        </blockquote>
+        Read more on the <a href="https://nonbinary.miraheze.org/wiki/Pronouns" target="_blank">Nonbinary wiki</a>.
+        <hr>
+
+          <h2>Example Pronouns</h2>
+          <p>Here are some examples of pronouns you could select on Pronouny. You can also see the <a ui-sref="pronouns.list.all({})">full list</a>.</p> <br>
+          <div ng-repeat="randomPronoun in randomPronouns" ui-sref="pronouns.view({pronounId: randomPronoun._id})" class="col-md-12">
+            <div class="panel panel-default" style="padding: 5px">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-sm-10 col-xs-12">
+                    <a ui-sref="pronouns.view({pronounId: randomPronoun._id})"><h4 class="list-group-item-heading titleOnPhone" ng-bind="randomPronoun.pattern" ng-hide="!!randomPronoun.title"></h4><h4 class="list-group-item-heading titleOnPhone" ng-bind="randomPronoun.title"></h4></a>
+                    <small class="list-group-item-heading" ng-bind="randomPronoun.pattern" ng-show="!!randomPronoun.title"></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <hr>
+
+          <h2>Supporting Pronouny</h2>
+          <p>Pronouny is free software that doesn't use ads or have any sort of revenue. There are a few ways you can
+            make sure it stays alive keeps getting better.</p>
+          <div class="container">
+            <div class="row">
+              <div class="col-md-4">
+                <h3>Suggesting features and reporting bugs</h3>
+                <p>You can suggest new features or report issues <a href="https://github.com/pronouns/main/issues">on
+                  GitHub</a>. Feel free to suggest or comment on anything, feedback is great. Accessibility issues will
+                  be prioritized.</p>
+              </div>
+              <div class="col-md-4">
+                <h3>Contributing code</h3>
+                <p>If you know Javascript and have used Angular.JS before, you could probably help Pronouny out. The
+                  code is all <a href="https://github.com/pronouns/main">open source</a> and pull requests are
+                  encouraged.</p>
+              </div>
+              <div class="col-md-4">
+                <h3>Donating money</h3>
+                <p>You can donate to <a href="https://paypal.me/falkirks">falkirks on Paypal</a>. Put "Pronouny" in the
+                  note and the money will be allocated directly back to maintaining this service.</p>
+              </div>
+
+            </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-center"><p>Cats are cute. Enbies are awesome.</p></div>
+        </div>
+      </div>
+      <script>
+        var jumboHeight = $('.jumbotron').outerHeight();
+
+        function parallax() {
+          var scrolled = $(window).scrollTop();
+          $('.bg').css('height', (jumboHeight - scrolled) + 'px');
+        }
+
+        $(window).scroll(function (e) {
+          parallax();
+        });
+      </script>
+    </div>
   </div>
-  <div ng-show="authentication.user">
+  <div ng-show=" authentication.user">
     <div class="well" style="margin-top: 20px; text-align:center;">
       <p>You can share your pronouns, names, and nouns using your profile link.</p>
       <h4><code>https://pronouny.xyz/u/{{user.username}}</code></h4>

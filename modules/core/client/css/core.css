@@ -43,3 +43,25 @@ a:hover .header-profile-image {
     font-size: 15px;
   }
 }
+.bg {
+  background: url('/pink.jpg') right center no-repeat;
+  background-size: cover;
+  position: fixed;
+  width: 100%;
+  height: 350px; /*same height as jumbotron */
+  top:0;
+  left:0;
+  z-index: -1;
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+
+.jumbotron {
+  height: 350px;
+  color: white;
+
+  background:transparent;
+}

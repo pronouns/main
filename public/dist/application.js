@@ -443,8 +443,8 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
 
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', '$http', 'Authentication', 'Users', 'Profile',
-  function ($scope, $http, Authentication, Users, Profile) {
+angular.module('core').controller('HomeController', ['$scope', '$http', 'Authentication', 'Users', 'Profile', 'Pronouns',
+  function ($scope, $http, Authentication, Users, Profile, Pronouns) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
@@ -452,6 +452,30 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
     $scope.following = [];
     $scope.searchResults = [];
     $scope.selectedUser = undefined;
+    $scope.pronouns = [];
+    $scope.randomPronoun = undefined;
+
+    Pronouns.query(function (data) {
+      $scope.pronouns = data;
+      console.log($scope.pronouns);
+      $scope.pickRandomPronouns();
+    });
+
+    $scope.pickRandomPronouns = function () {
+      $scope.randomPronouns = getRandomSubarray($scope.pronouns, Math.max(3, $scope.pronouns.length));
+    };
+
+    function getRandomSubarray(arr, size) {
+      var shuffled = arr.slice(0), i = arr.length, temp, index;
+      while (i--) {
+        index = Math.floor((i + 1) * Math.random());
+        temp = shuffled[index];
+        shuffled[index] = shuffled[i];
+        shuffled[i] = temp;
+      }
+      return shuffled.slice(0, size);
+    }
+
 
     $scope.reloadFollowing = function() {
       $scope.following = [];
@@ -513,6 +537,8 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
     };
     $scope.reloadFollowing();
   }
+
+
 ]);
 
 'use strict';

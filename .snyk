@@ -1,0 +1,17 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.7.1
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:ms:20170412':
+    - socket.io > socket.io-adapter > socket.io-parser > debug > ms:
+        patched: '2017-08-15T04:41:54.152Z'
+  'npm:request:20160119':
+    - phantomjs > request:
+        patched: '2017-08-15T04:41:54.152Z'
+  'npm:tough-cookie:20160722':
+    - phantomjs > request > tough-cookie:
+        patched: '2017-08-15T04:41:54.152Z'
+  'npm:uglify-js:20151024':
+    - swig > uglify-js:
+        patched: '2017-08-15T04:41:54.152Z'

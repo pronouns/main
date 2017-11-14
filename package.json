@@ -59,7 +59,7 @@
     "pushbullet": "^1.4.3",
     "request": "^2.69.0",
     "serve-favicon": "^2.4.3",
-    "socket.io": "^1.7.4",
+    "socket.io": "^2.0.0",
     "swig": "^1.4.2",
     "validator": "^3.41.2"
   },

@@ -9,12 +9,13 @@
     <a ui-sref="home" class="navbar-brand">Pronouny</a>
   </div>
   <nav class="collapse navbar-collapse" collapse="!isCollapsed" role="navigation">
+    <a class="sr-only" href="#content">Skip to content</a>
     <ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
       <li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" dropdown="item.type === 'dropdown'">
         <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle role="button">{{::item.title}}&nbsp;<span class="caret"></span></a>
         <ul ng-switch-when="dropdown" class="dropdown-menu">
           <li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active">
-            <a ui-sref="{{subitem.state}}" ng-bind="subitem.title"></a>
+            <a ui-sref="{{subitem.state}}" ng-bind="subitem.title" aria-label="{{subitem.title}}"></a>
           </li>
         </ul>
         <a ng-switch-default ui-sref="{{item.state}}" ng-bind="item.title"></a>
@@ -33,34 +34,21 @@
       <li ui-sref-active="active">
         <a ui-sref="alerts.open"><i class="ion-android-alert"></i> Alerts </a>
       </li>
-      <li class="dropdown" dropdown>
-        <a class="dropdown-toggle user-header-dropdown-toggle" dropdown-toggle role="button">
+      <li class="dropdown" dropdown keyboard-nav="true">
+        <a href="#" class="dropdown-toggle user-header-dropdown-toggle" dropdown-toggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.username}}" class="header-profile-image" />
           <span ng-bind="authentication.user.username"></span> <b class="caret"></b>
         </a>
-        <ul class="dropdown-menu" role="menu">
+        <ul class="dropdown-menu" role="menu" dropdown-menu>
           <li ui-sref-active="active">
-            <a ui-sref="profile({username: authentication.user.username})"><i class="ion-person"></i> View Profile</a>
-          </li>
-          <li class="divider"></li>
-          <li ui-sref-active="active">
-            <a ui-sref="settings.profile"><i class="ion-edit"></i> Edit Profile</a>
+            <a role="menuitem" href="#" ui-sref="profile({username: authentication.user.username})"><i class="ion-person"></i> View Profile</a>
           </li>
           <li ui-sref-active="active">
-            <a ui-sref="settings.picture"><i class="ion-ios-camera"></i> Change Profile Picture</a>
-          </li>
-          <li ui-sref-active="active" ng-show="authentication.user.provider === 'local'">
-            <a ui-sref="settings.password"><i class="ion-locked"></i> Change Password</a>
-          </li>
-          <li ui-sref-active="active">
-            <a ui-sref="settings.accounts"><i class="ion-at"></i> Manage Social Accounts</a>
-          </li>
-          <li ui-sref-active="active">
-            <a ui-sref="settings.alerts"><i class="ion-android-alert"></i> Manage Alerts</a>
+            <a role="menuitem" href="#" ui-sref="settings.profile"><i class="ion-settings"></i> Settings</a>
           </li>
           <li class="divider"></li>
           <li>
-            <a href="/api/auth/signout" target="_self"><i class="ion-android-exit"></i> Signout</a>
+            <a role="menuitem" href="/api/auth/signout" target="_self"><i class="ion-android-exit"></i> Signout</a>
           </li>
         </ul>
       </li>

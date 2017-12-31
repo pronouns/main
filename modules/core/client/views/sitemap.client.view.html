@@ -1,0 +1,44 @@
+<section ng-controller="SitemapController">
+  <br>
+  <h2>Sitemap</h2>
+  <br>
+  <ul role="directory">
+    <li ng-show="user"><b><a href="/api/auth/signout">Signout</a></b></li>
+    <li ng-hide="user"><b><a ui-sref="authentication.signup">Signup</a> / <a ui-sref="authentication.signin">Signin</a></b></li>
+    <li ng-hide="user"><a ui-sref="password.forgot">Reset password</a></li>
+    <li><a ui-sref="home">Main page</a></li>
+    <li><a ui-sref="faq">FAQ</a> </li>
+    <li>Pronouns
+      <ul>
+        <li ng-show="user"><a ui-sref="pronouns.update">Update pronouns</a></li>
+        <li>Pronoun list
+          <ul>
+            <li><a ui-sref="pronouns.list.all">Public pronoun list</a></li>
+            <li ng-show="user"><a ui-sref="pronouns.list.mine">Private pronoun list</a></li>
+          </ul>
+        </li>
+        <li ng-show="user"><a ui-sref="pronouns.create">Create new pronoun set</a></li>
+      </ul>
+    </li>
+    <li ng-show="user"><a ui-sref="names">Update names</a></li>
+    <li ng-show="user"><a ui-sref="nouns">Update nouns</a></li>
+    <li ng-show="user"><a ui-sref="relations">Manage relations</a></li>
+    <li ng-show="user">Alerts
+      <ul>
+        <li><a ui-sref="alerts.list">Outgoing alerts</a></li>
+        <li><a ui-sref="alerts.open">Incoming alerts</a></li>
+      </ul>
+    </li>
+    <li ng-show="user"><a ui-sref="profile({username: user.username})">Your profile</a></li>
+    <li ng-show="user">Settings
+      <ul>
+        <li><a ui-sref="settings.profile">Edit profile</a></li>
+        <li><a ui-sref="settings.picture">Change profile picture</a></li>
+        <li><a ui-sref="settings.password">Change password</a></li>
+        <li><a ui-sref="settings.accounts">Manage social accounts</a></li>
+        <li><a ui-sref="settings.alerts">Manage alerts</a></li>
+        <li><a ui-sref="settings.features">Accessibility features</a></li>
+      </ul>
+    </li>
+  </ul>
+</section>

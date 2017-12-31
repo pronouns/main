@@ -1,5 +1,5 @@
 <section ng-controller="PronounsController" ng-init="findOne()">
-  <div ng-show="!!pronoun._id">
+  <div ng-show="!!pronoun._id" aria-busy="{{!pronoun.$resolved && !pronoun._id}}">
     <div class="page-header">
       <h1 style="font-size: 5.6vw">
         <span ng-show="!pronoun.listed"><a class="text-muted" ui-sref="profile({username: pronoun.user.username})" ng-bind="pronoun.user.username"></a>:</span>

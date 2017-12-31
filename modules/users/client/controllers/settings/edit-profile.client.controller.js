@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('users').controller('EditProfileController', ['$scope', '$http', '$location', 'Users', 'Authentication',
-  function ($scope, $http, $location, Users, Authentication) {
+angular.module('users').controller('EditProfileController', ['$scope', '$http', '$location', '$window', 'Users', 'Authentication',
+  function ($scope, $http, $location, $window, Users, Authentication) {
+    $window.document.title = 'Edit Profile';
     $scope.user = Authentication.user;
 
     // Update a user profile

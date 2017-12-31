@@ -4,7 +4,7 @@
     <div ng-repeat="(providerName, providerData) in user.additionalProvidersData" class="social-account-container">
       <img ng-src="/modules/users/client/img/buttons/{{providerName}}.png">
       <a class="btn btn-danger btn-remove-account" ng-click="removeUserSocialAccount(providerName)">
-        <i class="glyphicon glyphicon-trash"></i>
+        <i class="ion-trash-a"></i>
       </a>
     </div>
   </div>
@@ -13,13 +13,13 @@
     <div class="social-account-container" ng-hide="isConnectedSocialAccount('facebook')">
       <img ng-src="/modules/users/client/img/buttons/facebook.png">
       <a class="btn btn-success btn-remove-account" href="/api/auth/facebook" target="_self">
-        <i class="glyphicon glyphicon-plus"></i>
+        <i class="ion-plus"></i>
       </a>
     </div>
     <div class="social-account-container" ng-hide="isConnectedSocialAccount('twitter')">
       <img ng-src="/modules/users/client/img/buttons/twitter.png">
       <a class="btn btn-success btn-remove-account" href="/api/auth/twitter" target="_self">
-        <i class="glyphicon glyphicon-plus"></i>
+        <i class="ion-plus"></i>
       </a>
     </div>
   </div>

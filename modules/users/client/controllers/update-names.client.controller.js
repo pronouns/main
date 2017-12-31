@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('users').controller('UpdateNamesController', ['$scope', '$http', '$location', 'Users', 'Authentication',
-  function ($scope, $http, $location, Users, Authentication) {
+angular.module('users').controller('UpdateNamesController', ['$scope', '$http', '$location', '$window', 'Users', 'Authentication',
+  function ($scope, $http, $location, $window, Users, Authentication) {
+    $window.document.title = 'Update names';
+
     $scope.user = Authentication.user;
 
     $scope.names = $scope.user.names;

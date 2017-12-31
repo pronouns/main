@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('users').controller('WelcomeController', ['$scope', '$state', '$http', 'Authentication', 'Users', 'Profile',
-  function ($scope, $state, $http, Authentication, Users, Profile) {
+angular.module('users').controller('WelcomeController', ['$scope', '$state', '$http', '$window', 'Authentication', 'Users', 'Profile',
+  function ($scope, $state, $http, $window, Authentication, Users, Profile) {
+    $window.document.title = 'Welcome!';
+
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;

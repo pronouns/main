@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', '$http', 'Authentication', 'Users', 'Profile', 'Pronouns',
-  function ($scope, $http, Authentication, Users, Profile, Pronouns) {
+angular.module('core').controller('HomeController', ['$scope', '$http', '$window', 'Authentication', 'Users', 'Profile', 'Pronouns',
+  function ($scope, $http, $window, Authentication, Users, Profile, Pronouns) {
+    $window.document.title = 'Pronouny';
+
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;

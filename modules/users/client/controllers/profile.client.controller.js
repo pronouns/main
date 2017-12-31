@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('users').controller('UserProfileController', ['$scope', '$stateParams', 'Authentication', 'Users', 'Pronouns', '$q', 'profileResolve', 'followersResolve',
-  function ($scope, $stateParams, Authentication, Users, Pronouns, $q, profileResolve, followersResolve) {
+angular.module('users').controller('UserProfileController', ['$scope', '$stateParams', '$window', 'Authentication', 'Users', 'Pronouns', '$q', 'profileResolve', 'followersResolve',
+  function ($scope, $stateParams, $window, Authentication, Users, Pronouns, $q, profileResolve, followersResolve) {
+    $window.document.title = $stateParams.username + ' on Pronouny';
     $scope.authentication = Authentication;
     $scope.username = $stateParams.username;
 

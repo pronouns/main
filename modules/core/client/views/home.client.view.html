@@ -1,11 +1,11 @@
 <section ng-controller="HomeController">
-  <div ng-hide="authentication.user">
+  <div ng-hide="!!authentication.user">
     <div class="bg"></div>
     <div class="jumbotron">
       <h1>Pronouny</h1>
       <p class="lead"><b>Share your personal pronouns and stay updated on your friends' pronouns.</b></p>
       <a class="btn btn-lg btn-primary" ui-sref="authentication.signup" href="/authentication/signup">Sign Up</a>
-      <a class="btn btn-lg btn-info" ui-sref="authentication.signin" href="/authentication/signin">Sign In</a>
+      <a class="btn btn-lg btn-success" ui-sref="authentication.signin" href="/authentication/signin">Sign In</a>
     </div>
 
     <div class="container">
@@ -91,13 +91,13 @@
     <div class="well" style="margin-top: 20px; text-align:center;">
       <p>You can share your pronouns, names, and nouns using your profile link.</p>
       <h4><code>https://pronouny.xyz/u/{{user.username}}</code></h4>
-      <a class="btn btn-primary btn-sm" href="https://www.facebook.com/sharer/sharer.php?u=https%3A//pronouny.xyz/u/{{user.username}}" target="_blank">Share on Facebook</a>
-      <a class="btn btn-info btn-sm" href="https://twitter.com/home?status=https%3A//pronouny.xyz/u/{{user.username}}" target="_blank">Share on Twitter</a>
+      <a class="btn btn-primary btn-sm" aria-label="Share your profile link on Facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A//pronouny.xyz/u/{{user.username}}" target="_blank">Share on Facebook</a>
+      <a class="btn btn-info btn-sm" aria-label="Share your profile link on Twitter" href="https://twitter.com/home?status=https%3A//pronouny.xyz/u/{{user.username}}" target="_blank">Share on Twitter</a>
     </div>
     <br>
     <div class="row">
       <div class="col-md-10">
-        <input type="text" ng-model="selectedUser" placeholder="Search for a user" typeahead="user as user.username for user in getUsers($viewValue)" typeahead-loading="loadingUsers" typeahead-no-results="noResults" typeahead-editable="false" typeahead-show-hint="true" class="form-control">
+        <input type="text" ng-model="selectedUser" placeholder="Search for a user" aria-label="Search for a user to follow" role="combobox" typeahead="user as user.username for user in getUsers($viewValue)" typeahead-loading="loadingUsers" typeahead-no-results="noResults" typeahead-editable="false" typeahead-show-hint="true" class="form-control">
       </div>
       <div class="col-md-2">
         <button class="btn btn-primary" ng-class="{disabled: selectedUser === undefined}" style="width: 100%;" ng-click="addFollowing()">Follow</button>
@@ -106,7 +106,7 @@
     <br>
     <div ng-show="!following.length && !user.following.length">
       <div class="alert alert-warning">
-        <p>You haven't followed anyone yet, so there is nothing to put here. Here is a cat picture instead! If you are having trouble getting started, we have a <a ui-sref="welcome()">checklist for new users</a>.</p>
+        <p>You haven't followed anyone yet, so there is nothing to put here. Here is a cat picture instead! If you are having trouble getting started, we have a <a ui-sref="welcome()" href="">checklist for new users</a>.</p>
       </div>
       <img ng-src="{{(!following.length && !user.following.length && authentication.user) && 'http://thecatapi.com/api/images/get?size=med&type=png,jpg' || ''}}" class="img-responsive" alt="Random cat image"/>
     </div>
@@ -117,7 +117,7 @@
       <div class="sk-rect sk-rect4"></div>
       <div class="sk-rect sk-rect5"></div>
     </div>
-    <div class="row">
+    <div class="row" aria-busy="{{!following.length && !!user.following.length}}">
       <div class="col-md-12" ng-repeat="followed in following">
         <div class="panel panel-default">
           <div class="panel-heading">

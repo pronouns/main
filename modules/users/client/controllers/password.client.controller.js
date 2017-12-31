@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('users').controller('PasswordController', ['$scope', '$stateParams', '$http', '$location', 'Authentication', 'PasswordValidator',
-  function ($scope, $stateParams, $http, $location, Authentication, PasswordValidator) {
+angular.module('users').controller('PasswordController', ['$scope', '$stateParams', '$http', '$location', '$window', 'Authentication', 'PasswordValidator',
+  function ($scope, $stateParams, $http, $location, $window, Authentication, PasswordValidator) {
+    $window.document.title = 'Reset password';
+
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 

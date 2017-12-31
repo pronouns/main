@@ -1,8 +1,10 @@
 'use strict';
 
 // Pronouns controller
-angular.module('pronouns').controller('PronounsController', ['$scope', '$stateParams', '$http', '$location', 'Users', 'Authentication', 'Pronouns',
-  function ($scope, $stateParams, $http, $location, Users, Authentication, Pronouns) {
+angular.module('pronouns').controller('PronounsController', ['$scope', '$stateParams', '$http', '$location', '$window', 'Users', 'Authentication', 'Pronouns',
+  function ($scope, $stateParams, $http, $location, $window, Users, Authentication, Pronouns) {
+    $window.document.title = 'Pronouns';
+
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     $scope.pronounType = 'X';

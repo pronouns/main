@@ -15,6 +15,7 @@ module.exports = {
         'public/lib/jquery-ui/ui/minified/sortable.min.js',
         'public/lib/angular/angular.min.js',
         'public/lib/angular-resource/angular-resource.min.js',
+        'public/lib/angular-aria/angular-aria.min.js',
         'public/lib/angular-animate/angular-animate.min.js',
         'public/lib/angular-messages/angular-messages.min.js',
         'public/lib/angular-ui-router/release/angular-ui-router.min.js',

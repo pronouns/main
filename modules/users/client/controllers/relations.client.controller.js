@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('users').controller('RelationsController', ['$scope', '$http', 'Authentication', 'Users', 'Profile',
-  function ($scope, $http, Authentication, Users, Profile) {
+angular.module('users').controller('RelationsController', ['$scope', '$http', '$window', 'Authentication', 'Users', 'Profile',
+  function ($scope, $http, $window, Authentication, Users, Profile) {
+    $window.document.title = 'Relations';
+
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;

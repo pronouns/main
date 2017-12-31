@@ -1,4 +1,4 @@
-<section class="row" style="padding-top: 10px;">
+<section class="row" style="padding-top: 10px;" aria-busy="{{!resolved}}">
   <div class="col-md-12">
     <!-- <button class="btn btn-info" ng-click="sendAlerts();" ng-show="user.canSendAlert">Send alerts</button>
     <button class="btn btn-info" disabled ng-hide="user.canSendAlert">Send alerts</button>-->
@@ -19,7 +19,7 @@
 
         <alert ng-show="!pronouns.length && resolved" type="info">You don't have any pronouns added to your profile.
         </alert>
-        <div class="list-group" ui-sortable="sortableOptions" ng-model="pronouns">
+        <div class="list-group" ui-sortable="sortableOptions" ng-model="pronouns" aria-dropeffect="move">
           <div ng-repeat="pronoun in pronouns" class="list-group-item">
             <div class="row">
               <div class="col-xs-10">
@@ -32,7 +32,7 @@
               </div>
               <div class="col-xs-2">
                 <div class="pull-right">
-                  <button class="btn btn-danger btn-sm" ng-click="removeMine(pronoun);">
+                  <button class="btn btn-danger btn-sm" ng-click="removeMine(pronoun);" aria-label="Remove {{pronoun.title}} {{pronoun.pattern}} from pronouns">
                     <i class="icon ion-minus"></i>
                   </button>
                 </div>
@@ -40,8 +40,8 @@
             </div>
           </div>
         </div>
-        <button class="btn btn-success btn-block" ng-show="canSave" ng-click="saveAndAlert()">Save</button>
-        <button class="btn btn-default btn-block text-muted" ng-hide="canSave" disabled>Saved</button>
+        <button class="btn btn-success btn-block" ng-show="canSave" ng-click="saveAndAlert()" aria-label="Save pronouns">Save</button>
+        <button class="btn btn-default btn-block" ng-hide="canSave" disabled>Saved</button>
         <hr>
       </div>
       <div class="col-md-6">
@@ -66,7 +66,7 @@
                   </div>
                   <div class="col-sm-2 col-xs-12">
                     <div class="pull-right">
-                      <button class="btn btn-info btn-sm" ng-click="addMine(pronoun);">
+                      <button class="btn btn-info btn-sm" ng-click="addMine(pronoun);" aria-label="Add {{pronoun.title}} {{pronoun.pattern}} to pronouns">
                         <i class="icon ion-plus"></i>
                       </button>
                     </div>
@@ -92,7 +92,7 @@
                 </div>
                 <div class="col-sm-2 col-xs-12">
                   <div class="pull-right">
-                    <button class="btn btn-info btn-sm" ng-click="addMine(pronoun);">
+                    <button class="btn btn-info btn-sm" ng-click="addMine(pronoun);" aria-label="Add {{pronoun.title}} {{pronoun.pattern}} to pronouns">
                       <i class="icon ion-plus"></i>
                     </button>
                   </div>

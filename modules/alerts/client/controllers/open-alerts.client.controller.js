@@ -5,9 +5,12 @@
     .module('alerts')
     .controller('OpenAlertsController', AlertsListController);
 
-  AlertsListController.$inject = ['AlertsService'];
+  AlertsListController.$inject = ['AlertsService', '$window'];
 
-  function AlertsListController(AlertsService) {
+  function AlertsListController(AlertsService, $window) {
+
+    $window.document.title = 'Alerts';
+
     var vm = this;
 
     vm.alerts = AlertsService.open();

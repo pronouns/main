@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('pronouns').controller('PronounListController', ['$scope', '$filter', 'Users', 'Authentication', 'Pronouns',
-  function ($scope, $filter, Users, Authentication, Pronouns) {
+angular.module('pronouns').controller('PronounListController', ['$scope', '$filter', '$window', 'Users', 'Authentication', 'Pronouns',
+  function ($scope, $filter, $window, Users, Authentication, Pronouns) {
+    $window.document.title = 'Public pronoun list';
+
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 

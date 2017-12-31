@@ -1,3 +1,6 @@
+body{
+  font-size: 16px;
+}
 .content {
   margin-top: 50px;
 }
@@ -65,3 +68,46 @@ a:hover .header-profile-image {
 
   background:transparent;
 }
+
+
+.navbar-default .navbar-nav > li > a{
+  color: #727272;
+}
+.navbar-default .navbar-brand{
+  color: #727272;
+}
+
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/font/OpenDyslexic-Regular.eot?#iefix') format('embedded-opentype'),
+  url('/font/OpenDyslexic-Regular.woff') format('woff'),
+  url('/font/OpenDyslexic-Regular.ttf')  format('truetype');
+}
+
+
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/font/OpenDyslexic-Bold.eot?#iefix') format('embedded-opentype'),
+  url('/font/OpenDyslexic-Bold.woff') format('woff'),
+  url('/font/OpenDyslexic-Bold.ttf')  format('truetype');
+
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/font/OpenDyslexic-BoldItalic.eot?#iefix') format('embedded-opentype'),
+  url('/font/OpenDyslexic-BoldItalic.woff') format('woff'),
+  url('/font/OpenDyslexic-BoldItalic.ttf')  format('truetype');
+
+  font-weight: bold;
+  font-style: normal;
+}
+
+
+.list-group-item.active .list-group-item-text, .list-group-item.active:hover .list-group-item-text, .list-group-item.active:focus .list-group-item-text{
+  color: #fdfeff;
+}
+
+

@@ -89,6 +89,8 @@ exports.getUser = function (req, res) {
         user.resetPasswordToken = undefined;
         user.pushbulletKey = undefined;
         user.additionalProvidersData = undefined;
+        user.featureToggles = undefined;
+        user.fontSize = undefined;
 
         res.json(user);
       });

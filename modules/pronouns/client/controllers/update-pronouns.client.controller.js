@@ -1,8 +1,10 @@
 'use strict';
 
-angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q', '$state', '$http', '$location', '$filter', 'moment', 'Users', 'Authentication', 'Profile', 'Pronouns',
-  function ($scope, $q, $state, $http, $location, $filter, moment, Users, Authentication, Profile, Pronouns) {
+angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q', '$state', '$http', '$location', '$filter', '$window', 'moment', 'Users', 'Authentication', 'Profile', 'Pronouns',
+  function ($scope, $q, $state, $http, $location, $filter, $window, moment, Users, Authentication, Profile, Pronouns) {
     $scope.showCongratsTo = ['falk', 'tom catyr todd'];
+
+    $window.document.title = 'Update pronouns';
     
     $scope.user = Authentication.user;
     $scope.error = {

@@ -1,8 +1,10 @@
 'use strict';
 
 // Pronouns controller
-angular.module('pronouns').controller('CreatePronounController', ['$scope', '$stateParams', '$location', 'Users', 'Authentication', 'Pronouns',
-  function ($scope, $stateParams, $location, Users, Authentication, Pronouns) {
+angular.module('pronouns').controller('CreatePronounController', ['$scope', '$stateParams', '$location', '$window', 'Users', 'Authentication', 'Pronouns',
+  function ($scope, $stateParams, $location, $window, Users, Authentication, Pronouns) {
+    $window.document.title = 'Create pronoun set';
+
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     $scope.pronoun = {};

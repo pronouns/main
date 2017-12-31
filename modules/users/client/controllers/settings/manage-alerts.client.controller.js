@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('users').controller('ManageAlertsController', ['$scope', '$http', '$location', 'Users', 'Authentication',
-  function ($scope, $http, $location, Users, Authentication) {
+angular.module('users').controller('ManageAlertsController', ['$scope', '$http', '$location', '$window', 'Users', 'Authentication',
+  function ($scope, $http, $location, $window, Users, Authentication) {
+    $window.document.title = 'Manage Alerts';
+
     $scope.user = Authentication.user;
     $scope.alerts = {
       facebook: $scope.user.alertChannels.indexOf('facebook') > -1,

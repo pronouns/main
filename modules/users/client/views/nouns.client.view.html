@@ -20,14 +20,14 @@
       <div class="input-group">
         <input type="text" ng-model="newGood" name="newGood" id="newGood" typeahead="noun for noun in nouns | filter:$viewValue | limitTo:8" class="form-control">
         <span class="input-group-btn">
-          <button class="btn btn-default" type="button" ng-click="addGood()">Add</button>
+          <button class="btn btn-default" type="button" ng-click="addGood()" aria-label="Add good word">Add</button>
         </span>
       </div>
       <br>
       <div class="panel panel-default" ng-show="user.nouns.goodWords.length > 0">
         <div class="panel-body">
           <ul>
-            <li ng-repeat="noun in user.nouns.goodWords">{{noun}} <span class="ion-close" ng-click="removeNoun(noun)"></span> </li>
+            <li ng-repeat="noun in user.nouns.goodWords">{{noun}} <span class="ion-close" ng-click="removeNoun(noun)" aria-label="Remove {{noun}} from good words"></span> </li>
           </ul>
         </div>
       </div>
@@ -38,14 +38,14 @@
       <div class="input-group">
         <input type="text" ng-model="newBad" name="newBad" id="newBad" typeahead="noun for noun in nouns | filter:$viewValue | limitTo:8" class="form-control">
         <span class="input-group-btn">
-          <button class="btn btn-default" type="button" ng-click="addBad()">Add</button>
+          <button class="btn btn-default" type="button" ng-click="addBad()" aria-label="Add bad word">Add</button>
         </span>
       </div>
       <br>
       <div class="panel panel-default" ng-show="user.nouns.badWords.length > 0">
         <div class="panel-body">
           <ul>
-            <li ng-repeat="noun in user.nouns.badWords">{{noun}} <span class="ion-close" ng-click="removeNoun(noun)"></span> </li>
+            <li ng-repeat="noun in user.nouns.badWords">{{noun}} <span class="ion-close" ng-click="removeNoun(noun)" aria-label="Remove {{noun}} from bad words"></span> </li>
           </ul>
         </div>
       </div>
@@ -58,7 +58,7 @@
       </div>
     </div>
     <div class="col-md-12">
-      <button class="btn btn-success btn-block" ng-click="saveAndAlert()" ng-show="needsSave">Save</button>
+      <button class="btn btn-success btn-block" ng-click="saveAndAlert()" ng-show="needsSave" aria-label="Save nouns">Save</button>
       <button class="btn btn-default btn-block text-muted" disabled ng-hide="needsSave">Saved</button>
     </div>
   </div>

@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('core').controller('FaqController', ['$scope', '$sce', 'Authentication', 'Users', 'Profile',
-  function ($scope, $sce, Authentication, Users, Profile) {
+angular.module('core').controller('FaqController', ['$scope', '$window', '$sce', 'Authentication', 'Users', 'Profile',
+  function ($scope, $window, $sce, Authentication, Users, Profile) {
+    $window.document.title = 'FAQ';
+
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;

@@ -1,10 +1,12 @@
 'use strict';
 
-angular.module('users.admin').controller('UserController', ['$scope', '$state', 'Authentication', 'userResolve', 'ownedPronounsResolve',
-  function ($scope, $state, Authentication, userResolve, ownedPronounsResolve) {
+angular.module('users.admin').controller('UserController', ['$scope', '$state', '$window', 'Authentication', 'userResolve', 'ownedPronounsResolve',
+  function ($scope, $state, $window, Authentication, userResolve, ownedPronounsResolve) {
     $scope.authentication = Authentication;
     $scope.user = userResolve;
     $scope.ownedPronouns = ownedPronounsResolve;
+
+    $window.document.title = 'Manage ' + $scope.user.username;
 
 
     $scope.remove = function (user) {

@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('users').controller('SocialAccountsController', ['$scope', '$http', 'Authentication',
-  function ($scope, $http, Authentication) {
+angular.module('users').controller('SocialAccountsController', ['$scope', '$http', '$window', 'Authentication',
+  function ($scope, $http, $window, Authentication) {
+    $window.document.title = 'Manage Social Accounts';
+
     $scope.user = Authentication.user;
 
     // Check if there are additional accounts

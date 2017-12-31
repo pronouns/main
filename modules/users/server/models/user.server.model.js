@@ -148,6 +148,17 @@ var UserSchema = new Schema({
   pronounTimeBest: {
     type: Number,
     default: 0
+  },
+  featureToggles: {
+    type: [{
+      type: String,
+      enum: ['font', 'contrast', 'textSize']
+    }]
+  },
+  /** Font size is only used if 'text-size' is toggled on **/
+  textSize: {
+    type: Number,
+    default: 14
   }
 });
 UserSchema.index({ displayName: 'text', email: 'text', username: 'text' });

@@ -37,6 +37,10 @@ angular.module('users').config(['$stateProvider',
         url: '/alerts',
         templateUrl: 'modules/users/client/views/settings/manage-alerts.client.view.html'
       })
+      .state('settings.features', {
+        url: '/accessibility',
+        templateUrl: 'modules/users/client/views/settings/accessibility-features.client.view.html'
+      })
       .state('authentication', {
         abstract: true,
         url: '/authentication',

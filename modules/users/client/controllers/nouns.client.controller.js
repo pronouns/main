@@ -1,7 +1,10 @@
 'use strict';
 
-angular.module('users').controller('NounsController', ['$scope', '$http', 'Authentication', 'Users', 'Profile',
-  function ($scope, $http, Authentication, Users, Profile) {
+angular.module('users').controller('NounsController', ['$scope', '$http', '$window', 'Authentication', 'Users', 'Profile',
+  function ($scope, $http, $window, Authentication, Users, Profile) {
+
+    $window.document.title = 'Update nouns';
+
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;

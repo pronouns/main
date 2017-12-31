@@ -12,6 +12,13 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
   }
 ]);
 
+angular.module(ApplicationConfiguration.applicationModuleName).run(['Accessibility',
+  function (Accessibility) {
+    Accessibility.inject();
+  }
+]);
+
+
 angular.module(ApplicationConfiguration.applicationModuleName).run(function ($rootScope, $state, Authentication) {
 
   // Check authentication before changing state

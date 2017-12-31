@@ -5,13 +5,13 @@
         <input type="text" ng-model="newName" placeholder="Name" class="form-control">
       </div>
       <div class="col-md-4" style="padding-top: 20px;">
-        <button class="btn btn-primary" style="width: 100%;" ng-click="addName()">Add</button>
+        <button class="btn btn-primary" style="width: 100%;" ng-click="addName()" aria-label="Add new name">Add</button>
       </div>
     </div>
     <div style="margin-top: 10px;">
       <div class="list-group">
         <div ng-show="!user.names.length" class="list-group-item">
-          <h4 class="list-group-item-heading text-muted">You don't have any names.</h4>
+          <h4 class="list-group-item-heading">You don't have any names.</h4>
         </div>
         <div ng-repeat="name in user.names" class="list-group-item">
           <div class="row">
@@ -20,7 +20,7 @@
             </div>
             <div class="col-xs-2">
               <div class="pull-right">
-                <button class="btn btn-danger btn-sm" ng-click="removeName(name);">
+                <button class="btn btn-danger btn-sm" ng-click="removeName(name);" aria-label="Remove {{name}} from names">
                   <i class="icon ion-close"></i>
                 </button>
               </div>

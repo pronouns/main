@@ -16,7 +16,7 @@
     <div class="sk-rect sk-rect4"></div>
     <div class="sk-rect sk-rect5"></div>
   </div>
-  <div class="row">
+  <div class="row" aria-busy="{{!pagedItems.length}}">
     <div ng-repeat="pronoun in pagedItems" ui-sref="pronouns.view({pronounId: pronoun._id})" class="col-md-6 col-sm-12">
       <div class="panel panel-default" ng-class="{'panel-primary': user.pronouns.indexOf(pronoun._id) > -1}" style="padding: 5px">
         <div class="panel-body">

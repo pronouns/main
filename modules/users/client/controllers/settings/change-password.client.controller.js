@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('users').controller('ChangePasswordController', ['$scope', '$http', 'Authentication',
-  function ($scope, $http, Authentication) {
+angular.module('users').controller('ChangePasswordController', ['$scope', '$http', '$window', 'Authentication',
+  function ($scope, $http, $window, Authentication) {
+    $window.document.title = 'Change Password';
+
     $scope.user = Authentication.user;
 
     // Change user password

@@ -4,7 +4,7 @@
 var ApplicationConfiguration = (function () {
   // Init module configuration options
   var applicationModuleName = 'mean';
-  var applicationModuleVendorDependencies = ['ngResource', 'ngAnimate', 'ngMessages', 'ui.router', 'ui.bootstrap', 'ui.utils', 'angularFileUpload', 'angularMoment'];
+  var applicationModuleVendorDependencies = ['ngResource', 'ngAnimate', 'ngMessages', 'ngAria', 'ui.router', 'ui.bootstrap', 'ui.utils', 'angularFileUpload', 'angularMoment'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {
@@ -35,6 +35,13 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
     $httpProvider.interceptors.push('authInterceptor');
   }
 ]);
+
+angular.module(ApplicationConfiguration.applicationModuleName).run(['Accessibility',
+  function (Accessibility) {
+    Accessibility.inject();
+  }
+]);
+
 
 angular.module(ApplicationConfiguration.applicationModuleName).run(["$rootScope", "$state", "Authentication", function ($rootScope, $state, Authentication) {
 
@@ -234,9 +241,12 @@ ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.route
     .module('alerts')
     .controller('AlertsListController', AlertsListController);
 
-  AlertsListController.$inject = ['AlertsService'];
+  AlertsListController.$inject = ['AlertsService', '$window'];
 
-  function AlertsListController(AlertsService) {
+  function AlertsListController(AlertsService, $window) {
+
+    $window.document.title = 'Sent Alerts';
+
     var vm = this;
 
     vm.alerts = AlertsService.query();
@@ -250,9 +260,12 @@ ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.route
     .module('alerts')
     .controller('OpenAlertsController', AlertsListController);
 
-  AlertsListController.$inject = ['AlertsService'];
+  AlertsListController.$inject = ['AlertsService', '$window'];
 
-  function AlertsListController(AlertsService) {
+  function AlertsListController(AlertsService, $window) {
+
+    $window.document.title = 'Alerts';
+
     var vm = this;
 
     vm.alerts = AlertsService.open();
@@ -339,6 +352,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       url: '/faq',
       templateUrl: 'modules/core/client/views/faq.client.view.html'
     })
+    .state('sitemap', {
+      url: '/sitemap',
+      templateUrl: 'modules/core/client/views/sitemap.client.view.html'
+    })
     .state('not-found', {
       url: '/not-found',
       templateUrl: 'modules/core/client/views/404.client.view.html',
@@ -378,8 +395,10 @@ angular.module('core').controller('ServiceAlertsController', ['$scope',
 
 'use strict';
 
-angular.module('core').controller('FaqController', ['$scope', '$sce', 'Authentication', 'Users', 'Profile',
-  function ($scope, $sce, Authentication, Users, Profile) {
+angular.module('core').controller('FaqController', ['$scope', '$window', '$sce', 'Authentication', 'Users', 'Profile',
+  function ($scope, $window, $sce, Authentication, Users, Profile) {
+    $window.document.title = 'FAQ';
+
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
@@ -443,8 +462,10 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
 
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', '$http', 'Authentication', 'Users', 'Profile', 'Pronouns',
-  function ($scope, $http, Authentication, Users, Profile, Pronouns) {
+angular.module('core').controller('HomeController', ['$scope', '$http', '$window', 'Authentication', 'Users', 'Profile', 'Pronouns',
+  function ($scope, $http, $window, Authentication, Users, Profile, Pronouns) {
+    $window.document.title = 'Pronouny';
+
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
@@ -453,7 +474,8 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
     $scope.searchResults = [];
     $scope.selectedUser = undefined;
     $scope.pronouns = [];
-    $scope.randomPronoun = undefined;
+    $scope.randomPronouns = undefined;
+    $scope.easyPronouns = ['she', 'he', 'they'];
 
     Pronouns.query(function (data) {
       $scope.pronouns = data;
@@ -463,6 +485,22 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
 
     $scope.pickRandomPronouns = function () {
       $scope.randomPronouns = getRandomSubarray($scope.pronouns, Math.min(3, $scope.pronouns.length));
+      for(var i = 0; i < $scope.randomPronouns.length; i++){
+        if($scope.easyPronouns.indexOf($scope.randomPronouns[i].subject) > -1){
+          return;
+        }
+      }
+
+      var subject = $scope.easyPronouns[Math.floor(Math.random()*$scope.easyPronouns.length)];
+      for(var j = 0; j < $scope.pronouns.length; j++){
+        if($scope.pronouns[j].subject === subject){
+          $scope.randomPronouns[0] = $scope.pronouns[j];
+          return;
+        }
+      }
+
+      console.log('Error: One of the defined easy pronouns was not available.');
+
     };
 
     function getRandomSubarray(arr, size) {
@@ -543,6 +581,18 @@ angular.module('core').controller('HomeController', ['$scope', '$http', 'Authent
 
 'use strict';
 
+angular.module('core').controller('SitemapController', ['$scope', '$window', '$sce', 'Authentication', 'Users', 'Profile',
+  function ($scope, $window, $sce, Authentication, Users, Profile) {
+    $window.document.title = 'Sitemap';
+
+    // This provides Authentication context.
+    $scope.authentication = Authentication;
+    $scope.user = Authentication.user;
+  }
+]);
+
+'use strict';
+
 /**
  * Edits by Ryan Hutchison
  * Credit: https://github.com/paulyoder/angular-bootstrap-show-errors */
@@ -615,6 +665,45 @@ angular.module('core')
       }
     };
   }]);
+
+'use strict';
+
+angular.module('core').service('Accessibility', ['Authentication',
+  function (Authentication) {
+
+    this.injectCss = function (cssId, relUrl) {
+      if (!document.getElementById(cssId)) {
+        var head = document.getElementsByTagName('head')[0];
+        var link = document.createElement('link');
+        link.id = cssId;
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = relUrl;
+        link.media = 'all';
+        head.appendChild(link);
+      }
+    };
+
+    this.inject = function () {
+      if (Authentication.user && Authentication.user.featureToggles.indexOf('font') > -1) {
+        var node = document.createElement('style');
+        node.innerHTML = 'body { font-family: \'OpenDyslexic\' !important; }';
+        document.body.appendChild(node);
+      }
+      if (Authentication.user && Authentication.user.featureToggles.indexOf('textSize') > -1) {
+        var node2 = document.createElement('style');
+        node2.innerHTML = 'body,h1,h2,h3,h4,h5,p,span,button,a { font-size: ' + Authentication.user.textSize + 'px !important;}';
+        document.body.appendChild(node2);
+
+        this.injectCss('navBreak', '/nav-break.css');
+      }
+      if (Authentication.user && Authentication.user.featureToggles.indexOf('contrast') > -1) {
+        this.injectCss('contrastCss', '/accessibility.css');
+      }
+    };
+
+  }
+]);
 
 'use strict';
 
@@ -938,8 +1027,10 @@ angular.module('pronouns').config(['$stateProvider',
 'use strict';
 
 // Pronouns controller
-angular.module('pronouns').controller('CreatePronounController', ['$scope', '$stateParams', '$location', 'Users', 'Authentication', 'Pronouns',
-  function ($scope, $stateParams, $location, Users, Authentication, Pronouns) {
+angular.module('pronouns').controller('CreatePronounController', ['$scope', '$stateParams', '$location', '$window', 'Users', 'Authentication', 'Pronouns',
+  function ($scope, $stateParams, $location, $window, Users, Authentication, Pronouns) {
+    $window.document.title = 'Create pronoun set';
+
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     $scope.pronoun = {};
@@ -1006,8 +1097,10 @@ angular.module('pronouns').controller('CreatePronounController', ['$scope', '$st
 
 'use strict';
 
-angular.module('pronouns').controller('PronounListController', ['$scope', '$filter', 'Users', 'Authentication', 'Pronouns',
-  function ($scope, $filter, Users, Authentication, Pronouns) {
+angular.module('pronouns').controller('PronounListController', ['$scope', '$filter', '$window', 'Users', 'Authentication', 'Pronouns',
+  function ($scope, $filter, $window, Users, Authentication, Pronouns) {
+    $window.document.title = 'Public pronoun list';
+
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
@@ -1042,8 +1135,10 @@ angular.module('pronouns').controller('PronounListController', ['$scope', '$filt
 
 'use strict';
 
-angular.module('pronouns').controller('MyPronounListController', ['$http', '$scope', '$filter', 'Users', 'Authentication', 'Pronouns',
-  function ($http, $scope, $filter, Users, Authentication, Pronouns) {
+angular.module('pronouns').controller('MyPronounListController', ['$http', '$scope', '$filter', '$window', 'Users', 'Authentication', 'Pronouns',
+  function ($http, $scope, $filter, $window, Users, Authentication, Pronouns) {
+    $window.document.title = 'Private pronouns list';
+
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
 
@@ -1080,8 +1175,10 @@ angular.module('pronouns').controller('MyPronounListController', ['$http', '$sco
 'use strict';
 
 // Pronouns controller
-angular.module('pronouns').controller('PronounsController', ['$scope', '$stateParams', '$http', '$location', 'Users', 'Authentication', 'Pronouns',
-  function ($scope, $stateParams, $http, $location, Users, Authentication, Pronouns) {
+angular.module('pronouns').controller('PronounsController', ['$scope', '$stateParams', '$http', '$location', '$window', 'Users', 'Authentication', 'Pronouns',
+  function ($scope, $stateParams, $http, $location, $window, Users, Authentication, Pronouns) {
+    $window.document.title = 'Pronouns';
+
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
     $scope.pronounType = 'X';
@@ -1180,9 +1277,11 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
 
 'use strict';
 
-angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q', '$state', '$http', '$location', '$filter', 'moment', 'Users', 'Authentication', 'Profile', 'Pronouns',
-  function ($scope, $q, $state, $http, $location, $filter, moment, Users, Authentication, Profile, Pronouns) {
+angular.module('pronouns').controller('UpdatePronounsController', ['$scope', '$q', '$state', '$http', '$location', '$filter', '$window', 'moment', 'Users', 'Authentication', 'Profile', 'Pronouns',
+  function ($scope, $q, $state, $http, $location, $filter, $window, moment, Users, Authentication, Profile, Pronouns) {
     $scope.showCongratsTo = ['falk', 'tom catyr todd'];
+
+    $window.document.title = 'Update pronouns';
     
     $scope.user = Authentication.user;
     $scope.error = {
@@ -1548,6 +1647,10 @@ angular.module('users').config(['$stateProvider',
         url: '/alerts',
         templateUrl: 'modules/users/client/views/settings/manage-alerts.client.view.html'
       })
+      .state('settings.features', {
+        url: '/accessibility',
+        templateUrl: 'modules/users/client/views/settings/accessibility-features.client.view.html'
+      })
       .state('authentication', {
         abstract: true,
         url: '/authentication',
@@ -1642,8 +1745,10 @@ angular.module('users').config(['$stateProvider',
 
 'use strict';
 
-angular.module('users.admin').controller('UserListController', ['$scope', '$filter', 'Admin',
-  function ($scope, $filter, Admin) {
+angular.module('users.admin').controller('UserListController', ['$scope', '$filter', '$window', 'Admin',
+  function ($scope, $filter, $window, Admin) {
+    $window.document.title = 'User List';
+
     Admin.query(function (data) {
       $scope.users = data;
       $scope.buildPager();
@@ -1674,11 +1779,13 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
 
 'use strict';
 
-angular.module('users.admin').controller('UserController', ['$scope', '$state', 'Authentication', 'userResolve', 'ownedPronounsResolve',
-  function ($scope, $state, Authentication, userResolve, ownedPronounsResolve) {
+angular.module('users.admin').controller('UserController', ['$scope', '$state', '$window', 'Authentication', 'userResolve', 'ownedPronounsResolve',
+  function ($scope, $state, $window, Authentication, userResolve, ownedPronounsResolve) {
     $scope.authentication = Authentication;
     $scope.user = userResolve;
     $scope.ownedPronouns = ownedPronounsResolve;
+
+    $window.document.title = 'Manage ' + $scope.user.username;
 
 
     $scope.remove = function (user) {
@@ -1717,8 +1824,10 @@ angular.module('users.admin').controller('UserController', ['$scope', '$state', 
 
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator',
-  function ($scope, $state, $http, $location, $window, Authentication, PasswordValidator) {
+angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'Accessibility', 'Authentication', 'PasswordValidator',
+  function ($scope, $state, $http, $location, $window, Accessibility, Authentication, PasswordValidator) {
+    $window.document.title = 'Authenticate';
+
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
     $scope.showSignedUpMsg = false;
@@ -1765,6 +1874,12 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         // If successful we assign the response to the global user model
         $scope.authentication.user = response;
 
+        /**
+         * Inject accessibility features
+         */
+
+        Accessibility.inject();
+
         // And redirect to the previous or home page
         $state.go($state.previous.state.name || 'home', $state.previous.params);
       }).error(function (response) {
@@ -1786,8 +1901,11 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
 
 'use strict';
 
-angular.module('users').controller('NounsController', ['$scope', '$http', 'Authentication', 'Users', 'Profile',
-  function ($scope, $http, Authentication, Users, Profile) {
+angular.module('users').controller('NounsController', ['$scope', '$http', '$window', 'Authentication', 'Users', 'Profile',
+  function ($scope, $http, $window, Authentication, Users, Profile) {
+
+    $window.document.title = 'Update nouns';
+
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
@@ -1867,8 +1985,10 @@ angular.module('users').controller('NounsController', ['$scope', '$http', 'Authe
 
 'use strict';
 
-angular.module('users').controller('PasswordController', ['$scope', '$stateParams', '$http', '$location', 'Authentication', 'PasswordValidator',
-  function ($scope, $stateParams, $http, $location, Authentication, PasswordValidator) {
+angular.module('users').controller('PasswordController', ['$scope', '$stateParams', '$http', '$location', '$window', 'Authentication', 'PasswordValidator',
+  function ($scope, $stateParams, $http, $location, $window, Authentication, PasswordValidator) {
+    $window.document.title = 'Reset password';
+
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 
@@ -1927,8 +2047,9 @@ angular.module('users').controller('PasswordController', ['$scope', '$stateParam
 
 'use strict';
 
-angular.module('users').controller('UserProfileController', ['$scope', '$stateParams', 'Authentication', 'Users', 'Pronouns', '$q', 'profileResolve', 'followersResolve',
-  function ($scope, $stateParams, Authentication, Users, Pronouns, $q, profileResolve, followersResolve) {
+angular.module('users').controller('UserProfileController', ['$scope', '$stateParams', '$window', 'Authentication', 'Users', 'Pronouns', '$q', 'profileResolve', 'followersResolve',
+  function ($scope, $stateParams, $window, Authentication, Users, Pronouns, $q, profileResolve, followersResolve) {
+    $window.document.title = $stateParams.username + ' on Pronouny';
     $scope.authentication = Authentication;
     $scope.username = $stateParams.username;
 
@@ -2039,8 +2160,10 @@ angular.module('users').controller('UserProfileController', ['$scope', '$statePa
 
 'use strict';
 
-angular.module('users').controller('RelationsController', ['$scope', '$http', 'Authentication', 'Users', 'Profile',
-  function ($scope, $http, Authentication, Users, Profile) {
+angular.module('users').controller('RelationsController', ['$scope', '$http', '$window', 'Authentication', 'Users', 'Profile',
+  function ($scope, $http, $window, Authentication, Users, Profile) {
+    $window.document.title = 'Relations';
+
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
@@ -2117,8 +2240,84 @@ angular.module('users').controller('RelationsController', ['$scope', '$http', 'A
 
 'use strict';
 
-angular.module('users').controller('ChangePasswordController', ['$scope', '$http', 'Authentication',
-  function ($scope, $http, Authentication) {
+angular.module('users').controller('AccessibilityFeaturesController', ['$scope', '$http', '$location', '$window', 'Users', 'Authentication',
+  function ($scope, $http, $location, $window, Users, Authentication) {
+    $window.document.title = 'Accessibility Features';
+
+    $scope.user = Authentication.user;
+    $scope.features = {
+      font: $scope.user.featureToggles.indexOf('font') > -1,
+      contrast: $scope.user.featureToggles.indexOf('contrast') > -1,
+      textSize: $scope.user.featureToggles.indexOf('textSize') > -1
+    };
+
+    // Update a user profile
+    $scope.updateFeatures = function (isValid) {
+      $scope.success = $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'userForm');
+
+        return false;
+      }
+      $scope.user.featureToggles = [];
+      if($scope.features.font){
+        $scope.user.featureToggles.push('font');
+
+
+        //Instant enable of OpenDyslexic. There is no instant disable though :P
+        var node = document.createElement('style');
+        node.innerHTML = 'body { font-family: \'OpenDyslexic\' !important; }';
+        document.body.appendChild(node);
+
+      }
+      if($scope.features.textSize){
+        $scope.user.featureToggles.push('textSize');
+
+      }
+      if($scope.features.contrast){
+        $scope.user.featureToggles.push('contrast');
+
+        var cssId = 'contrastCss';  // you could encode the css path itself to generate id..
+        if (!document.getElementById(cssId))
+        {
+          var head = document.getElementsByTagName('head')[0];
+          var link = document.createElement('link');
+          link.id = cssId;
+          link.rel = 'stylesheet';
+          link.type = 'text/css';
+          link.href = '/accessibility.css';
+          link.media = 'all';
+          head.appendChild(link);
+        }
+      }
+
+      var user = new Users($scope.user);
+
+
+      user.$update(function (response) {
+        $scope.$broadcast('show-errors-reset', 'userForm');
+
+        console.log(response);
+
+        $scope.success = true;
+        $scope.user = response;
+        Authentication.user = response;
+      }, function (response) {
+        console.log(response);
+        $scope.error = response.data.message;
+      });
+    };
+  }
+]);
+
+
+'use strict';
+
+angular.module('users').controller('ChangePasswordController', ['$scope', '$http', '$window', 'Authentication',
+  function ($scope, $http, $window, Authentication) {
+    $window.document.title = 'Change Password';
+
     $scope.user = Authentication.user;
 
     // Change user password
@@ -2146,6 +2345,8 @@ angular.module('users').controller('ChangePasswordController', ['$scope', '$http
 
 angular.module('users').controller('ChangeProfilePictureController', ['$scope', '$timeout', '$window', 'Authentication', 'FileUploader',
   function ($scope, $timeout, $window, Authentication, FileUploader) {
+    $window.document.title = 'Change Profile Picture';
+
     $scope.user = Authentication.user;
     $scope.imageURL = $scope.user.profileImageURL;
 
@@ -2218,8 +2419,9 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
 
 'use strict';
 
-angular.module('users').controller('EditProfileController', ['$scope', '$http', '$location', 'Users', 'Authentication',
-  function ($scope, $http, $location, Users, Authentication) {
+angular.module('users').controller('EditProfileController', ['$scope', '$http', '$location', '$window', 'Users', 'Authentication',
+  function ($scope, $http, $location, $window, Users, Authentication) {
+    $window.document.title = 'Edit Profile';
     $scope.user = Authentication.user;
 
     // Update a user profile
@@ -2248,8 +2450,10 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
 
 'use strict';
 
-angular.module('users').controller('ManageAlertsController', ['$scope', '$http', '$location', 'Users', 'Authentication',
-  function ($scope, $http, $location, Users, Authentication) {
+angular.module('users').controller('ManageAlertsController', ['$scope', '$http', '$location', '$window', 'Users', 'Authentication',
+  function ($scope, $http, $location, $window, Users, Authentication) {
+    $window.document.title = 'Manage Alerts';
+
     $scope.user = Authentication.user;
     $scope.alerts = {
       facebook: $scope.user.alertChannels.indexOf('facebook') > -1,
@@ -2300,8 +2504,10 @@ angular.module('users').controller('ManageAlertsController', ['$scope', '$http',
 
 'use strict';
 
-angular.module('users').controller('SocialAccountsController', ['$scope', '$http', 'Authentication',
-  function ($scope, $http, Authentication) {
+angular.module('users').controller('SocialAccountsController', ['$scope', '$http', '$window', 'Authentication',
+  function ($scope, $http, $window, Authentication) {
+    $window.document.title = 'Manage Social Accounts';
+
     $scope.user = Authentication.user;
 
     // Check if there are additional accounts
@@ -2339,16 +2545,19 @@ angular.module('users').controller('SocialAccountsController', ['$scope', '$http
 
 'use strict';
 
-angular.module('users').controller('SettingsController', ['$scope', 'Authentication',
-  function ($scope, Authentication) {
+angular.module('users').controller('SettingsController', ['$scope', '$window', 'Authentication',
+  function ($scope, $window, Authentication) {
+    $window.document.title = 'Settings';
     $scope.user = Authentication.user;
   }
 ]);
 
 'use strict';
 
-angular.module('users').controller('UpdateNamesController', ['$scope', '$http', '$location', 'Users', 'Authentication',
-  function ($scope, $http, $location, Users, Authentication) {
+angular.module('users').controller('UpdateNamesController', ['$scope', '$http', '$location', '$window', 'Users', 'Authentication',
+  function ($scope, $http, $location, $window, Users, Authentication) {
+    $window.document.title = 'Update names';
+
     $scope.user = Authentication.user;
 
     $scope.names = $scope.user.names;
@@ -2409,8 +2618,10 @@ angular.module('users').controller('UpdateNamesController', ['$scope', '$http', 
 
 'use strict';
 
-angular.module('users').controller('WelcomeController', ['$scope', '$state', '$http', 'Authentication', 'Users', 'Profile',
-  function ($scope, $state, $http, Authentication, Users, Profile) {
+angular.module('users').controller('WelcomeController', ['$scope', '$state', '$http', '$window', 'Authentication', 'Users', 'Profile',
+  function ($scope, $state, $http, $window, Authentication, Users, Profile) {
+    $window.document.title = 'Welcome!';
+
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;

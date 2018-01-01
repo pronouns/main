@@ -264,6 +264,4 @@ UserSchema.statics.generateRandomPassphrase = function () {
     }
   });
 };
-console.log('hey77');
 mongoose.model('User', UserSchema);
-console.log('hey74');

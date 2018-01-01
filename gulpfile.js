@@ -274,35 +274,21 @@ gulp.task('templatecache', function () {
 
 // Mocha tests task
 gulp.task('mocha', function (done) {
-  var mongooseService = require('./config/lib/mongoose');
-  var testSuites = changedTestFiles.length ? changedTestFiles : testAssets.tests.server;
+  var testSuites = testAssets.tests.server;
   var error;
 
-  // Connect mongoose
-  mongooseService.connect(function (db) {
-    // Load mongoose models
-    mongooseService.loadModels();
-
-    gulp.src(testSuites)
-      .pipe(plugins.mocha({
-        reporter: 'spec',
-        timeout: 10000
-      }))
-      .on('error', function (err) {
-        // If an error occurs, save it
-        error = err;
-      })
-      .on('end', function () {
-        mongooseService.disconnect(function (err) {
-          if (err) {
-            console.log('Error disconnecting from database');
-            console.log(err);
-          }
-
-          return done(error);
-        });
-      });
-  });
+  gulp.src(testSuites)
+    .pipe(plugins.mocha({
+      reporter: 'spec',
+      timeout: 10000
+    }))
+    .on('error', function (err) {
+      // If an error occurs, save it
+      error = err;
+    })
+    .on('end', function () {
+      done(error);
+    });
 });
 
 // Prepare istanbul coverage test
@@ -456,7 +442,7 @@ gulp.task('build', function (done) {
 
 // Run the project tests
 gulp.task('test', function (done) {
-  runSequence('env:test', 'test:server', 'karma', 'nodemon', 'protractor', done);
+  runSequence('env:test', 'karma', 'test:server',  done);
 });
 
 gulp.task('test:server', function (done) {

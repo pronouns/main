@@ -4,13 +4,20 @@ var should = require('should'),
   request = require('supertest'),
   path = require('path'),
   mongoose = require('mongoose'),
-  User = mongoose.model('User'),
   express = require(path.resolve('./config/lib/express'));
+
+
+var User;
 
 /**
  * Globals
  */
 var app, agent, credentials, user, _user, admin;
+
+before(function (done) {
+  User = mongoose.model('User');
+  done();
+});
 
 /**
  * User routes tests
@@ -19,7 +26,7 @@ describe('User CRUD tests', function () {
 
   before(function (done) {
     // Get application
-    app = express.init(mongoose);
+    app = express.init(mongoose.connection.db);
     agent = request.agent(app);
 
     done();

@@ -4,14 +4,22 @@ var should = require('should'),
   request = require('supertest'),
   path = require('path'),
   mongoose = require('mongoose'),
-  User = mongoose.model('User'),
-  Pronoun = mongoose.model('Pronoun'),
   express = require(path.resolve('./config/lib/express'));
+
+
+var User, Pronoun;
 
 /**
  * Globals
  */
 var app, agent, credentials, user, pronoun;
+
+
+before(function (done) {
+  User = mongoose.model('User');
+  Pronoun = mongoose.model('Pronoun');
+  done();
+});
 
 /**
  * Pronoun routes tests
@@ -20,7 +28,7 @@ describe('Pronoun CRUD tests', function () {
 
   before(function (done) {
     // Get application
-    app = express.init(mongoose);
+    app = express.init(mongoose.connection.db);
     agent = request.agent(app);
 
     done();

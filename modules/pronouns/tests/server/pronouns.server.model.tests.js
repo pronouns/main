@@ -4,14 +4,21 @@
  * Module dependencies.
  */
 var should = require('should'),
-  mongoose = require('mongoose'),
-  User = mongoose.model('User'),
-  Pronoun = mongoose.model('Pronoun');
+  mongoose = require('mongoose');
+
+
+var User, Pronoun;
 
 /**
  * Globals
  */
 var user, xPronoun, mPronoun;
+
+before(function (done) {
+  User = mongoose.model('User');
+  Pronoun = mongoose.model('Pronoun');
+  done();
+});
 
 /**
  * Unit tests
@@ -55,7 +62,7 @@ describe('Pronoun Model Unit Tests:', function () {
   describe('Method Save', function () {
     it('should be able to save standard pronoun without problems', function (done) {
       this.timeout(10000);
-      return xPronoun.save(function (err) {
+      xPronoun.save(function (err) {
         should.not.exist(err);
         done();
       });
@@ -65,7 +72,7 @@ describe('Pronoun Model Unit Tests:', function () {
       xPronoun.subject = '';
       this.timeout(10000);
 
-      return xPronoun.save(function (err) {
+      xPronoun.save(function (err) {
         should.exist(err);
         done();
       });
@@ -73,7 +80,7 @@ describe('Pronoun Model Unit Tests:', function () {
 
     it('should be able to save non-standard pronoun without problems', function (done) {
       this.timeout(10000);
-      return mPronoun.save(function (err) {
+      mPronoun.save(function (err) {
         should.not.exist(err);
         done();
       });
@@ -83,7 +90,7 @@ describe('Pronoun Model Unit Tests:', function () {
       mPronoun.title = '';
       this.timeout(10000);
 
-      return mPronoun.save(function (err) {
+      mPronoun.save(function (err) {
         should.exist(err);
         done();
       });

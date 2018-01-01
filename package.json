@@ -17,7 +17,9 @@
   "scripts": {
     "start": "gulp",
     "test": "gulp test",
-    "postinstall": "bower install --config.interactive=false"
+    "postinstall": "bower install --config.interactive=false",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "acl": "^0.4.11",
@@ -68,7 +70,8 @@
     "swig": "^1.4.2",
     "validator": "^3.41.2",
     "winston": "^2.4.0",
-    "wiredep": "^4.0.0"
+    "wiredep": "^4.0.0",
+    "snyk": "^1.64.0"
   },
   "devDependencies": {
     "coveralls": "^3.0.0",
@@ -104,5 +107,6 @@
     "run-sequence": "^2.2.0",
     "should": "^7.0.1",
     "supertest": "^1.0.1"
-  }
+  },
+  "snyk": true
 }

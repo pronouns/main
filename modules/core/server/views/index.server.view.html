@@ -1,7 +1,5 @@
-{% extends 'layout.server.view.html' %}
+{{!< layout}}
 
-{% block content %}
-  <div id="content" role="main">
-    <section ui-view></section>
-  </div>
-{% endblock %}
+{{#contentFor 'content'}}
+<section ui-view></section>
+{{/contentFor}}

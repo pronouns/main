@@ -50,7 +50,7 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
         $scope.error = response.data.message;
       });
     };
-// Remove existing Pronoun
+    // Remove existing Pronoun
     $scope.remove = function (pronoun) {
       if (pronoun) {
         pronoun.$remove();
@@ -67,7 +67,7 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
       }
     };
 
-// Update existing Pronoun
+    // Update existing Pronoun
     $scope.update = function (isValid) {
       $scope.error = null;
 
@@ -86,12 +86,12 @@ angular.module('pronouns').controller('PronounsController', ['$scope', '$statePa
       });
     };
 
-// Find a list of Pronouns
+    // Find a list of Pronouns
     $scope.find = function () {
       $scope.pronouns = Pronouns.query();
     };
 
-// Find existing Pronoun
+    // Find existing Pronoun
     $scope.findOne = function () {
       $scope.pronoun = Pronouns.get({
         pronounId: $stateParams.pronounId

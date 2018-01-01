@@ -29,7 +29,7 @@ module.exports = {
         'public/lib/angular-moment/angular-moment.min.js'
       ]
     },
-    css: 'public/dist/application.min.css',
-    js: 'public/dist/application.min.js'
+    css: 'public/dist/application*.min.css',
+    js: 'public/dist/application*.min.js'
   }
 };

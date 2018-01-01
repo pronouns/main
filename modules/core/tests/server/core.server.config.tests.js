@@ -14,6 +14,8 @@ var _ = require('lodash'),
   logger = require(path.resolve('./config/lib/logger')),
   seed = require(path.resolve('./config/lib/seed'));
 
+console.log('ehfui3rhf');
+
 /**
  * Globals
  */

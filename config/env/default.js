@@ -7,6 +7,9 @@ module.exports = {
     keywords: 'pronouns, gender, personal pronouns, social, pronouny, pronouny, preferred gender pronouns, gender pronouns',
     googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
   },
+  db: {
+    promise: global.Promise
+  },
   port: process.env.PORT || 3000,
   templateEngine: 'swig',
   // Session Cookie settings
@@ -35,6 +38,15 @@ module.exports = {
       limits: {
         fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
       }
+    }
+  },
+  shared: {
+    owasp: {
+      allowPassphrases: true,
+      maxLength: 128,
+      minLength: 10,
+      minPhraseLength: 20,
+      minOptionalTestsToPass: 4
     }
   }
 };

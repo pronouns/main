@@ -33,7 +33,7 @@
   <link href="{{favicon}}" rel="shortcut icon" type="image/x-icon">
 
   <!-- Application CSS Files -->
-  {% for cssFile in cssFiles %}<link rel="stylesheet" href="{{cssFile}}">{% endfor %}
+  {{#each cssFiles}}<link rel="stylesheet" href="/{{this}}">{{/each}}
 </head>
 
 <body class="ng-cloak">
@@ -41,27 +41,35 @@
 
   <section class="content">
     <section class="container">
-      {% block content %}{% endblock %}
+      <div ng-include="'/modules/core/client/views/alerts.client.view.html'"></div>
+      {{{block "content"}}}
     </section>
   </section>
   <footer style="position: relative; top: 30px; width: 100%; height: 60px;" ng-include="'/modules/core/client/views/footer.client.view.html'" role="contentinfo"></footer>
 
   <!--Embedding The User Object-->
   <script type="text/javascript">
-    var user = {{ user | json | safe }};
+    var user = {{{ user }}};
+    var env = "{{ env }}";
   </script>
 
   <!--Load The Socket.io File-->
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 
   <!--Application JavaScript Files-->
-  {% for jsFile in jsFiles %}<script type="text/javascript" src="{{jsFile}}"></script>{% endfor %}
+  {{#each jsFiles}}<script type="text/javascript" src="/{{this}}"></script>{{/each}}
 
 
-  {% if livereload %}
+  <!--owasp config sync-->
+  <script type="text/javascript">
+    var sharedConfig = {{{ sharedConfig }}};
+    owaspPasswordStrengthTest.config(sharedConfig.owasp);
+  </script>
+
+  {{#if livereload}}
   <!--Livereload script rendered -->
   <script type="text/javascript" src="{{host}}:35729/livereload.js"></script>
-  {% endif %}
+  {{/if}}
 
 </body>
 

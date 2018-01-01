@@ -25,7 +25,7 @@ angular.module('pronouns').controller('CreatePronounController', ['$scope', '$st
       var pronoun = {};
       console.log($scope.pronounType);
       if($scope.pronounType === 'X') {
-// Create new Pronoun object
+        // Create new Pronoun object
         pronoun = new Pronouns({
           subject: $scope.pronoun.subject,
           object: $scope.pronoun.object,
@@ -38,7 +38,7 @@ angular.module('pronouns').controller('CreatePronounController', ['$scope', '$st
         });
       }
       if($scope.pronounType === 'M') {
-// Create new Pronoun object
+        // Create new Pronoun object
         pronoun = new Pronouns({
           content: $scope.pronoun.content,
           title: $scope.pronoun.title,
@@ -47,11 +47,11 @@ angular.module('pronouns').controller('CreatePronounController', ['$scope', '$st
         });
       }
 
-// Redirect after save
+      // Redirect after save
       pronoun.$save(function (response) {
         $location.path('pronouns/' + response._id);
 
-// Clear form fields
+        // Clear form fields
         $scope.subject = '';
         $scope.object = '';
         $scope.determiner = '';

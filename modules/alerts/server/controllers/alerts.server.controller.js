@@ -36,11 +36,12 @@ exports.create = function (req, res) {
         }
         var userHasFacebook = user.additionalProvidersData && user.additionalProvidersData.facebook;
         User.find({ following: user._id }, function (err, docs) {
+          console.log(docs);
           async.filter(docs, function(target, callback) {
             Alert.count({ 'user': user, 'targetUsers': { $elemMatch: { user: target._id } } }, function(err, c){
-              callback(c === 0);
+              callback(null, c === 0);
             });
-          }, function(docs){
+          }, function(err, docs){
             var targets = [];
             for (var i = 0; i < docs.length; i++) {
               targets.push({

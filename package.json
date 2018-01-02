@@ -20,6 +20,7 @@
     "postinstall": "bower install --config.interactive=false",
     "heroku-postbuild": "node node_modules/gulp/bin/gulp build"
   },
+  "cacheDirectories": ["node_modules", "public/lib"],
   "dependencies": {
     "acl": "^0.4.11",
     "async": "^2.6.0",

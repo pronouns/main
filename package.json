@@ -18,7 +18,7 @@
     "start": "gulp",
     "test": "gulp test",
     "postinstall": "bower install --config.interactive=false",
-    "heroku-postbuild": "gulp build"
+    "heroku-postbuild": "node node_modules/gulp/bin/gulp build"
   },
   "dependencies": {
     "acl": "^0.4.11",

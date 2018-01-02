@@ -1,4 +1,4 @@
-FROM node:0.12
+FROM node:8
 
 # Install gem sass for  grunt-contrib-sass
 RUN apt-get update -qq && apt-get install -y build-essential
@@ -8,7 +8,7 @@ RUN gem install sass
 WORKDIR /home/mean
 
 # Install Mean.JS Prerequisites
-RUN npm install -g grunt-cli
+RUN npm install -g gulp
 RUN npm install -g bower
 
 # Install Mean.JS packages
@@ -29,4 +29,4 @@ ENV NODE_ENV development
 # Port 3000 for server
 # Port 35729 for livereload
 EXPOSE 3000 35729
-CMD ["grunt"]
+CMD ["gulp"]

@@ -15,8 +15,8 @@
     "node": "8.2.x"
   },
   "scripts": {
-    "start": "gulp",
-    "test": "gulp test",
+    "start": "node node_modules/gulp/bin/gulp",
+    "test": "node node_modules/gulp/bin/gulp test",
     "postinstall": "bower install --config.interactive=false",
     "heroku-postbuild": "node node_modules/gulp/bin/gulp build"
   },

@@ -17,7 +17,8 @@
   "scripts": {
     "start": "gulp",
     "test": "gulp test",
-    "postinstall": "bower install --config.interactive=false"
+    "postinstall": "bower install --config.interactive=false",
+    "heroku-postbuild": "gulp build"
   },
   "dependencies": {
     "acl": "^0.4.11",

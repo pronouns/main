@@ -50,7 +50,7 @@
             <br>
 
             <div class="list-group">
-              <input class="form-control" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay(search)"/>
+              <input class="form-control" type="text" aria-label="Search" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay(search)"/>
               <br>
               <alert ng-show="!pagedItems.length && resolved" type="info">You don't have any available public
                 pronouns.

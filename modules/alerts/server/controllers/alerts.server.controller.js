@@ -26,7 +26,7 @@ exports.create = function (req, res) {
   var user = req.user;
   if (user) {
     if ((user.nextAlertAt === undefined || user.nextAlertAt < Date.now()) && user.canSendAlert) {
-      user.nextAlertAt = Date.now() + (30 * 1000); // 2 minutes
+      user.nextAlertAt = Date.now() + (1000 * 60 * 10); // 10 minutes
       user.canSendAlert = false;
       user.save(function (err) {
         if (err) {
@@ -38,9 +38,11 @@ exports.create = function (req, res) {
         User.find({ following: user._id }, function (err, docs) {
           console.log(docs);
           async.filter(docs, function(target, callback) {
-            Alert.count({ 'user': user, 'targetUsers': { $elemMatch: { user: target._id } } }, function(err, c){
-              callback(null, c === 0);
-            });
+            // !!! Removed throttling for now as a test
+            // Alert.count({ 'user': user, 'targetUsers': { $elemMatch: { user: target._id } } }, function(err, c){
+            //  callback(null, c === 0);
+            // });
+            callback(null, true);
           }, function(err, docs){
             var targets = [];
             for (var i = 0; i < docs.length; i++) {
@@ -141,7 +143,7 @@ exports.read = function (req, res) {
 
   var alert = req.alert ? req.alert.toJSON() : {};
 
-  alert.isCurrentUserOwner = req.user && alert.user && alert.user._id.toString() === req.user._id.toString() ? true : false;
+  alert.isCurrentUserOwner = !!(req.user && alert.user && alert.user._id.toString() === req.user._id.toString());
 
   res.jsonp(alert);
 };

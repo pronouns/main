@@ -33,7 +33,7 @@ module.exports = {
   twitter: {
     clientID: process.env.TWITTER_KEY || 'CONSUMER_KEY',
     clientSecret: process.env.TWITTER_SECRET || 'CONSUMER_SECRET',
-    callbackURL: '/api/auth/twitter/callback'
+    callbackURL: process.env.SITE_URL || '' + ('/api/auth/twitter/callback')
   },
   mailer: {
     from: process.env.MAILER_FROM || 'MAILER_FROM',

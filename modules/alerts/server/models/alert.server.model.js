@@ -44,6 +44,8 @@ var AlertSchema = new Schema({
 });
 
 AlertSchema.methods.linkForUser = function(user){
+  //console.log(user);
+  //console.log(this.targetUsers);
   for(var i = 0; i < this.targetUsers.length; i++){
     if(this.targetUsers[i].user === user._id){
       return 'api/alerts/open/' + this._id + '/' + this.targetUsers[i].key;

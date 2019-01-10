@@ -47,7 +47,7 @@ exports.create = function (req, res) {
             var targets = [];
             for (var i = 0; i < docs.length; i++) {
               targets.push({
-                user: docs[i],
+                user: docs[i]._id,
                 key: new ObjectId()
               });
             }

@@ -39,7 +39,7 @@ exports.update = function (req, res) {
       req.body.lastPronounUpdateAt = Date.now();
     }
 
-    if(req.body.email === '' && !user.email && user.provider !== "local"){ // prevent email from being saved, fix for twitter
+    if(req.body.email === '' && !user.email && user.provider !== 'local'){ // prevent email from being saved, fix for twitter
       delete req.body.email;
     }
 

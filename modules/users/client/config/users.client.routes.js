@@ -124,6 +124,7 @@ angular.module('users').config(['$stateProvider',
         url: '/nouns',
         templateUrl: 'modules/users/client/views/nouns.client.view.html'
       }).state('welcome', {
+        url: '/welcome',
         templateUrl: 'modules/users/client/views/welcome.client.view.html',
         params: {
           'destination': 'home',

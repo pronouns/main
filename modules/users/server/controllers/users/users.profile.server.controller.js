@@ -37,8 +37,12 @@ exports.update = function (req, res) {
         req.body.pronounTimeBest = Date.now() - user.lastPronounUpdateAt;
       }
       req.body.lastPronounUpdateAt = Date.now();
-      
     }
+
+    if(req.body.email === '' && !user.email && user.provider !== "local"){ // prevent email from being saved, fix for twitter
+      delete req.body.email;
+    }
+
     // Merge existing user
     user = _.extend(user, req.body);
     if(user.bio && user.bio.length > 10000){
@@ -127,7 +131,7 @@ exports.changeProfilePicture = function (req, res) {
   var message = null;
   var upload = multer(config.uploads.profileUpload).single('newProfilePicture');
   var profileUploadFileFilter = require(path.resolve('./config/lib/multer')).imageFileFilter;
-  
+
   // Filtering to upload only images
   upload.fileFilter = profileUploadFileFilter;
 

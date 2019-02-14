@@ -19,6 +19,7 @@ module.exports = function (config) {
   function (req, token, tokenSecret, profile, done) {
     // Set the provider data and include tokens
     var providerData = profile._json;
+    console.log(profile);
     providerData.token = token;
     providerData.tokenSecret = tokenSecret;
 

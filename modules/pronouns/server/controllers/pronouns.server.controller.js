@@ -128,7 +128,7 @@ exports.listMine = function (req, res) {
  * (for Admin)
  */
 exports.listUser = function (req, res) {
-  Pronoun.find({ user: req.params.userId, listed: false }).sort('-created').populate('user', 'displayName username').exec(function (err, pronouns) {
+  Pronoun.find({ user: req.params.userId }).sort('-created').populate('user', 'displayName username').exec(function (err, pronouns) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

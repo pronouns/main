@@ -73,7 +73,7 @@
             </div>
           </tab>
         </tabset>
-        <div class="form-group" ng-hide="pronounType == 'M' && user.roles.indexOf('admin') === -1">
+        <div class="form-group" ng-hide="user.roles.indexOf('admin') === -1">
           <label for="listed">Listed</label>
           <input name="listed" type="checkbox" id="listed" ng-model="pronoun.listed" class="form-control">
         </div>

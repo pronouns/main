@@ -14,9 +14,9 @@ var path = require('path'),
  */
 exports.create = function (req, res) {
   var pronoun = new Pronoun(req.body);
-  if(pronoun.pronounType === 'M' && pronoun.listed && req.user.roles.indexOf('admin') === -1){
+  if(pronoun.listed && req.user.roles.indexOf('admin') === -1){
     return res.status(400).send({
-      message: 'Only admins can create public "M" pronouns'
+      message: 'Only admins can create public pronouns'
     });
   }
   pronoun.user = req.user;

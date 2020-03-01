@@ -48,8 +48,10 @@
   <footer style="position: relative; top: 30px; width: 100%; height: 60px;" ng-include="'/modules/core/client/views/footer.client.view.html'" role="contentinfo"></footer>
 
   <!--Embedding The User Object-->
+  <div id="userData" style="display: none">{{user}}</div>
   <script type="text/javascript">
-    var user = {{{ user }}};
+    var jsonData = document.getElementById("userData").innerHTML;
+    var user = JSON.parse(jsonData);
     var env = "{{ env }}";
   </script>
 

@@ -29,6 +29,7 @@ exports.update = function (req, res) {
 
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles;
+  delete req.body._id;
 
   if (user) {
     if(req.body.pronouns !== user.pronouns || req.body.names.toString() !== user.names.toString() || req.body.nouns.toString() !== user.nouns.toString() || req.body.nouns.goodWords.toString() !== user.nouns.goodWords.toString() || req.body.nouns.badWords.toString() !== user.nouns.badWords.toString()){

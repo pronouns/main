@@ -96,6 +96,7 @@ exports.getUser = function (req, res) {
         user.additionalProvidersData = undefined;
         user.featureToggles = undefined;
         user.fontSize = undefined;
+        user.providerData = undefined;
 
         res.json(user);
       });

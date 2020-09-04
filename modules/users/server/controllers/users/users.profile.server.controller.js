@@ -84,11 +84,12 @@ exports.update = function (req, res) {
 exports.getUser = function (req, res) {
   if(req.profile !== null) {
     User.populate(req.profile, { path: 'pronouns' }, function (err, user) {
-      User.populate(user, { path: 'following', select: 'username displayName email' }, function (err, user) {
+      User.populate(user, { path: 'following', select: 'username displayName' }, function (err, user) {
         //TODO remove non-public data !!!
         // But like I already did that, sooooooooooo...
         // Just going to have this chain of comments
         // > Br
+        user.email = undefined;
         user.salt = undefined;
         user.password = undefined;
         user.resetPasswordToken = undefined;
@@ -110,7 +111,7 @@ exports.getUser = function (req, res) {
 };
 exports.getFollowers = function (req, res){
   if(req.profile !== null) {
-    User.find({ following: req.profile._id }).select('displayName email username').exec(function (err, docs) {
+    User.find({ following: req.profile._id }).select('displayName username').exec(function (err, docs) {
       if(err){
         res.json([]);
       }
@@ -170,7 +171,7 @@ exports.changeProfilePicture = function (req, res) {
   }
 };
 exports.runSearch = function(req, res){
-  User.find({ $text : { $search : req.params.searchData } }).select('username displayName email names').exec(function(err, results) {
+  User.find({ $text : { $search : req.params.searchData } }).select('username displayName names').exec(function(err, results) {
     if(err){
       res.json([]);
     }
@@ -188,7 +189,7 @@ exports.runSuggested = function(req, res){
       }
     }
     async.map(suggestedStore[req.user._id].result, function(id, done){
-      User.findOne({ '_id': id }).select('username displayName names email').exec(function(err, user){
+      User.findOne({ '_id': id }).select('username displayName names').exec(function(err, user){
         done(err, user);
       });
     }, function(err, results){
@@ -231,7 +232,7 @@ exports.runSuggested = function(req, res){
       }
       suggestedStore[req.user._id].result = result;
       async.map(suggestedStore[req.user._id].result, function (id, done) {
-        User.findOne({ '_id': id }).select('username displayName names email').exec(function (err, user) {
+        User.findOne({ '_id': id }).select('username displayName names').exec(function (err, user) {
           done(err, user);
         });
       }, function (err, results) {
@@ -249,7 +250,7 @@ exports.meWithFollowing = function (req, res) {
   if(req.user !== null){
     User.findOne({ _id: req.user._id }).populate({
       path: 'following',
-      select: '-salt -password -resetPasswordToken -additionalProvidersData -providerData -pushbulletKey',
+      select: '-salt -password -resetPasswordToken -additionalProvidersData -providerData -pushbulletKey -email -featureToggles -fontSize',
       populate: {
         path: 'pronouns',
         model: 'Pronoun'

@@ -6,20 +6,23 @@
   </div>
   <div ng-show="profile._id">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-xs-6">
         <h1><span ng-bind="profile.username"></span></h1><span class="label label-danger"
                                                                ng-show="profile.roles.indexOf('admin') !== -1"
                                                                tooltip="This user is a member of the website staff and can make edits to the pronoun list.">Admin</span>
       </div>
-    </div>
-    <span ng-hide="user._id === profile._id">
+      <div class="col-xs-6">
+        <br>
+         <span ng-hide="user._id === profile._id">
           <a class="btn btn-info pull-right" ng-click="addFollowing();"
              ng-show="user.following.indexOf(profile._id) === -1">Follow</a>
           <a class="btn btn-danger pull-right" ng-click="removeFollowing();"
              ng-show="user.following.indexOf(profile._id) > -1">Unfollow</a>
-      <br>
       </span>
-    <div class="row" ng-show="profile.bio">
+      </div>
+    </div>
+
+    <div class="row">
       <div class="col-md-6">
         <p style="font-size: 12pt;">
           {{profile.bio}}

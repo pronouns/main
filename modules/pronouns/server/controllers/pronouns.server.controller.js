@@ -98,16 +98,25 @@ exports.delete = function (req, res) {
 /**
  * Public list of Pronouns
  */
+
+let listCache = null;
+let cacheExpire = 0;
 exports.list = function (req, res) {
-  Pronoun.find({ listed: true }).sort('-created').populate('user', 'displayName username').exec(function (err, pronouns) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(pronouns);
-    }
-  });
+  if(listCache != null && Date.now() < cacheExpire){
+    res.json(listCache);
+  } else {
+    Pronoun.find({ listed: true }).sort('-created').populate('user', 'displayName username').exec(function (err, pronouns) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        listCache = pronouns;
+        cacheExpire = Date.now() + (60 * 1000 * 10);
+        res.json(pronouns);
+      }
+    });
+  }
 };
 /**
  * Personal list of Pronouns

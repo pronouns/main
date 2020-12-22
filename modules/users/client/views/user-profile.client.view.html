@@ -80,7 +80,7 @@
                   <h5 class="list-group-item-heading text-muted">This user hasn't posted any names.</h5>
                 </div>
               </div>
-              <div ng-repeat="name in profile.names" class="list-group-item">
+              <div ng-repeat="name in profile.names track by $index" class="list-group-item">
                 <div class="row">
                   <div class="col-sm-10 col-xs-12">
                     <h5>{{name}}</h5>

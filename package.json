@@ -52,7 +52,7 @@
     "helmet": "~0.9.1",
     "imagemin-pngquant": "^5.1.0",
     "jasmine-core": "^2.99.1",
-    "lodash": "^3.10.0",
+    "lodash": "^4.17.21",
     "lusca": "^1.6.1",
     "method-override": "^2.3.10",
     "mongoose": "^4.13.18",

@@ -55,7 +55,7 @@
     "lodash": "^3.10.0",
     "lusca": "^1.6.1",
     "method-override": "^2.3.10",
-    "mongoose": "^4.13.18",
+    "mongoose": "^4.13.21",
     "morgan": "^1.9.1",
     "multer": "~1.0.5",
     "nodemailer": "^4.7.0",

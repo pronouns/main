@@ -145,7 +145,7 @@ gulp.task('uglify', function () {
   );
   del(['public/dist/*']);
 
-  return gulp.src(assets)
+  return gulp.src(assets, { allowEmpty: true })
     .pipe(plugins.ngAnnotate())
     .pipe(plugins.uglify({
       mangle: true

@@ -1,32 +1,35 @@
-FROM node:8
+FROM node:22
 
 # Install gem sass for  grunt-contrib-sass
-RUN apt-get update -qq && apt-get install -y build-essential
-RUN apt-get install -y ruby
-RUN gem install sass
+#RUN apt-get update -qq && apt-get install -y build-essential
+#RUN apt-get install -y ruby
+#RUN gem install sass
 
-WORKDIR /home/mean
+WORKDIR /home/pronouny
 
 # Install Mean.JS Prerequisites
 RUN npm install -g gulp
 RUN npm install -g bower
 
 # Install Mean.JS packages
-ADD package.json /home/mean/package.json
+ADD package.json /home/pronouny/package.json
+ADD .bowerrc /home/pronouny/.bowerrc
+ADD bower.json /home/pronouny/bower.json
+RUN echo '{ "allow_root": true }' > /root/.bowerrc
 RUN npm install
 
 # Manually trigger bower. Why doesnt this work via npm install?
-ADD .bowerrc /home/mean/.bowerrc
-ADD bower.json /home/mean/bower.json
-RUN bower install --config.interactive=false --allow-root
+
+
+RUN bower install --config.interactive=false
 
 # Make everything available for start
-ADD . /home/mean
+ADD . /home/pronouny
 
 # Set development environment as default
-ENV NODE_ENV development
+ENV NODE_ENV=production
 
 # Port 3000 for server
 # Port 35729 for livereload
-EXPOSE 3000 35729
+EXPOSE 3000
 CMD ["gulp"]

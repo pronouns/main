@@ -10,7 +10,7 @@ var config = require('../config'),
   passport = require('passport'),
   socketio = require('socket.io'),
   session = require('express-session'),
-  MongoStore = require('connect-mongo')(session);
+  MongoStore = require('connect-mongo');
 
 // Define the Socket.io configuration method
 module.exports = function (app, db) {
@@ -70,9 +70,10 @@ module.exports = function (app, db) {
   var io = socketio.listen(server);
 
   // Create a MongoDB storage object
-  var mongoStore = new MongoStore({
-    db: db,
-    collection: config.sessionCollection
+  var mongoStore = MongoStore.create({
+    client: db.client,
+    collectionName: config.sessionCollection,
+    dbName: config.db.name,
   });
 
   // Intercept Socket.io's handshake request

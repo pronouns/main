@@ -59,15 +59,13 @@ exports.delete = function (req, res) {
  * List of Users
  */
 exports.list = function (req, res) {
-  User.find({}, '-salt -password').sort('-created').exec(function (err, users) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err),
-        raw: err
-      });
-    }
-
+  User.find({}, '-salt -password').sort('-created').then(function (users) {
     res.json(users);
+  }).catch(function (error) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err),
+      raw: err
+    });
   });
 };
 
@@ -81,14 +79,14 @@ exports.userByID = function (req, res, next, id) {
     });
   }
 
-  User.findById(id, '-salt -password').populate('pronouns').exec(function (err, user) {
-    if (err) {
-      return next(err);
-    } else if (!user) {
+  User.findById(id, '-salt -password').populate('pronouns').then(function (user) {
+    if (!user) {
       return next(new Error('Failed to load user ' + id));
     }
 
     req.model = user;
     next();
+  }).catch(function (err) {
+    return next(err);
   });
 };

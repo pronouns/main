@@ -9,7 +9,7 @@ var config = require('../config'),
   logger = require('./logger'),
   bodyParser = require('body-parser'),
   session = require('express-session'),
-  MongoStore = require('connect-mongo')(session),
+  MongoStore = require('connect-mongo'),
   favicon = require('serve-favicon'),
   compress = require('compression'),
   methodOverride = require('method-override'),
@@ -117,9 +117,10 @@ module.exports.initSession = function (app, db) {
       secure: config.sessionCookie.secure && config.secure.ssl
     },
     name: config.sessionKey,
-    store: new MongoStore({
-      db: db,
-      collection: config.sessionCollection
+    store: MongoStore.create({
+      client: db.client,
+      collectionName: config.sessionCollection,
+      dbName: config.db.name,
     })
   }));
 

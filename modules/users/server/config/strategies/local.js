@@ -16,10 +16,7 @@ module.exports = function () {
   function (username, password, done) {
     User.findOne({
       username: username.toLowerCase()
-    }, function (err, user) {
-      if (err) {
-        return done(err);
-      }
+    }).then( function (user) {
       if (!user || !user.authenticate(password)) {
         return done(null, false, {
           message: 'Invalid username or password'
@@ -27,6 +24,8 @@ module.exports = function () {
       }
 
       return done(null, user);
+    }).catch(function (error) {
+      return done(error);
     });
   }));
 };

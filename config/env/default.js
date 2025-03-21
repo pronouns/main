@@ -8,7 +8,8 @@ module.exports = {
     googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
   },
   db: {
-    promise: global.Promise
+    promise: global.Promise,
+    name: 'pronouny',
   },
   port: process.env.PORT || 3000,
   templateEngine: 'swig',

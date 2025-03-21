@@ -30,26 +30,24 @@ exports.signup = function (req, res) {
   user.provider = 'local';
 
   // Then save the user
-  user.save(function (err) {
-    if (err) {
-      console.log(err);
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      // Remove sensitive data before login
-      user.password = undefined;
-      user.salt = undefined;
+  user.save().then(function () {
+    // Remove sensitive data before login
+    user.password = undefined;
+    user.salt = undefined;
 
-      req.login(user, function (err) {
-        if (err) {
-          console.log(err);
-          res.status(400).send(err);
-        } else {
-          res.json(user);
-        }
-      });
-    }
+    req.login(user, function (err) {
+      if (err) {
+        console.log(err);
+        res.status(400).send(err);
+      } else {
+        res.json(user);
+      }
+    });
+  }).catch(function (err) {
+    console.log(err);
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 
@@ -59,6 +57,7 @@ exports.signup = function (req, res) {
 exports.signin = function (req, res, next) {
   passport.authenticate('local', function (err, user, info) {
     if (err || !user) {
+      console.log(err);
       res.status(400).send(info);
     } else {
       // Remove sensitive data before login
@@ -69,7 +68,7 @@ exports.signin = function (req, res, next) {
         if (err) {
           res.status(400).send(err);
         } else {
-          User.populate(user, { path: 'pronouns' }, function(err, user) {
+          User.populate(user, { path: 'pronouns' }).then(function(user) {
             res.json(user);
           });
         }

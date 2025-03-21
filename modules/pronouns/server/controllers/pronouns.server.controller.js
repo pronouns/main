@@ -23,14 +23,12 @@ exports.create = function (req, res) {
   if(pronoun.pronounType === 'X') {
     pronoun.pattern = pronoun.subject + '/' + pronoun.object + '/' + pronoun.determiner + '/' + pronoun.possessive + '/' + pronoun.reflexive;
   }
-  pronoun.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
+  pronoun.save().then(function () {
       res.json(pronoun);
-    }
+  }).catch(function (err) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 
@@ -63,14 +61,12 @@ exports.update = function (req, res) {
     pronoun.pattern = pronoun.subject + '/' + pronoun.object + '/' + pronoun.determiner + '/' + pronoun.possessive + '/' + pronoun.reflexive;
   }
 
-  pronoun.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(pronoun);
-    }
+  pronoun.save().then(function () {
+    res.json(pronoun);
+  }).catch(function (err) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 
@@ -84,14 +80,12 @@ exports.delete = function (req, res) {
       pronouns: [pronoun._id]
     }
   }, { multi: true });
-  pronoun.remove(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(pronoun);
-    }
+  pronoun.remove().then(function () {
+    res.json(pronoun);
+  }).catch(function (err) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 
@@ -105,16 +99,14 @@ exports.list = function (req, res) {
   if(listCache != null && Date.now() < cacheExpire){
     res.json(listCache);
   } else {
-    Pronoun.find({ listed: true }).sort('-created').populate('user', 'displayName username').exec(function (err, pronouns) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
+    Pronoun.find({ listed: true }).sort('-created').populate('user', 'displayName username').then(function (pronouns) {
         listCache = pronouns;
         cacheExpire = Date.now() + (60 * 1000 * 10);
-        res.json(pronouns);
-      }
+        return res.json(pronouns);
+    }).catch(function (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
     });
   }
 };
@@ -122,14 +114,12 @@ exports.list = function (req, res) {
  * Personal list of Pronouns
  */
 exports.listMine = function (req, res) {
-  Pronoun.find({ user: req.user._id, listed: false }).sort('-created').populate('user', 'displayName username').exec(function (err, pronouns) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(pronouns);
-    }
+  Pronoun.find({ user: req.user._id, listed: false }).sort('-created').populate('user', 'displayName username').then(function (pronouns) {
+    res.json(pronouns);
+  }).catch(function (err) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 /**
@@ -137,14 +127,12 @@ exports.listMine = function (req, res) {
  * (for Admin)
  */
 exports.listUser = function (req, res) {
-  Pronoun.find({ user: req.params.userId }).sort('-created').populate('user', 'displayName username').exec(function (err, pronouns) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(pronouns);
-    }
+  Pronoun.find({ user: req.params.userId }).sort('-created').populate('user', 'displayName username').then(function ( pronouns) {
+    res.json(pronouns);
+  }).catch(function (err) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 exports.findByPattern = function(req, res, next){
@@ -152,13 +140,15 @@ exports.findByPattern = function(req, res, next){
     next();
     return;
   }
-  Pronoun.findOne({ pattern: req.params.subject + '/' + req.params.object + '/' + req.params.determiner + '/' + req.params.possessive + '/' + req.params.reflexive, listed: true }, '_id', function(err, pronoun){
-    if(err !== null || pronoun === null){
+  Pronoun.findOne({ pattern: req.params.subject + '/' + req.params.object + '/' + req.params.determiner + '/' + req.params.possessive + '/' + req.params.reflexive, listed: true }, '_id').then( function(pronoun){
+    if(pronoun === null){
       res.redirect('/pronouns');
     }
     else{
       res.redirect('/pronouns/' + pronoun._id);
     }
+  }).then(function (err){
+    res.redirect('/pronouns');
   });
 };
 /**
@@ -172,15 +162,15 @@ exports.pronounByID = function (req, res, next, id) {
     });
   }
 
-  Pronoun.findById(id).populate('user', 'displayName username').exec(function (err, pronoun) {
-    if (err) {
-      return next(err);
-    } else if (!pronoun) {
+  Pronoun.findById(id).populate('user', 'displayName username').then(function (pronoun) {
+    if (!pronoun) {
       return res.status(404).send({
         message: 'No pronoun with that identifier has been found'
       });
     }
     req.pronoun = pronoun;
     next();
+  }).catch(function (err) {
+    return next(err);
   });
 };

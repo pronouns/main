@@ -219,16 +219,14 @@ UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
   var possibleUsername = username.toLowerCase() + (suffix || '');
   _this.findOne({
     username: possibleUsername
-  }, function (err, user) {
-    if (!err) {
-      if (!user) {
-        callback(possibleUsername);
-      } else {
-        return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
-      }
+  }).then( function (user) {
+    if (!user) {
+      callback(possibleUsername);
     } else {
-      callback(null);
+      return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
     }
+  }).catch(function () {
+    callback(null);
   });
 };
 

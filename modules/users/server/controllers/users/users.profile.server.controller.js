@@ -57,20 +57,18 @@ exports.update = function (req, res) {
     });
     user.updated = Date.now();
 
-    user.save(function (err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        req.login(user, function (err) {
-          if (err) {
-            res.status(400).send(err);
-          } else {
-            res.json(user);
-          }
-        });
-      }
+    user.save().then(function (user) {
+      req.login(user, function (err) {
+        if (err) {
+          res.status(400).send(err);
+        } else {
+          res.json(user);
+        }
+      });
+    }).catch(function (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      })
     });
   } else {
     res.status(400).send({
@@ -83,8 +81,8 @@ exports.update = function (req, res) {
  */
 exports.getUser = function (req, res) {
   if(req.profile !== null) {
-    User.populate(req.profile, { path: 'pronouns' }, function (err, user) {
-      User.populate(user, { path: 'following', select: 'username displayName' }, function (err, user) {
+    User.populate(req.profile, { path: 'pronouns' }).then(function (user) {
+      User.populate(user, { path: 'following', select: 'username displayName' }).then(function ( user) {
         //TODO remove non-public data !!!
         // But like I already did that, sooooooooooo...
         // Just going to have this chain of comments
@@ -111,13 +109,10 @@ exports.getUser = function (req, res) {
 };
 exports.getFollowers = function (req, res){
   if(req.profile !== null) {
-    User.find({ following: req.profile._id }).select('displayName username').exec(function (err, docs) {
-      if(err){
-        res.json([]);
-      }
-      else {
-        res.json(docs);
-      }
+    User.find({ following: req.profile._id }).select('displayName username').then(function (docs) {
+      res.json(docs);
+    }).catch(function (err) {
+      res.json([]);
     });
   }
   else{
@@ -147,20 +142,18 @@ exports.changeProfilePicture = function (req, res) {
       } else {
         user.profileImageURL = config.uploads.profileUpload.dest + req.file.filename;
 
-        user.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            req.login(user, function (err) {
-              if (err) {
-                res.status(400).send(err);
-              } else {
-                res.json(user);
-              }
-            });
-          }
+        user.save().then(function () {
+          req.login(user, function (err) {
+            if (err) {
+              res.status(400).send(err);
+            } else {
+              res.json(user);
+            }
+          });
+        }).catch(function (saveError) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(saveError)
+          });
         });
       }
     });
@@ -171,13 +164,10 @@ exports.changeProfilePicture = function (req, res) {
   }
 };
 exports.runSearch = function(req, res){
-  User.find({ $text : { $search : req.params.searchData } }).select('username displayName names').exec(function(err, results) {
-    if(err){
-      res.json([]);
-    }
-    else{
-      res.json(results);
-    }
+  User.find({ $text : { $search : req.params.searchData } }).select('username displayName names').then(function(results) {
+    res.json(results);
+  }).catch(function (err){
+    res.json([]);
   });
 };
 exports.runSuggested = function(req, res){
@@ -189,8 +179,10 @@ exports.runSuggested = function(req, res){
       }
     }
     async.map(suggestedStore[req.user._id].result, function(id, done){
-      User.findOne({ '_id': id }).select('username displayName names').exec(function(err, user){
+      User.findOne({ '_id': id }).select('username displayName names').then(function(user){
         done(err, user);
+      }).catch(function (err) {
+        done(err);
       });
     }, function(err, results){
       if(err){
@@ -206,10 +198,7 @@ exports.runSuggested = function(req, res){
     };
     var tempStore = [];
     async.each(req.user.following, function (id, done) {
-      User.findOne({ '_id': id }).exec(function (err, user) {
-        if (err) {
-          return done(err);
-        }
+      User.findOne({ '_id': id }).then(function ( user) {
         for (var i = 0; i < user.following.length; i++) {
           if (String(user.following[i]) !== String(req.user._id) && req.user.following.indexOf(user.following[i]) === -1) {
             if (tempStore[user.following[i]] === undefined) {
@@ -219,6 +208,8 @@ exports.runSuggested = function(req, res){
           }
         }
         done();
+      }).catch(function (err) {
+        return done(err);
       });
     }, function (err) {
       if (err) {
@@ -232,8 +223,10 @@ exports.runSuggested = function(req, res){
       }
       suggestedStore[req.user._id].result = result;
       async.map(suggestedStore[req.user._id].result, function (id, done) {
-        User.findOne({ '_id': id }).select('username displayName names').exec(function (err, user) {
-          done(err, user);
+        User.findOne({ '_id': id }).select('username displayName names').then(function (user) {
+          done(null, user);
+        }).catch(function (err) {
+          done(err);
         });
       }, function (err, results) {
         if (err) {
@@ -255,13 +248,10 @@ exports.meWithFollowing = function (req, res) {
         path: 'pronouns',
         model: 'Pronoun'
       }
-    }).exec(function (err, user) {
-      if(err !== null){
-        res.json(null);
-      }
-      else {
+    }).then(function (user) {
         res.json(user);
-      }
+    }).catch(function () {
+      res.json(null);
     });
   }
   else{

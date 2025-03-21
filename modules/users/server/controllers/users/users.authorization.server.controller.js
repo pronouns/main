@@ -13,7 +13,7 @@ var _ = require('lodash'),
 exports.userByIdSafe = function (req, res, next, id) {
   User.findOne({
     _id: id
-  }).exec(function (err, user) {
+  }).then(function (user) {
     req.profile = user;
     next();
   });
@@ -21,7 +21,7 @@ exports.userByIdSafe = function (req, res, next, id) {
 exports.userByUsername = function(req, res, next, username) {
   User.findOne({
     username: username
-  }).exec(function(err, user) {
+  }).then(function(user) {
     req.profile = user;
     next();
   });
@@ -36,28 +36,26 @@ exports.userByUsername = function(req, res, next, username) {
 exports.userByUsernameOrId = function(req, res, next, usernameOrId) {
   User.findOne({
     username: usernameOrId
-  }).exec(function (err, user) {
-    if (err) {
-      if (mongoose.Types.ObjectId.isValid(usernameOrId)) {
-        User.findOne({
-          _id: usernameOrId
-        }).exec(function (err, user) {
-          if (err) {
-            return next(err);
-          }
-          if (!!user) {
-            req.profile = user;
-          }
-          next();
-        });
-      }
-      else {
-        return next(err);
-      }
-    }
+  }).then(function (user) {
     if (!!user) {
       req.profile = user;
     }
     next();
+  }).catch(function (error) {
+    if (mongoose.Types.ObjectId.isValid(usernameOrId)) {
+      User.findOne({
+        _id: usernameOrId
+      }).then(function (user) {
+        if (!!user) {
+          req.profile = user;
+        }
+        next();
+      }).catch(function (error) {
+        return next(error);
+      });
+    }
+    else {
+      return next(error);
+    }
   });
 };

@@ -79,10 +79,7 @@ gulp.task('watch', function () {
   gulp.watch(defaultAssets.client.sass, gulp.series('sass', 'csslint')).on('change', plugins.refresh.changed);
   gulp.watch(defaultAssets.client.less, gulp.series('less', 'csslint')).on('change', plugins.refresh.changed);
 
-  if (process.env.NODE_ENV === 'production') {
-    gulp.watch(defaultAssets.server.gulpConfig, gulp.series('templatecache', 'eslint'));
-    gulp.watch(defaultAssets.client.views, gulp.series('templatecache')).on('change', plugins.refresh.changed);
-  } else {
+  if (process.env.NODE_ENV !== 'production') {
     gulp.watch(defaultAssets.server.gulpConfig, gulp.series('eslint'));
     gulp.watch(defaultAssets.client.views).on('change', plugins.refresh.changed);
   }
@@ -257,19 +254,6 @@ gulp.task('makeUploadsDir', async function () {
       console.error(err);
     }
   });
-});
-
-// Angular template cache task
-gulp.task('templatecache', function () {
-  return gulp.src(defaultAssets.client.views)
-    .pipe(plugins.templateCache('templates.js', {
-      root: '/modules/',
-      module: 'core',
-      templateHeader: '(function () {' + endOfLine + '	\'use strict\';' + endOfLine + endOfLine + '	angular' + endOfLine + '		.module(\'<%= module %>\'<%= standalone %>)' + endOfLine + '		.run(templates);' + endOfLine + endOfLine + '	templates.$inject = [\'$templateCache\'];' + endOfLine + endOfLine + '	function templates($templateCache) {' + endOfLine,
-      templateBody: '		$templateCache.put(\'<%= url %>\', \'<%= contents %>\');',
-      templateFooter: '	}' + endOfLine + '})();' + endOfLine
-    }))
-    .pipe(gulp.dest('build'));
 });
 
 // Mocha tests task
@@ -459,7 +443,7 @@ gulp.task('default', gulp.series('env:dev', gulp.parallel('copyLocalEnvConfig', 
 
 // Run the project in production mode
 
-gulp.task('prod', gulp.series(gulp.parallel('copyLocalEnvConfig', 'makeUploadsDir', 'templatecache'), 'build', 'env:prod', 'lint', gulp.parallel('nodemon-nodebug', 'watch')));
+gulp.task('prod', gulp.series(gulp.parallel('copyLocalEnvConfig', 'makeUploadsDir'), 'build', 'env:prod', 'lint', gulp.parallel('nodemon-nodebug', 'watch')));
 
 // Run Mongo Seed with default environment config
 gulp.task('seed', gulp.series('env:dev', 'mongo-seed'));

@@ -23,10 +23,9 @@ RUN npm install
 
 RUN bower install --config.interactive=false
 
-RUN npm run heroku-postbuild
-
 # Make everything available for start
 ADD . /home/pronouny
+RUN npm run heroku-postbuild
 
 
 EXPOSE 3000

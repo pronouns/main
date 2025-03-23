@@ -23,13 +23,11 @@ RUN npm install
 
 RUN bower install --config.interactive=false
 
+RUN npm run heroku-postbuild
+
 # Make everything available for start
 ADD . /home/pronouny
 
-# Set development environment as default
-ENV NODE_ENV=production
 
-# Port 3000 for server
-# Port 35729 for livereload
 EXPOSE 3000
-CMD ["gulp"]
+CMD ["npm start"]

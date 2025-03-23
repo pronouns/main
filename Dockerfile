@@ -29,4 +29,4 @@ RUN npm run heroku-postbuild
 
 
 EXPOSE 3000
-CMD ["./node_modules/.bin/forever -m 5 server.js"]
+CMD ["gulp prod"]

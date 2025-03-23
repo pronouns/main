@@ -38,7 +38,7 @@ gulp.task('env:dev', async function () {
 });
 
 // Set NODE_ENV to 'production'
-gulp.task('env:prod', function () {
+gulp.task('env:prod', async function () {
   process.env.NODE_ENV = 'production';
 });
 
@@ -80,7 +80,7 @@ gulp.task('watch', function () {
   gulp.watch(defaultAssets.client.less, gulp.series('less', 'csslint')).on('change', plugins.refresh.changed);
 
   if (process.env.NODE_ENV === 'production') {
-    gulp.watch(defaultAssets.server.gulpConfig, ['templatecache', 'eslint']);
+    gulp.watch(defaultAssets.server.gulpConfig, gulp.series('templatecache', 'eslint'));
     gulp.watch(defaultAssets.client.views, gulp.series('templatecache')).on('change', plugins.refresh.changed);
   } else {
     gulp.watch(defaultAssets.server.gulpConfig, gulp.series('eslint'));

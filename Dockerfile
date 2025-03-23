@@ -25,8 +25,7 @@ RUN bower install --config.interactive=false
 
 # Make everything available for start
 ADD . /home/pronouny
-RUN npm run heroku-postbuild
 
-
+ENV PORT=3000
 EXPOSE 3000
-CMD ["gulp prod"]
+CMD ["gulp", "prod"]

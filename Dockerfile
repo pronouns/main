@@ -10,6 +10,7 @@ WORKDIR /home/pronouny
 # Install Mean.JS Prerequisites
 RUN npm install -g gulp
 RUN npm install -g bower
+RUN npm install -g forever
 
 # Install Mean.JS packages
 ADD package.json /home/pronouny/package.json
@@ -26,6 +27,9 @@ RUN bower install --config.interactive=false
 # Make everything available for start
 ADD . /home/pronouny
 
+# And build the app
+RUN gulp build
+
 ENV PORT=3000
 EXPOSE 3000
-CMD ["gulp", "prod"]
+CMD ["forever", "start", "server.js"]
